@@ -22,9 +22,9 @@ steps:
 
   - task: CopyFiles@2
     inputs:
-      Contents:  |
-        .next
-        public
+      Contents: |
+        .next/**
+        public/**
         package.json
       TargetFolder: '$(Build.ArtifactStagingDirectory)'
       CleanTargetFolder: true
