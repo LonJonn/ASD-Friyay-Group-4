@@ -6,9 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen:theme-typings": "chakra-cli tokens ./src/styles/theme/index.ts",
+    "postinstall": "npm run gen:theme-typings"
   },
   "dependencies": {
+    "@chakra-ui/cli": "^1.5.0",
+    "@chakra-ui/icons": "^1.0.15",
     "@chakra-ui/react": "^1.6.6",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
