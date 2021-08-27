@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { ChakraProvider, Container } from "@chakra-ui/react";
+import { Box, ChakraProvider, Container, Flex } from "@chakra-ui/react";
 import { Provider } from "next-auth/client";
 
 import { theme } from "../styles/theme";
@@ -9,11 +9,17 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider session={pageProps.session}>
       <ChakraProvider resetCSS theme={theme}>
-        <Navbar mb="4" />
+        <Flex flexDir="column" minH="100vh">
+          <Navbar mb="4" />
 
-        <Container>
-          <Component {...pageProps} />
-        </Container>
+          <Container flexGrow={1}>
+            <Component {...pageProps} />
+          </Container>
+
+          <Box bg="primary.900" color="white" textAlign="center" mt="8" py="8">
+            ASD Assessment - Friday Group 4
+          </Box>
+        </Flex>
       </ChakraProvider>
     </Provider>
   );

@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import NextLink from "next/link";
 import { User } from "next-auth";
 import { useSession, signOut, signIn } from "next-auth/client";
 import {
@@ -70,8 +71,8 @@ const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
-    label: "Learn Design",
-    href: "#",
+    label: "Secret",
+    href: "/protected",
   },
   {
     label: "Hire Designers",
@@ -105,14 +106,14 @@ const Navbar: React.FC<BoxProps> = (props) => {
           />
         </Flex>
 
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex flex={1} align="center" justify={{ base: "center", md: "start" }}>
           <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily="heading"
             fontWeight="black"
             color={useColorModeValue("gray.800", "white")}
           >
-            Logo
+            <NextLink href="/">Logo</NextLink>
           </Text>
 
           <Flex display={{ base: "none", md: "flex" }} ml="5">
@@ -120,7 +121,7 @@ const Navbar: React.FC<BoxProps> = (props) => {
           </Flex>
         </Flex>
 
-        <Stack direction="row" justify="flex-end" spacing={6}>
+        <Stack flex={{ base: 1, md: "none" }} direction="row" justify="flex-end" spacing={6}>
           {session?.user ? (
             <UserAvatar user={session.user} />
           ) : (
@@ -149,9 +150,8 @@ const DesktopNav = () => {
         <Box key={navItem.label}>
           <Popover trigger="hover" placement="bottom-start" id="popover">
             <PopoverTrigger>
-              <Link
+              <Text
                 p={2}
-                href={navItem.href ?? "#"}
                 fontSize="sm"
                 fontWeight="semibold"
                 color={linkColor}
@@ -160,8 +160,8 @@ const DesktopNav = () => {
                   color: linkHoverColor,
                 }}
               >
-                {navItem.label}
-              </Link>
+                <NextLink href={navItem.href ?? "#"}>{navItem.label}</NextLink>
+              </Text>
             </PopoverTrigger>
 
             {navItem.children && (
@@ -189,37 +189,39 @@ const DesktopNav = () => {
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   return (
-    <Link
-      href={href}
-      role="group"
-      display="block"
-      p={2}
-      rounded="md"
-      _hover={{ bg: useColorModeValue("primary.50", "gray.900") }}
-    >
-      <Stack direction="row" align="center" justify="space-between">
-        <Box>
-          <Text
-            fontWeight="semibold"
-            transition="all .3s ease"
-            _groupHover={{ color: "primary.700" }}
-          >
-            {label}
-          </Text>
-          <Text fontSize="sm">{subLabel}</Text>
-        </Box>
+    <NextLink href={href ?? "#"}>
+      <Link
+        as="div"
+        role="group"
+        display="block"
+        p={2}
+        rounded="md"
+        _hover={{ bg: useColorModeValue("primary.50", "gray.900") }}
+      >
+        <Stack direction="row" align="center" justify="space-between">
+          <Box>
+            <Text
+              fontWeight="semibold"
+              transition="all .3s ease"
+              _groupHover={{ color: "primary.700" }}
+            >
+              {label}
+            </Text>
+            <Text fontSize="sm">{subLabel}</Text>
+          </Box>
 
-        <Icon
-          as={ChevronRightIcon}
-          color="primary.500"
-          boxSize={5}
-          opacity={0}
-          transform="translateX(-10px)"
-          transition="all .3s ease"
-          _groupHover={{ opacity: 1, transform: "translateX(0)" }}
-        />
-      </Stack>
-    </Link>
+          <Icon
+            as={ChevronRightIcon}
+            color="primary.500"
+            boxSize={5}
+            opacity={0}
+            transform="translateX(-10px)"
+            transition="all .3s ease"
+            _groupHover={{ opacity: 1, transform: "translateX(0)" }}
+          />
+        </Stack>
+      </Link>
+    </NextLink>
   );
 };
 
@@ -238,29 +240,29 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
-      <Flex
-        py={2}
-        as={Link}
-        href={href ?? "#"}
-        justify="space-between"
-        align="center"
-        _hover={{
-          textDecoration: "none",
-        }}
-      >
-        <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
-          {label}
-        </Text>
-        {children && (
-          <Icon
-            as={ChevronDownIcon}
-            transition="all .25s ease-in-out"
-            transform={isOpen ? "rotate(180deg)" : ""}
-            w={6}
-            h={6}
-          />
-        )}
-      </Flex>
+      <NextLink href={href ?? "#"}>
+        <Flex
+          py={2}
+          justify="space-between"
+          align="center"
+          _hover={{
+            textDecoration: "none",
+          }}
+        >
+          <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
+            {label}
+          </Text>
+          {children && (
+            <Icon
+              as={ChevronDownIcon}
+              transition="all .25s ease-in-out"
+              transform={isOpen ? "rotate(180deg)" : ""}
+              w={6}
+              h={6}
+            />
+          )}
+        </Flex>
+      </NextLink>
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
         <Stack
@@ -318,8 +320,8 @@ const UserAvatar: React.FC<{ user: User }> = ({ user }) => {
           <MenuItem
             icon={<Icon as={FiLogOut} />}
             onClick={async () => {
-              await signOut({ redirect: false });
-              router.push("/");
+              await router.push("/");
+              signOut({ redirect: false });
             }}
           >
             Log out
