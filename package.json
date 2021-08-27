@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "jest --watch",
     "gen:theme-typings": "chakra-cli tokens ./src/styles/theme/index.ts",
     "postinstall": "npm run gen:theme-typings"
   },
@@ -28,10 +29,18 @@
     "zod": "^3.7.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@types/jest": "^27.0.1",
     "@types/react": "17.0.18",
+    "babel-jest": "^27.0.6",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.0.6",
     "prisma": "^2.29.1",
+    "react-test-renderer": "^17.0.2",
+    "ts-jest": "^27.0.5",
     "typescript": "4.3.5"
   }
 }
