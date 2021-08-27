@@ -8,8 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
+    "gen:db": "prisma generate && prisma migrate dev",
     "gen:theme-typings": "chakra-cli tokens ./src/styles/theme/index.ts",
-    "postinstall": "npm run gen:theme-typings"
+    "postinstall": "npm run gen:db && npm run gen:theme-typings"
   },
   "dependencies": {
     "@chakra-ui/cli": "^1.5.0",
@@ -18,13 +19,17 @@
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
     "@hookform/resolvers": "^2.7.1",
+    "@next-auth/prisma-adapter": "^0.5.4",
+    "@prisma/client": "^2.30.0",
     "firebase": "^8.9.1",
     "firebase-admin": "^9.11.0",
     "framer-motion": "^4.1.17",
     "next": "11.1.0",
+    "next-auth": "^3.29.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.12.2",
+    "react-icons": "^4.2.0",
     "react-query": "^3.19.6",
     "zod": "^3.7.2"
   },
@@ -38,9 +43,12 @@
     "eslint-config-next": "11.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
-    "prisma": "^2.29.1",
+    "prisma": "^2.30.0",
     "react-test-renderer": "^17.0.2",
     "ts-jest": "^27.0.5",
     "typescript": "4.3.5"
+  },
+  "prettier": {
+    "printWidth": 100
   }
 }

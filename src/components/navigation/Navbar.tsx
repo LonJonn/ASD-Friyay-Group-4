@@ -1,3 +1,6 @@
+import { useRouter } from "next/router";
+import { User } from "next-auth";
+import { useSession, signOut, signIn } from "next-auth/client";
 import {
   Box,
   Flex,
@@ -14,29 +17,81 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  BoxProps,
+  Container,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+  MenuGroup,
+  MenuDivider,
 } from "@chakra-ui/react";
-import {
-  HamburgerIcon,
-  CloseIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-} from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
 
-export default function WithSubnavigation() {
+interface NavItem {
+  label: string;
+  subLabel?: string;
+  children?: Array<NavItem>;
+  href?: string;
+}
+
+const NAV_ITEMS: Array<NavItem> = [
+  {
+    label: "Inspiration",
+    children: [
+      {
+        label: "Explore Design Work",
+        subLabel: "Trending Design to inspire you",
+        href: "#",
+      },
+      {
+        label: "New & Noteworthy",
+        subLabel: "Up-and-coming Designers",
+        href: "#",
+      },
+    ],
+  },
+  {
+    label: "Find Work",
+    children: [
+      {
+        label: "Job Board",
+        subLabel: "Find your dream design job",
+        href: "#",
+      },
+      {
+        label: "Freelance Projects",
+        subLabel: "An exclusive list for contract work",
+        href: "#",
+      },
+    ],
+  },
+  {
+    label: "Learn Design",
+    href: "#",
+  },
+  {
+    label: "Hire Designers",
+    href: "#",
+  },
+];
+
+const Navbar: React.FC<BoxProps> = (props) => {
   const { isOpen, onToggle } = useDisclosure();
+  const [session] = useSession();
 
   return (
-    <Box>
-      <Flex
-        minH="60px"
-        align="center"
-        py="2"
-        px="4"
-        bg={useColorModeValue("white", "gray.800")}
-        color={useColorModeValue("gray.600", "white")}
-        borderBottom="1px solid"
-        borderColor={useColorModeValue("gray.200", "gray.900")}
-      >
+    <Box
+      borderBottom="1px solid"
+      borderColor={useColorModeValue("gray.200", "gray.900")}
+      bg={useColorModeValue("white", "gray.800")}
+      color={useColorModeValue("gray.600", "white")}
+      {...props}
+    >
+      <Container as={Flex} minH="16" align="center" py="2">
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
@@ -44,9 +99,7 @@ export default function WithSubnavigation() {
         >
           <IconButton
             onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
+            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
             variant="ghost"
             aria-label="Toggle Navigation"
           />
@@ -67,32 +120,23 @@ export default function WithSubnavigation() {
           </Flex>
         </Flex>
 
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          direction="row"
-          justify="flex-end"
-          spacing={6}
-        >
-          <Button as="a" variant="link" size="sm" href="#">
-            Sign In
-          </Button>
-
-          <Button
-            display={{ base: "none", md: "inline-flex" }}
-            size="sm"
-            href="#"
-          >
-            Sign Up
-          </Button>
+        <Stack direction="row" justify="flex-end" spacing={6}>
+          {session?.user ? (
+            <UserAvatar user={session.user} />
+          ) : (
+            <Button size="sm" leftIcon={<Icon as={FiLogIn} />} onClick={() => signIn("auth0")}>
+              Sign In
+            </Button>
+          )}
         </Stack>
-      </Flex>
+      </Container>
 
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
     </Box>
   );
-}
+};
 
 const DesktopNav = () => {
   const linkColor = useColorModeValue("gray.600", "gray.200");
@@ -103,7 +147,7 @@ const DesktopNav = () => {
     <Stack direction="row" spacing={4}>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover trigger="hover" placement="bottom-start">
+          <Popover trigger="hover" placement="bottom-start" id="popover">
             <PopoverTrigger>
               <Link
                 p={2}
@@ -153,28 +197,27 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       rounded="md"
       _hover={{ bg: useColorModeValue("primary.50", "gray.900") }}
     >
-      <Stack direction="row" align="center">
+      <Stack direction="row" align="center" justify="space-between">
         <Box>
           <Text
+            fontWeight="semibold"
             transition="all .3s ease"
-            fontWeight={500}
             _groupHover={{ color: "primary.700" }}
           >
             {label}
           </Text>
           <Text fontSize="sm">{subLabel}</Text>
         </Box>
-        <Flex
-          flex={1}
-          justify="flex-end"
-          align="center"
+
+        <Icon
+          as={ChevronRightIcon}
+          color="primary.500"
+          boxSize={5}
           opacity={0}
-          transition="all .3s ease"
           transform="translateX(-10px)"
-          _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
-        >
-          <Icon color="primary.500" w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
+          transition="all .3s ease"
+          _groupHover={{ opacity: 1, transform: "translateX(0)" }}
+        />
       </Stack>
     </Link>
   );
@@ -182,11 +225,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 
 const MobileNav = () => {
   return (
-    <Stack
-      bg={useColorModeValue("white", "gray.800")}
-      p={4}
-      display={{ md: "none" }}
-    >
+    <Stack bg={useColorModeValue("white", "gray.800")} p={4} display={{ md: "none" }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
@@ -209,10 +248,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           textDecoration: "none",
         }}
       >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
+        <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
           {label}
         </Text>
         {children && (
@@ -247,50 +283,57 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
   );
 };
 
-interface NavItem {
-  label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
-}
+const UserAvatar: React.FC<{ user: User }> = ({ user }) => {
+  const router = useRouter();
 
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Inspiration",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Learn Design",
-    href: "#",
-  },
-  {
-    label: "Hire Designers",
-    href: "#",
-  },
-];
+  return (
+    <Menu>
+      <MenuButton>
+        <Stack direction="row" spacing="2" align="center">
+          <Avatar name={user.name!} src={user.image!} boxSize="10" />
+          <Icon as={ChevronDownIcon} />
+        </Stack>
+      </MenuButton>
+      <Portal>
+        <MenuList>
+          <Text mx="4" fontSize="lg" fontWeight="medium">
+            Welcome, {capitalize(user.name?.split(".")[0] || "")}
+          </Text>
+
+          <MenuDivider />
+
+          <MenuGroup title="Profile">
+            <MenuItem>My Account</MenuItem>
+          </MenuGroup>
+
+          <MenuDivider />
+
+          <MenuGroup title="About">
+            <MenuItem>Repository</MenuItem>
+            <MenuItem>Credits</MenuItem>
+          </MenuGroup>
+
+          <MenuDivider />
+
+          <MenuItem
+            icon={<Icon as={FiLogOut} />}
+            onClick={async () => {
+              await signOut({ redirect: false });
+              router.push("/");
+            }}
+          >
+            Log out
+          </MenuItem>
+        </MenuList>
+      </Portal>
+    </Menu>
+  );
+};
+
+export default Navbar;
+
+/** Utils */
+
+function capitalize(input: string) {
+  return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
+}
