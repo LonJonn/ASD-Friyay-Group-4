@@ -1,13 +1,13 @@
 import type { AppProps } from "next/app";
 import { Box, ChakraProvider, Container, Flex } from "@chakra-ui/react";
-import { Provider } from "next-auth/client";
+import { Provider as NextAuthProvider } from "next-auth/client";
 
 import { theme } from "../styles/theme";
 import Navbar from "../components/navigation/Navbar";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider session={pageProps.session}>
+    <NextAuthProvider session={pageProps.session}>
       <ChakraProvider resetCSS theme={theme}>
         <Flex flexDir="column" minH="100vh">
           <Navbar mb="4" />
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Box>
         </Flex>
       </ChakraProvider>
-    </Provider>
+    </NextAuthProvider>
   );
 }
 
