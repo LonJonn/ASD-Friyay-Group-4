@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  - master
+  - develop
 
 pool:
   vmImage: ubuntu-latest
@@ -26,11 +26,11 @@ steps:
         .next/**
         public/**
         package.json
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      TargetFolder: "$(Build.ArtifactStagingDirectory)"
       CleanTargetFolder: true
       OverWrite: true
-  
+
   - task: PublishBuildArtifacts@1
-    inputs: 
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'app'
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "app"
