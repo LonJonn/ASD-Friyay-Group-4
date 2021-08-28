@@ -4,24 +4,29 @@ import { Provider as NextAuthProvider } from "next-auth/client";
 
 import { theme } from "../styles/theme";
 import Navbar from "../components/navigation/Navbar";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <NextAuthProvider session={pageProps.session}>
-      <ChakraProvider resetCSS theme={theme}>
-        <Flex flexDir="column" minH="100vh">
-          <Navbar mb="4" />
+    <QueryClientProvider client={queryClient}>
+      <NextAuthProvider session={pageProps.session}>
+        <ChakraProvider resetCSS theme={theme}>
+          <Flex flexDir="column" minH="100vh">
+            <Navbar mb="4" />
 
-          <Container flexGrow={1}>
-            <Component {...pageProps} />
-          </Container>
+            <Container flexGrow={1}>
+              <Component {...pageProps} />
+            </Container>
 
-          <Box bg="primary.900" color="white" textAlign="center" mt="8" py="8">
-            ASD Assessment - Friday Group 4
-          </Box>
-        </Flex>
-      </ChakraProvider>
-    </NextAuthProvider>
+            <Box bg="primary.900" color="white" textAlign="center" mt="8" py="8">
+              ASD Assessment - Friday Group 4
+            </Box>
+          </Flex>
+        </ChakraProvider>
+      </NextAuthProvider>
+    </QueryClientProvider>
   );
 }
 
