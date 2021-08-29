@@ -1,8 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-declare global {
-  var prisma: PrismaClient;
-}
+let prisma: PrismaClient;
 
 // PrismaClient is attached to the `global` object in development to prevent
 // exhausting your database connection limit.
@@ -10,25 +8,14 @@ declare global {
 // Learn more:
 // https://pris.ly/d/help/next-js-best-practices
 
-const status = {
-  connected: false,
-};
-
 if (process.env.NODE_ENV === "production") {
   prisma = new PrismaClient();
 } else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
+  if (!(globalThis as any).prisma) {
+    (globalThis as any).prisma = new PrismaClient();
   }
 
-  prisma = global.prisma;
+  prisma = (globalThis as any).prisma;
 }
 
-export async function getDB() {
-  if (status.connected === false) {
-    await prisma.$connect();
-    status.connected = true;
-  }
-
-  return prisma;
-}
+export { prisma as db };
