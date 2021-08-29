@@ -57,3 +57,12 @@ model VerificationRequest {
 
   @@unique([identifier, token])
 }
+
+model Comment {
+  id          String @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  parentId    String
+  userId      String @unique
+  movieId     Int
+  likes       Int
+  dateCreated DateTime
+}
