@@ -1,13 +1,28 @@
 import type { NextPage } from "next";
+import NextLink from "next/link";
 import { useSession } from "next-auth/client";
-import { Heading, Stack, Text } from "@chakra-ui/react";
+import { Heading, Link, Stack, Text } from "@chakra-ui/react";
+import { useQueryClient } from "react-query";
+
+import { getAllUsers } from "./all-users-client";
 
 const Home: NextPage = () => {
   const [session, loading] = useSession();
+  const queryClient = useQueryClient();
 
   return (
-    <Stack direction="column" spacing="2">
+    <Stack direction="column" align="start" spacing={4}>
       <Heading>Home</Heading>
+
+      <NextLink href="/all-users-client" passHref>
+        <Link
+          onMouseOver={() => {
+            queryClient.prefetchQuery("users", getAllUsers, { staleTime: 15000 });
+          }}
+        >
+          To all users client
+        </Link>
+      </NextLink>
 
       <Text
         fontSize="xl"
