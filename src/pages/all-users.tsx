@@ -1,8 +1,11 @@
-import * as userService from "@app/services/user";
 import { Box, Heading, List, ListItem } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
+import { getSession } from "next-auth/client";
 
-type AllUsersProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+import { withAuthRequired } from "@app/lib/with-auth-required";
+import { getAllUsers, GetAllUsersResponse } from "@app/services/user";
+
+type AllUsersProps = Required<InferGetServerSidePropsType<typeof getServerSideProps>>;
 
 const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
   <Box>
@@ -18,15 +21,29 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
   </Box>
 );
 
-export const getServerSideProps: GetServerSideProps<{ users: userService.GetAllUsersResponse }> =
-  async () => {
-    const allUsers = await userService.getAllUsers();
-
+export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersResponse }> = async (
+  ctx
+) => {
+  // Check if user is logged in, if not, return out
+  const session = await getSession(ctx);
+  if (!session) {
     return {
-      props: {
-        users: allUsers,
-      },
+      props: {},
+      // redirect: {
+      //   destination: "/login",
+      //   permanent: false,
+      // },
     };
-  };
+  }
 
-export default AllUsers;
+  const users = await getAllUsers();
+
+  return {
+    props: {
+      session, // We return the session here so that the client doesn't have to request it again
+      users,
+    },
+  };
+};
+
+export default withAuthRequired(AllUsers);
