@@ -18,7 +18,7 @@ export function withAuthRequired(Component: React.FC<any>): React.FC {
 
     /** Show Auth Error Screen */
     return (
-      <Stack align="center" spacing="8" mt="48">
+      <Stack align="center" spacing="8" my="48">
         <Stack textAlign="center">
           <Heading fontSize="6xl" fontWeight="black">
             Uh oh... 😢
