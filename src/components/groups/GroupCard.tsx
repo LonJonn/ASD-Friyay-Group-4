@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Heading, Stack, Text } from "@chakra-ui/react";
+import { Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 
 export interface IGroupCard {
   name: String;
@@ -16,11 +16,14 @@ const GroupCard: React.FC<IGroupCard> = ({ name, imageBackdrop, movieCount, emoj
       spacing={4}
       backgroundImage={`${imageBackdrop}`}
       backgroundSize="cover"
-      maxW="3xl"
+      minH="xs"
     >
       <Heading size="3xl">{emoji}</Heading>
-      <Heading color="whiteAlpha.900">{name}</Heading>
-      <Heading color="whiteAlpha.900" size="md">
+      <Heading size="4xl" color="whiteAlpha.900">
+        {name}
+      </Heading>
+      <Spacer />
+      <Heading color="whiteAlpha.900" size="lg">
         🎬 {movieCount}
       </Heading>
     </Stack>

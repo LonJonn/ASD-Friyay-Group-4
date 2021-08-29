@@ -3,7 +3,7 @@ import { signIn, useSession } from "next-auth/client";
 import React from "react";
 import { FiLogIn } from "react-icons/fi";
 
-export function withAuthRequired(Component: React.FC): React.FC {
+export function withAuthRequired(Component: React.FC<any>): React.FC {
   const Protected: React.FC = (props) => {
     const [session, loading] = useSession();
 
