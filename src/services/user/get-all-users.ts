@@ -1,6 +1,6 @@
-import { PrismaClient, User } from "@prisma/client";
+import { User } from "@prisma/client";
 
-const prisma = new PrismaClient();
+import { getDB } from "@app/lib/db";
 
 /**
  * This is the custom response type of the service action.
@@ -16,7 +16,8 @@ interface UserWithFirstName extends Pick<User, "id" | "name" | "email"> {
 export type GetAllUsersResponse = UserWithFirstName[];
 
 export async function getAllUsers(): Promise<GetAllUsersResponse> {
-  const allUsers = await prisma.user.findMany();
+  const db = await getDB();
+  const allUsers = await db.user.findMany();
 
   // Compute first name
   const usersWithFirstName = allUsers.map((user): UserWithFirstName => {
