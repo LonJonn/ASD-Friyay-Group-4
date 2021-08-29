@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import { Stack } from "@chakra-ui/react";
 
 interface IMovieCard {
-  name: String;
-  poster: String;
+  name: string;
+  poster: string;
 }
 
 const MovieCard: React.FC<IMovieCard> = ({ name, poster }) => {

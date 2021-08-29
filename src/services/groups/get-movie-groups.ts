@@ -5,7 +5,7 @@ export interface TransformedMovieGroup {
   id: MovieGroup["id"];
   emoji: MovieGroup["emoji"];
   name: MovieGroup["name"];
-  imageBackdrop: String;
+  imageBackdrop: string;
   movieCount: number;
 }
 
