@@ -1,4 +1,3 @@
-import type { NextPage } from "next";
 import { Heading, Spacer, Stack, Text } from "@chakra-ui/react";
 
 export interface IGroupCard {

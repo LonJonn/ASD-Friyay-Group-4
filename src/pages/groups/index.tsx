@@ -56,7 +56,9 @@ export const getServerSideProps: GetServerSideProps<{
   movieGroups: movieGroupService.GetMovieGroupResponse;
 }> = async (ctx) => {
   const session = await getSession(ctx);
-  const movieGroups = await movieGroupService.getMovieGroups("612ae75400a9b2d900299b5e");
+  //if session undefined then redirect to Home
+
+  const movieGroups = await movieGroupService.getMovieGroups(`${session?.uid}`);
 
   return {
     props: {
