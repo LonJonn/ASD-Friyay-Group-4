@@ -29,10 +29,25 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Layers Overview
 
-## Deploy on Vercel
+1. Website - Components / Pages (React)
+2. API - Controllers
+3. Services - Business Logic (Most of the work is done here)
+4. Database (Prisma)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## General Workflow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Creating/Editing a database model
+
+1. Open `prisma/schema.prisma`
+2. Add/Update any schema
+3. Save the file
+4. Run `npm run gen:db`
+
+### Create a new service
+
+1. Create a new folder in `src/services/[service name]`
+2. Create a new .ts file for each service action (e.g. get-movies.ts)
+3. Write out the business logic in the action
+4. Add the new file to the `index.ts` file

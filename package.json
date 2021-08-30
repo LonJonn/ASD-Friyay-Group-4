@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
+    "db-studio": "prisma studio",
     "gen:db": "prisma generate",
     "gen:theme-typings": "chakra-cli tokens ./src/styles/theme/index.ts",
     "postinstall": "npm run gen:db && npm run gen:theme-typings"
