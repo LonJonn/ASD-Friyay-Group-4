@@ -82,6 +82,10 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "All Users CSR",
     href: "/all-users-client",
   },
+  {
+    label: "Admin View",
+    href: "/admin-view",
+  },
 ];
 
 const Navbar: React.FC<BoxProps> = (props) => {
