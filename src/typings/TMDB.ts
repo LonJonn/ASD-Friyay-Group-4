@@ -1,28 +1,43 @@
 export interface Movie {
+  /*
   backdrop_path: string;
   belongs_to_collection: null;
   budget: number;
   genres: Genre[];
   homepage: string;
+  */
   id: number;
+  adult: boolean;
+  /*
   imdb_id: string;
+  */
   original_language: string;
+  /*
   original_title: string;
   overview: string;
   popularity: number;
+  */
   poster_path: string;
+  /*
   production_companies: ProductionCompany[];
   production_countries: ProductionCountry[];
+  */
   release_date: string;
+  release_month: string;
+  release_year: string;
+  /*
   revenue: number;
   runtime: number;
   spoken_languages: SpokenLanguage[];
   status: string;
   tagline: string;
+  */
   title: string;
+  /*
   video: boolean;
   vote_average: number;
   vote_count: number;
+  */
 }
 
 export interface Genre {
