@@ -4,7 +4,6 @@ import { Movie } from '@app/typings/TMDB'
 export type GetPopularMoviesResponse = Movie[];
 
 export async function getPopularMovies(this: any): Promise<GetPopularMoviesResponse> {
-    //const response = await axios.get<{data: Response[]}>('https://api.themoviedb.org/3/movie/436969/credits?api_key=e4fa39bf6f208cb92054054b1c0398d4&language=en-US');
     const response = await axios.get<Movie[]>('https://api.themoviedb.org/3/movie/popular?api_key=e4fa39bf6f208cb92054054b1c0398d4&language=en-US&page=1');
     
     const movies = response.data.results;
