@@ -5,6 +5,7 @@ import { Provider as NextAuthProvider } from "next-auth/client";
 import { theme } from "../styles/theme";
 import Navbar from "../components/navigation/Navbar";
 import { QueryClient, QueryClientProvider } from "react-query";
+import "../styles/globals.css";
 
 const queryClient = new QueryClient();
 

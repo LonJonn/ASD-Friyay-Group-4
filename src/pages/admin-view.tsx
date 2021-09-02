@@ -9,22 +9,26 @@ type AllUsersProps = Required<InferGetServerSidePropsType<typeof getServerSidePr
 
 const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
   <Box>
-    <Heading mb="4">Admin View!</Heading>
+  <a class="button" id="new-user-button">Create new user</a>
+    <Heading mb="4">Hello Admin!</Heading>
     <p>You are logged in as an admin.</p>
-    <button>Create new user</button>
-
+    <form id="seach-div">
+    <p class="search-text">Search Users</p>
+    <label><input type="text" name="name" id="admin-search-text"/></label>
+    <input type="submit" value="Submit" id="admin-search"/>
+    </form>
     <List>
       {users.map((user) => (
-        <ListItem key={user.id}>
+        <ListItem key={user.id} class="list-item-users">
           {user.firstName} | {user.email}
-          <button>Edit User</button>
-          <button>Delete User</button>
+          <button class="button button-outline table-button">Delete User</button>
+          <button class="button button-outline  table-button">Edit User</button>
         </ListItem>
 
       ))}
     </List>
 
-    <Heading mb="4">You are not logged in as an admin</Heading>
+    <Heading mb="4" class="hide">You are not logged in as an admin</Heading>
 
   </Box>
 );
