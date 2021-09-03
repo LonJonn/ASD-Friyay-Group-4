@@ -75,8 +75,12 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/protected",
   },
   {
-    label: "Hire Designers",
-    href: "#",
+    label: "All Users SSR",
+    href: "/all-users",
+  },
+  {
+    label: "All Users CSR",
+    href: "/all-users-client",
   },
 ];
 

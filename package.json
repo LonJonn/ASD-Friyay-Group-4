@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "jest --watch",
-    "gen:db": "prisma generate && prisma migrate dev",
+    "db-studio": "prisma studio",
+    "gen:db": "prisma generate",
     "gen:theme-typings": "chakra-cli tokens ./src/styles/theme/index.ts",
     "postinstall": "npm run gen:db && npm run gen:theme-typings"
   },

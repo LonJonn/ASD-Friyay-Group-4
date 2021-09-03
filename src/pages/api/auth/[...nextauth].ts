@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -15,4 +15,14 @@ export default NextAuth({
   ],
 
   adapter: PrismaAdapter(prisma),
+
+  callbacks: {
+    session: async (session, user) => {
+      if (session.user) {
+        session.uid = user.id as string;
+      }
+
+      return session;
+    },
+  },
 });

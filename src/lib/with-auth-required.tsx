@@ -3,7 +3,7 @@ import { signIn, useSession } from "next-auth/client";
 import React from "react";
 import { FiLogIn } from "react-icons/fi";
 
-export function withAuthRequired(Component: React.FC): React.FC {
+export function withAuthRequired(Component: React.FC<any>): React.FC {
   const Protected: React.FC = (props) => {
     const [session, loading] = useSession();
 
@@ -18,7 +18,7 @@ export function withAuthRequired(Component: React.FC): React.FC {
 
     /** Show Auth Error Screen */
     return (
-      <Stack align="center" spacing="8" mt="48">
+      <Stack align="center" spacing="8" my="48">
         <Stack textAlign="center">
           <Heading fontSize="6xl" fontWeight="black">
             Uh oh... 😢
