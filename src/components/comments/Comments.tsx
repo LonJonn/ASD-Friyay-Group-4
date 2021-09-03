@@ -1,4 +1,4 @@
-import {Box, Heading, Flex, Text, VStack,HStack, IconButton, Button} from "@chakra-ui/react";
+import {Box, Heading, Flex, Text, VStack,HStack, IconButton, Button, Wrap, WrapItem, Avatar} from "@chakra-ui/react";
 import {ArrowUpIcon, ArrowDownIcon} from "@chakra-ui/icons";
 
 interface CommentProps {
@@ -33,6 +33,11 @@ const Comments: React.FC<CommentProps> = ({userId,dateCreated,parentId,comment,l
     return (
         <Box m={8} borderRadius={4} maxWidth="700px" w="full">
             <HStack>
+            <Wrap>
+                <WrapItem>
+                    <Avatar name="userId" src=""/>
+                </WrapItem>
+            </Wrap>
             <VStack spacing="0">
                 <IconButton variant="ghost" size="xs" aria-label="Upvote" icon={<ArrowUpIcon/>}/>
                 <Text fontSize="xs">{likes}</Text>

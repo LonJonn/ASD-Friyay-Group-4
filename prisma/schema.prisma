@@ -45,6 +45,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  comments      Comment[]
 }
 
 model VerificationRequest {
@@ -61,7 +62,7 @@ model VerificationRequest {
 model Comment {
   id          String @id @default(dbgenerated()) @map("_id") @db.ObjectId
   parentId    String
-  userId      String @unique
+  userId      User @relation(fields: [userId], references: [id])
   movieId     Int
   likes       Int
   dateCreated DateTime
