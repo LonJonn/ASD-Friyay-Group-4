@@ -1,6 +1,5 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
-
 import { getAllUsers } from "@app/services/user";
 
 const handler: NextApiHandler = async (req, res) => {

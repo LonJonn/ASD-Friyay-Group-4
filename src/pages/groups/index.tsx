@@ -1,26 +1,23 @@
-import type { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
-import {
-  Stack,
-  Heading,
-  Tab,
-  Tabs,
-  TabList,
-  TabPanels,
-  TabPanel,
-  Text,
-  SimpleGrid,
-  Icon,
-  Box,
-  AspectRatio,
-  Flex,
-} from "@chakra-ui/react";
-import { GetMovieGroupResponse, getMovieGroups } from "@app/services/groups/get-movie-groups";
-import { useQuery } from "react-query";
-import { getSession } from "next-auth/client";
-import { withAuthRequired } from "@app/lib/with-auth-required";
 import GroupCard from "@app/components/groups/GroupCard";
-import React from "react";
+import { withAuthRequired } from "@app/lib/with-auth-required";
+import { GetMovieGroupResponse } from "@app/services/groups/get-movie-groups";
 import { AddIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Heading,
+  SimpleGrid,
+  Spacer,
+  Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  Button,
+} from "@chakra-ui/react";
+import type { NextPage } from "next";
+import { useQuery } from "react-query";
 
 async function getAllMovieGroups(): Promise<GetMovieGroupResponse> {
   const res = await fetch("/api/groups/movies");
@@ -55,34 +52,28 @@ const GroupsPage: NextPage = () => {
 
         <TabPanels>
           <TabPanel p={0}>
-            <Heading pt={8}>Movie Groups</Heading>
+            <Stack direction="row" alignItems="center">
+              <Heading p={8}>Movie Groups</Heading>
+              <Spacer />
+              <Button leftIcon={<AddIcon />}>Add new</Button>
+            </Stack>
           </TabPanel>
         </TabPanels>
       </Tabs>
 
-      <SimpleGrid columns={2} spacingX={4} spacingY={4}>
-        {query.data.map((group) => (
-          <GroupCard
-            key={group.id}
-            emoji={group.emoji}
-            imageBackdrop={group.imageBackdrop}
-            movieCount={group.movieCount}
-            name={group.name}
-          />
-        ))}
-
-        <Stack
-          border="solid"
-          borderRadius="lg"
-          justifyContent="center"
-          alignItems="center"
-          bgColor="primary.200"
-          spacing={4}
-        >
-          <AddIcon w={12} h={12} />
-          <Text fontSize="2xl"> Add a new group</Text>
-        </Stack>
-      </SimpleGrid>
+      <Box>
+        <SimpleGrid columns={2} spacingX={4} spacingY={4}>
+          {query.data.map((group) => (
+            <GroupCard
+              key={group.id}
+              emoji={group.emoji}
+              imageBackdrop={group.imageBackdrop}
+              movieCount={group.movieCount}
+              name={group.name}
+            />
+          ))}
+        </SimpleGrid>
+      </Box>
     </Stack>
   );
 };
