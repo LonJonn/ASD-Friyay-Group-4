@@ -22,6 +22,7 @@
     "@hookform/resolvers": "^2.7.1",
     "@next-auth/prisma-adapter": "^0.5.4",
     "@prisma/client": "^2.30.0",
+    "axios": "^0.21.1",
     "firebase": "^8.9.1",
     "firebase-admin": "^9.11.0",
     "framer-motion": "^4.1.17",

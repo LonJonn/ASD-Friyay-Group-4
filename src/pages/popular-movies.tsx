@@ -38,11 +38,13 @@ const PopularMoviesPage: NextPage = () => {
       <SimpleGrid columns={6} spacingX={4} spacingY={4}>
         {query.data.map((movie) => (
           <PopularMovieCard
+            key={movie.id}
             title={movie.title}
             poster_path={movie.poster_path}
             original_language={movie.original_language}
             release_month={movie.release_month}
             release_year={String(movie.release_year)}
+            vote_average={movie.vote_average}
           />
         ))}
       </SimpleGrid>

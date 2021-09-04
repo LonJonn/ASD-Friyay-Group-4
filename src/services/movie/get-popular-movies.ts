@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import axios from "axios";
 
 import { PopularMoviesResponse, PopularMovieResult } from "@app/typings/TMDB";
 
@@ -21,7 +22,7 @@ const MONTHS = [
  * Internal type used in this service.
  */
 interface TransformedMovie
-  extends Pick<PopularMovieResult, "id" | "title" | "poster_path" | "original_language"> {
+  extends Pick<PopularMovieResult, "id" | "title" | "poster_path" | "original_language" | "vote_average" > {
   release_month: string;
   release_year: number;
 }
@@ -33,16 +34,19 @@ export type GetPopularMoviesResponse = TransformedMovie[];
 
 export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
   // Make request to TMDB
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
-  );
+  // const response = await fetch(
+  //   `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+  // );
+
+  const response = await axios.get<PopularMoviesResponse>(`https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`)
 
   // Parse as JSON, and cast to our type from the TMDB.ts file
-  const popularMoviesData = (await response.json()) as PopularMoviesResponse;
+  //const popularMoviesData = (await response.json()) as PopularMoviesResponse;
+  const popularMoviesData = response.data.results;
 
   // Now we transform the response from TMDB into our custom shape that we want
   // to return from our API.
-  const transformedMovies = popularMoviesData.results.map((movie): TransformedMovie => {
+  const transformedMovies = popularMoviesData.map((movie): TransformedMovie => {
     const releaseDate = new Date(movie.release_date);
 
     const year = releaseDate.getFullYear();
@@ -55,6 +59,7 @@ export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
       original_language: movie.original_language,
       release_month: MONTHS[month],
       release_year: year,
+      vote_average: movie.vote_average,
     };
   });
 
