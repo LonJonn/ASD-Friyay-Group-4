@@ -3,15 +3,13 @@ import { Box, Image, Badge, Tooltip } from "@chakra-ui/react";
 
 interface IMovieCard {
   title: string;
-  release_date: string;
   poster_path: string;
   original_language: string;
-  adult: boolean;
   release_month: string;
   release_year: string;
 }
 
-const PopularMovieCard: React.FC<IMovieCard> = ({ title, release_date, poster_path, original_language, adult, release_month, release_year  }) => {
+const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_language, release_month, release_year  }) => {
   const image = "https://image.tmdb.org/t/p/w500/" + poster_path;
   const friendlyRelease =  release_month + " " + release_year;
 
@@ -27,10 +25,6 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, release_date, poster_pa
             </Badge>
           </Tooltip>        
 
-          <Badge borderRadius="full" px="2" colorScheme={{adult} ? 'teal' : 'red'}>
-            {{adult} ? 'Non-Adult' : 'Adult'}
-          </Badge>
-
           <Box
             fontWeight="bold"
             letterSpacing="wide"
@@ -40,9 +34,6 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, release_date, poster_pa
           </Box>
         
           <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
-            <Tooltip label={release_date}>
-              {friendlyRelease}
-            </Tooltip>
             
           </Box>
         </Box>

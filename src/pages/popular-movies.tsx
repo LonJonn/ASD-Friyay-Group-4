@@ -18,6 +18,7 @@ async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
 
 const PopularMoviesPage: NextPage = () => {
   const query = useQuery<GetPopularMoviesResponse, Error>({
+    queryKey: "popularMovies",
     queryFn: getPopularMovies,
   });
 
@@ -27,22 +28,10 @@ const PopularMoviesPage: NextPage = () => {
 
   if (query.status === "error") {
     return <Text>Error...{query.error.message}</Text>;
+    console.log(query.data);
   }
 
   return (
-    /*
-    <Box>
-      <Heading mb="4">Movies</Heading>
-      <List>
-        {query.data.map((movie) => (
-          <ListItem key={movie.id}>
-            {movie.id} - {movie.title} - {movie.poster_path} - {movie.release_date}
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-    */
-
     <Stack spacing={8}>
       <Heading mb="4">Popular Movies</Heading>
 
@@ -50,12 +39,10 @@ const PopularMoviesPage: NextPage = () => {
         {query.data.map((movie) => (
           <PopularMovieCard
             title={movie.title}
-            release_date={movie.release_date}
             poster_path={movie.poster_path}
             original_language={movie.original_language}
-            adult={movie.adult}
             release_month={movie.release_month}
-            release_year={movie.release_year}
+            release_year={String(movie.release_year)}
           />
         ))}
       </SimpleGrid>

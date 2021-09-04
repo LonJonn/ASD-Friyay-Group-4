@@ -1,43 +1,29 @@
-export interface Movie {
-  /*
+export interface MovieDetail {
   backdrop_path: string;
   belongs_to_collection: null;
   budget: number;
   genres: Genre[];
   homepage: string;
-  */
   id: number;
   adult: boolean;
-  /*
   imdb_id: string;
-  */
   original_language: string;
-  /*
   original_title: string;
   overview: string;
   popularity: number;
-  */
   poster_path: string;
-  /*
   production_companies: ProductionCompany[];
   production_countries: ProductionCountry[];
-  */
   release_date: string;
-  release_month: string;
-  release_year: string;
-  /*
   revenue: number;
   runtime: number;
   spoken_languages: SpokenLanguage[];
   status: string;
   tagline: string;
-  */
   title: string;
-  /*
   video: boolean;
   vote_average: number;
   vote_count: number;
-  */
 }
 
 export interface Genre {
@@ -58,4 +44,34 @@ export interface ProductionCountry {
 
 export interface SpokenLanguage {
   name: string;
+}
+
+export interface PopularMoviesResponse {
+  page: number;
+  results: PopularMovieResult[];
+  total_results: number;
+  total_pages: number;
+}
+
+export interface PopularMovieResult {
+  adult: boolean;
+  genre_ids: number[];
+  id: number;
+  original_language: OriginalLanguage;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
+
+export enum OriginalLanguage {
+  De = "de",
+  En = "en",
+  Es = "es",
+  Fr = "fr",
 }

@@ -1,30 +1,62 @@
-import axios from "axios"
-import { Movie } from '@app/typings/TMDB'
+import fetch from "node-fetch";
 
-export type GetPopularMoviesResponse = Movie[];
+import { PopularMoviesResponse, PopularMovieResult } from "@app/typings/TMDB";
 
-export async function getPopularMovies(this: any): Promise<GetPopularMoviesResponse> {
-    const response = await axios.get<Movie[]>('https://api.themoviedb.org/3/movie/popular?api_key=e4fa39bf6f208cb92054054b1c0398d4&language=en-US&page=1');
-    
-    const movies = response.data.results;
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
-    const processedMovies = movies.map((movie: { id: any; title: any; poster_path: any; release_date: any; original_language: any; adult: any }): Movie => {
-        
-        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        var year = movie.release_date?.split("-")[0];
-        var month = Number(movie.release_date?.split("-")[1]) - 1;
+/**
+ * Internal type used in this service.
+ */
+interface TransformedMovie
+  extends Pick<PopularMovieResult, "id" | "title" | "poster_path" | "original_language"> {
+  release_month: string;
+  release_year: number;
+}
 
-        return {
-            id: movie.id,
-            title: movie.title,
-            poster_path: movie.poster_path,
-            release_date: movie.release_date,
-            original_language: movie.original_language,
-            adult: movie.adult,
-            release_month: months[month],
-            release_year: year
-        };
-    });
+/**
+ * The shape of the service response. (An array of TranformedMovies from above)
+ */
+export type GetPopularMoviesResponse = TransformedMovie[];
 
-    return processedMovies;
+export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
+  // Make request to TMDB
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+  );
+
+  // Parse as JSON, and cast to our type from the TMDB.ts file
+  const popularMoviesData = (await response.json()) as PopularMoviesResponse;
+
+  // Now we transform the response from TMDB into our custom shape that we want
+  // to return from our API.
+  const transformedMovies = popularMoviesData.results.map((movie): TransformedMovie => {
+    const releaseDate = new Date(movie.release_date);
+
+    const year = releaseDate.getFullYear();
+    const month = releaseDate.getMonth();
+
+    return {
+      id: movie.id,
+      title: movie.title,
+      poster_path: movie.poster_path,
+      original_language: movie.original_language,
+      release_month: MONTHS[month],
+      release_year: year,
+    };
+  });
+
+  return transformedMovies;
 }
