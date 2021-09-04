@@ -50,14 +50,6 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_l
             {release_month} {release_year}
           </Box>
 
-          <Box d="flex" mt="2" alignItems="center">
-            
-            
-            
-            <Box as="span" ml="2" color="gray.600" fontSize="sm">
-
-            </Box>
-          </Box>
         </Box>
       </Box>
     </Box>
