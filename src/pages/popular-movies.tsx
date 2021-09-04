@@ -45,6 +45,8 @@ const PopularMoviesPage: NextPage = () => {
             release_month={movie.release_month}
             release_year={String(movie.release_year)}
             vote_average={movie.vote_average}
+            overview={movie.overview}
+            backdrop_path={movie.backdrop_path}
           />
         ))}
       </SimpleGrid>

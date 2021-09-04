@@ -21,7 +21,7 @@ const MONTHS = [
 interface TransformedMovie
   extends Pick<
     PopularMovieResult,
-    "id" | "title" | "poster_path" | "original_language" | "vote_average"
+    "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path"
   > {
   release_month: string;
   release_year: number;
@@ -57,6 +57,8 @@ export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
       release_month: MONTHS[month],
       release_year: year,
       vote_average: movie.vote_average,
+      overview: movie.overview,
+      backdrop_path: movie.backdrop_path,
     };
   });
 
