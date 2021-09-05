@@ -94,13 +94,19 @@ input[type='submit'].button-outline[disabled]:hover {
   padding-top: 30px;
   padding-bottom: 30px;
 }
+.admin-search-text {
+  border: 0.1rem solid #d1d1d1;
+  padding: .6rem 1.0rem .7rem;
+  width: 100%;
+  border-radius: .4rem;
+}
 #admin-search-text {
   border: 0.1rem solid #d1d1d1;
   padding: .6rem 1.0rem .7rem;
   width: 100%;
   border-radius: .4rem;
 }
-#admin-search-text:focus {
+.admin-search-text:focus {
   border: 0.1rem solid #9890DF !important;
   outline: none !important;
 }
@@ -131,5 +137,17 @@ input[type='submit'].button-outline[disabled]:hover {
 }
 .hide {
   display: none;
+}
+#nil-login {
+  display: none;
+}
+.new-user-container {
+  margin: 20px;
+}
+.new-user-form {
+  display: flex;
+}
+.newuser-gif {
+  max-width: 250px;
 }
 /* Anastasia's CSS end */
