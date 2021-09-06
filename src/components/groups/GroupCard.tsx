@@ -18,13 +18,15 @@ const GroupCard: React.FC<IGroupCard> = ({ groupId, name, imageBackdrop, movieCo
 
   return (
     <Box
-      border="solid"
+      as="button"
+      borderWidth={2}
       borderRadius="lg"
+      overflow="hidden"
       onClick={() => handleClick(groupId)}
-      _hover={{ borderColor: "blue" }}
+      _hover={{ boxShadow: "2xl", transition: "0.5s" }}
     >
-      <AspectRatio minW="lg" ratio={2}>
-        <Image objectFit="cover" src={imageBackdrop} />
+      <AspectRatio minW="xl" ratio={2} borderRadius="lg">
+        <Image src={imageBackdrop} objectFit="cover" />
       </AspectRatio>
 
       <Stack pos="relative" direction="row" alignItems="center" p={10} pt={12} spacing={0}>
