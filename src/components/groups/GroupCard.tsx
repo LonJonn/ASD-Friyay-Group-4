@@ -1,16 +1,29 @@
 import { AspectRatio, Heading, Image, Spacer, Stack, Text, Box } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 export interface IGroupCard {
+  groupId: string;
   name: string;
   imageBackdrop: string;
   movieCount: number;
   emoji: string;
 }
 
-const GroupCard: React.FC<IGroupCard> = ({ name, imageBackdrop, movieCount, emoji }) => {
+const GroupCard: React.FC<IGroupCard> = ({ groupId, name, imageBackdrop, movieCount, emoji }) => {
+  const router = useRouter();
+
+  const handleClick = (id: string) => {
+    router.push(`/groups/${id}`);
+  };
+
   return (
-    <Box border="solid" borderRadius="lg">
-      <AspectRatio minW="xl" ratio={2}>
+    <Box
+      border="solid"
+      borderRadius="lg"
+      onClick={() => handleClick(groupId)}
+      _hover={{ borderColor: "blue" }}
+    >
+      <AspectRatio minW="lg" ratio={2}>
         <Image objectFit="cover" src={imageBackdrop} />
       </AspectRatio>
 
@@ -18,9 +31,9 @@ const GroupCard: React.FC<IGroupCard> = ({ name, imageBackdrop, movieCount, emoj
         <Heading pos="absolute" top={0} transform="auto" translateY="-50%" fontSize="5xl">
           {emoji}
         </Heading>
-        <Heading size="xl">{name}</Heading>
+        <Heading size="lg">{name}</Heading>
         <Spacer />
-        <Text fontSize="xl">{movieCount} 🎬</Text>
+        <Text fontSize="lg">{movieCount} 🎬</Text>
       </Stack>
     </Box>
   );

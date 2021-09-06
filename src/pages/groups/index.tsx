@@ -1,3 +1,4 @@
+import CreateGroupForm from "@app/components/groups/CreateGroupForm";
 import GroupCard from "@app/components/groups/GroupCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
 import { GetMovieGroupResponse } from "@app/services/groups/get-movie-groups";
@@ -15,9 +16,15 @@ import {
   Tabs,
   Text,
   Button,
+  useDisclosure,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
+
+export interface NewMovieGroup {
+  emoji: string;
+  name: string;
+}
 
 async function getAllMovieGroups(): Promise<GetMovieGroupResponse> {
   const res = await fetch("/api/groups/movies");
@@ -34,6 +41,8 @@ const GroupsPage: NextPage = () => {
     queryKey: "movieGroups",
     queryFn: getAllMovieGroups,
   });
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (query.status === "loading" || query.status === "idle") {
     return <Text>Loading...</Text>;
@@ -52,20 +61,22 @@ const GroupsPage: NextPage = () => {
 
         <TabPanels>
           <TabPanel p={0}>
-            <Stack direction="row" alignItems="center">
-              <Heading p={8}>Movie Groups</Heading>
-              <Spacer />
-              <Button leftIcon={<AddIcon />}>Add new</Button>
+            <Stack a spacing={0}>
+              <Heading py={4}>Movie Groups</Heading>
+              <Button leftIcon={<AddIcon />} onClick={onOpen}>
+                Add new
+              </Button>
             </Stack>
           </TabPanel>
         </TabPanels>
       </Tabs>
 
       <Box>
-        <SimpleGrid columns={2} spacingX={4} spacingY={4}>
+        <SimpleGrid columns={2} spacingY={4} justifyItems="center">
           {query.data.map((group) => (
             <GroupCard
               key={group.id}
+              groupId={group.id}
               emoji={group.emoji}
               imageBackdrop={group.imageBackdrop}
               movieCount={group.movieCount}
@@ -74,6 +85,8 @@ const GroupsPage: NextPage = () => {
           ))}
         </SimpleGrid>
       </Box>
+
+      <CreateGroupForm isOpen={isOpen} onClose={onClose} />
     </Stack>
   );
 };
