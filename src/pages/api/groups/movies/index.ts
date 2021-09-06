@@ -1,5 +1,5 @@
 import { NextApiHandler } from "next";
-import { getMovieGroups } from "@app/services/groups";
+import { getMovieGroups, createMovieGroup } from "@app/services/groups";
 import { getSession } from "next-auth/client";
 
 const handler: NextApiHandler = async (req, res) => {
@@ -12,6 +12,22 @@ const handler: NextApiHandler = async (req, res) => {
     const movieGroups = await getMovieGroups(session.uid!);
     return res.send(movieGroups);
   }
+
+  if (req.method === "POST") {
+    const { movieGroupCreateDetails } = req.body;
+    const newMovieGroup = await createMovieGroup(movieGroupCreateDetails, session.uid!);
+    return res.send(newMovieGroup);
+  }
+
+  // if (req.method === "PUT"){
+  //   const updatedMovieGroup = await editMovieGroup(session.uid!);
+  //   return res.send(updatedMovieGroup);
+  // }
+
+  // if (req.method === "DELETE"){
+  //   const deletedResult = await deleteMovieGroup(session.uid!);
+  //   return res.send(deletedResult);
+  // }
 
   return res.status(404).end();
 };
