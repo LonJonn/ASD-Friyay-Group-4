@@ -1,27 +1,17 @@
-import { Box, Heading, List, ListItem } from "@chakra-ui/react";
+import { Box, Heading, List } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { getSession } from "next-auth/client";
 
 
 import { withAuthRequired } from "@app/lib/with-auth-required";
 import { getAllUsers, GetAllUsersResponse } from "@app/services/user";
-//import { deleteUser } from "@app/services/admin-view/delete-user";
-import $ from "jquery";
-
-//export async function getAllUsers1(): Promise<GetAllUsersResponse> {
-  //const res = await fetch("/api/users");
-
-  //if (!res.ok) {
-    //throw new Error("Unable to retrieve users.");
-  //}
-
-  //return await res.json();
-//}
+import $ from 'jquery';
 
 
 type AllUsersProps = Required<InferGetServerSidePropsType<typeof getServerSideProps>>;
 
 const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
+  //Place box element which contains admin front end HTML
   <Box>
   <a class="button" id="new-user-button" onClick={toggleNewUser}>Create new user</a>
     <Heading mb="4">Hello Admin!</Heading>
@@ -31,7 +21,7 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
     <label><input type="text" name="name" id="admin-search-text"/></label>
     <input type="submit" value="Submit" id="admin-search"/>
     </form>
-    <div class="new-user-container">
+    <div class="new-user-container hide">
       <Heading mb="4">Create New User</Heading>
       <form class="new-user-form">
       <p class="search-text">Name</p>
@@ -51,22 +41,23 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
         </div>
       </div>
     </div>
-    <List>
+    <ul class="all-users-list">
       {users.map((user) => (
-        <ListItem key={user.id} class="list-item-users" data-firstName={user.firstName} data-email={user.email}>
+        <li key={user.id} class="list-item-users" data-firstName={user.firstName} data-email={user.email}>
           {user.firstName} | {user.email}
-          <button class="button button-outline table-button" onClick={deleteUserInit}>Delete User</button>
+          <button class="button button-outline table-button" onClick={deleteUserInit(this)}>Delete User</button>
           <button class="button button-outline  table-button">Edit User</button>
-        </ListItem>
+        </li>
 
       ))}
-    </List>
+    </ul>
 
     <Heading mb="4" id="nil-login" class="hide">You are not logged in as an admin</Heading>
 
   </Box>
 );
 
+//Fires when the the 'Create New User' button is pressed
 function createNewUser() {
   var name = $("#admin-search-name").val();
   var email = $("#admin-search-email").val();
@@ -75,7 +66,26 @@ function createNewUser() {
     //Call validateEmail function and check if the email is valid
     if (validateEmail(email)) {
       //Success!
+      $('#success-container').show();
       $('#success-container').removeClass('hide');
+      setTimeout(function() {
+        $('#success-container').fadeOut();
+    }, 5000);
+
+    //Create new user in DB
+    //Send the API Request and pass the name and email to the API
+    var dataArray = [name, email];
+
+    const res = fetch("/api/admin-view/createUser", {
+      method: 'POST',
+      body: dataArray,
+
+    });
+    //Refresh page
+    setTimeout(function(){
+   window.location.reload();
+}, 3000);
+
     } else {
       //Failure!
       $('#failure-container').show();
@@ -96,21 +106,37 @@ function createNewUser() {
   }
 }
 
-function deleteUserInit() {
+//Fires when the 'Delete User Button' is pressed for the specific user
+function deleteUserInit(this) {
    var el = document.elementFromPoint(event.pageX, event.pageY);
   var collectFirstName = $(el).parent().data('firstname');
   var collectEmail = $(el).parent().data('email');
-  deleteUser(collectEmail);
+  console.log(el, collectFirstName, collectEmail);
+  console.log(this);
+  if(window.confirm("Are you sure you want to delete this user? " + collectEmail)) {
+    //Send the API request and pass the email to the API
+    const res = fetch("/api/admin-view/deleteUser", {
+      method: 'POST',
+      body: collectEmail,
+    });
+    //Refresh page
+    setTimeout(function(){
+   window.location.reload();
+}, 3000);
+  }
 }
 
+//UX Logic to show/hide the 'Create New User' form
 function toggleNewUser() {
   $( ".new-user-container" ).toggleClass('hide');
 }
+//Function that checks the email is a valid format and returns a boolean response.
 function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
 
+//Logic to run the GetAllUsers API
 export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersResponse }> = async (
   ctx
 ) => {
