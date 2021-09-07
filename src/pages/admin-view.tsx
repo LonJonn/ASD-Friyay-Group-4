@@ -45,7 +45,7 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
       {users.map((user) => (
         <li key={user.id} class="list-item-users" data-firstName={user.firstName} data-email={user.email}>
           {user.firstName} | {user.email}
-          <button class="button button-outline table-button" onClick={deleteUserInit(this)}>Delete User</button>
+          <button class="button button-outline table-button" onClick={deleteUserInit}>Delete User</button>
           <button class="button button-outline  table-button">Edit User</button>
         </li>
 
@@ -107,12 +107,10 @@ function createNewUser() {
 }
 
 //Fires when the 'Delete User Button' is pressed for the specific user
-function deleteUserInit(this) {
-   var el = document.elementFromPoint(event.pageX, event.pageY);
+function deleteUserInit(e) {
+  var el = e.currentTarget;
   var collectFirstName = $(el).parent().data('firstname');
   var collectEmail = $(el).parent().data('email');
-  console.log(el, collectFirstName, collectEmail);
-  console.log(this);
   if(window.confirm("Are you sure you want to delete this user? " + collectEmail)) {
     //Send the API request and pass the email to the API
     const res = fetch("/api/admin-view/deleteUser", {
