@@ -1,7 +1,6 @@
 import { NextApiHandler } from "next";
-import { getMovieGroups, createMovieGroup } from "@app/services/groups";
+import { getMovieGroups, createMovieGroup, NewMovieGroup } from "@app/services/groups";
 import { getSession } from "next-auth/client";
-import { NewMovieGroup } from "@app/components/groups/CreateGroupForm";
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });

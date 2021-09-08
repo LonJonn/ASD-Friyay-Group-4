@@ -1,3 +1,4 @@
+import { NewMovieGroup } from "@app/services/groups";
 import {
   Button,
   FormControl,
@@ -13,28 +14,28 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 
 export interface CreateModalDiclosure {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export interface NewMovieGroup {
-  emoji: string;
-  name: string;
-}
-
 const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) => {
   const [emoji, setEmoji] = useState("");
   const [name, setName] = useState("");
+  const queryClient = useQueryClient();
 
   //should be using ReactHookForms for validation.
-  async function onSubmit() {
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
+
     const requestBody: NewMovieGroup = {
-      emoji: emoji,
-      name: name,
+      emoji,
+      name,
     };
 
+    //useMutation from reactQuery
     const response = await fetch("/api/groups/movies", {
       method: "POST",
       headers: {
@@ -43,7 +44,10 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
       body: JSON.stringify(requestBody),
     });
 
+    queryClient.invalidateQueries("movieGroups");
     console.log(response);
+
+    onClose();
   }
 
   return (
@@ -54,30 +58,28 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
           <ModalHeader>Create a New Group</ModalHeader>
 
           <ModalBody>
-            <Stack spacing={2}>
-              <form id="create-form" onSubmit={onSubmit}>
-                <FormControl id="emoji" isRequired>
-                  <FormLabel>Emoji</FormLabel>
-                  <Input
-                    placeholder="e.g. 😍👺"
-                    value={emoji}
-                    onChange={(e) => {
-                      setEmoji(e.target.value);
-                    }}
-                  />
-                </FormControl>
+            <Stack as="form" spacing={2} id="create-form" onSubmit={onSubmit}>
+              <FormControl id="emoji" isRequired>
+                <FormLabel>Emoji</FormLabel>
+                <Input
+                  placeholder="e.g. 😍👺"
+                  value={emoji}
+                  onChange={(e) => {
+                    setEmoji(e.target.value);
+                  }}
+                />
+              </FormControl>
 
-                <FormControl id="emoji" isRequired>
-                  <FormLabel>Title</FormLabel>
-                  <Input
-                    placeholder="e.g. Favourites"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
-                  />
-                </FormControl>
-              </form>
+              <FormControl id="emoji" isRequired>
+                <FormLabel>Title</FormLabel>
+                <Input
+                  placeholder="e.g. Favourites"
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                  }}
+                />
+              </FormControl>
             </Stack>
           </ModalBody>
 
