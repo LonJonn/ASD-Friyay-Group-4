@@ -13,54 +13,54 @@ type AllUsersProps = Required<InferGetServerSidePropsType<typeof getServerSidePr
 const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
   //Place box element which contains admin front end HTML
   <Box>
-  <a class="button" id="new-user-button" onClick={toggleNewUser}>Create new user</a>
+  <a className="button" id="new-user-button" onClick={toggleNewUser}>Create new user</a>
     <Heading mb="4">Hello Admin!</Heading>
     <p>You are logged in as an admin.</p>
     <form id="seach-div">
-    <p class="search-text">Search Users</p>
+    <p className="search-text">Search Users</p>
     <label><input type="text" name="name" id="admin-search-text"/></label>
     <input type="submit" value="Submit" id="admin-search"/>
     </form>
-    <div class="new-user-container hide">
+    <div className="new-user-container hide">
       <Heading mb="4">Create New User</Heading>
-      <form class="new-user-form">
-      <p class="search-text">Name</p>
-      <label><input type="text" name="name" class="admin-search-text" id="admin-search-name"/></label>
-      <p class="search-text">Email Address</p>
-      <label><input type="text" name="name" class="admin-search-text" id="admin-search-email"/></label>
-      <input class="button" value="Create New User" id="admin-search" onClick={createNewUser}/>
+      <form className="new-user-form">
+      <p className="search-text">Name</p>
+      <label><input type="text" name="name" className="admin-search-text" id="admin-search-name"/></label>
+      <p className="search-text">Email Address</p>
+      <label><input type="text" name="name" className="admin-search-text" id="admin-search-email"/></label>
+      <input className="button" value="Create New User" id="admin-search" onClick={createNewUser}/>
       </form>
       <div>
-        <div id="success-container" class="hide">
-        <img class="newuser-gif" src="https://c.tenor.com/TrAsjYbL720AAAAC/chris-pratt-wow.gif" alt="Success!"/>
+        <div id="success-container" className="hide">
+        <img className="newuser-gif" src="https://c.tenor.com/TrAsjYbL720AAAAC/chris-pratt-wow.gif" alt="Success!"/>
         <p>New User Created! Reloading the page now...</p>
         </div>
-        <div id="failure-container" class="hide">
-        <img class="newuser-gif" src="https://media.giphy.com/media/YTJXDIivNMPuNSMgc0/giphy.gif" alt="Success!"/>
-        <p>There's an issue with the Name or Email Address. Please check again!</p>
+        <div id="failure-container" className="hide">
+        <img className="newuser-gif" src="https://media.giphy.com/media/YTJXDIivNMPuNSMgc0/giphy.gif" alt="Success!"/>
+        <p>There is an issue with the Name or Email Address. Please check again!</p>
         </div>
       </div>
     </div>
-    <ul class="all-users-list">
+    <ul className="all-users-list">
       {users.map((user) => (
-        <li key={user.id} class="list-item-users" data-firstName={user.firstName} data-email={user.email}>
+        <li key={user.id} className="list-item-users" data-firstName={user.firstName} data-email={user.email}>
           {user.firstName} | {user.email}
-          <button class="button button-outline table-button" onClick={deleteUserInit}>Delete User</button>
-          <button class="button button-outline  table-button">Edit User</button>
+          <button className="button button-outline table-button" onClick={deleteUserInit}>Delete User</button>
+          <button className="button button-outline  table-button">Edit User</button>
         </li>
 
       ))}
     </ul>
 
-    <Heading mb="4" id="nil-login" class="hide">You are not logged in as an admin</Heading>
+    <Heading mb="4" id="nil-login" className="hide">You are not logged in as an admin</Heading>
 
   </Box>
 );
 
 //Fires when the the 'Create New User' button is pressed
 function createNewUser() {
-  var name = $("#admin-search-name").val();
-  var email = $("#admin-search-email").val();
+  var name = $("#admin-search-name").val() as string;
+  var email = $("#admin-search-email").val() as string;
   //Check name is valid
   if (/^[a-zA-Z]+$/.test(name)) {
     //Call validateEmail function and check if the email is valid
@@ -78,7 +78,7 @@ function createNewUser() {
 
     const res = fetch("/api/admin-view/createUser", {
       method: 'POST',
-      body: dataArray,
+      body: dataArray.toString(),
 
     });
     //Refresh page
@@ -107,7 +107,7 @@ function createNewUser() {
 }
 
 //Fires when the 'Delete User Button' is pressed for the specific user
-function deleteUserInit(e) {
+function deleteUserInit(e: { currentTarget: any; }) {
   var el = e.currentTarget;
   var collectFirstName = $(el).parent().data('firstname');
   var collectEmail = $(el).parent().data('email');
@@ -129,7 +129,7 @@ function toggleNewUser() {
   $( ".new-user-container" ).toggleClass('hide');
 }
 //Function that checks the email is a valid format and returns a boolean response.
-function validateEmail(email) {
+function validateEmail(email:string) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
