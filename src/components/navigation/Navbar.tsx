@@ -89,7 +89,11 @@ const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Admin View",
     href: "/admin-view",
-  }
+  },
+  {
+    label: "Groups",
+    href: "/groups",
+  },
 ];
 
 const Navbar: React.FC<BoxProps> = (props) => {
