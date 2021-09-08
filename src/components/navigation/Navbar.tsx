@@ -86,6 +86,10 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Popular Movies",
     href: "/popular-movies",
   },
+  {
+    label: "Admin View",
+    href: "/admin-view",
+  }
 ];
 
 const Navbar: React.FC<BoxProps> = (props) => {
