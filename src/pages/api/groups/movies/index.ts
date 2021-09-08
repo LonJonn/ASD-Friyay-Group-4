@@ -1,6 +1,7 @@
 import { NextApiHandler } from "next";
 import { getMovieGroups, createMovieGroup } from "@app/services/groups";
 import { getSession } from "next-auth/client";
+import { NewMovieGroup } from "@app/components/groups/CreateGroupForm";
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
@@ -14,7 +15,8 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "POST") {
-    const { movieGroupCreateDetails } = req.body;
+    const movieGroupCreateDetails: NewMovieGroup = req.body;
+    console.log(movieGroupCreateDetails);
     const newMovieGroup = await createMovieGroup(movieGroupCreateDetails, session.uid!);
     return res.send(newMovieGroup);
   }

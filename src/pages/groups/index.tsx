@@ -21,11 +21,6 @@ import {
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
 
-export interface NewMovieGroup {
-  emoji: string;
-  name: string;
-}
-
 async function getAllMovieGroups(): Promise<GetMovieGroupResponse> {
   const res = await fetch("/api/groups/movies");
 
