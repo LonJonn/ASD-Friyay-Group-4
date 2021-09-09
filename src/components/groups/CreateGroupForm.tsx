@@ -1,4 +1,4 @@
-import { NewMovieGroup } from "@app/services/groups";
+import { MovieGroupPostBody } from "@app/pages/api/groups/movies";
 import {
   Button,
   FormControl,
@@ -30,12 +30,12 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    const requestBody: NewMovieGroup = {
+    const requestBody: MovieGroupPostBody = {
       emoji,
       name,
     };
 
-    //useMutation from reactQuery
+    //useMutation from reactQuery should be used
     const response = await fetch("/api/groups/movies", {
       method: "POST",
       headers: {
@@ -46,6 +46,8 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
 
     queryClient.invalidateQueries("movieGroups");
     console.log(response);
+    setEmoji("");
+    setName("");
 
     onClose();
   }
@@ -84,14 +86,28 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
           </ModalBody>
 
           <ModalFooter>
-            <Button mr={3} onClick={onClose} colorScheme="red">
+            <Button
+              mr={3}
+              onClick={() => {
+                onClose();
+                setEmoji("");
+                setName("");
+              }}
+              colorScheme="red"
+            >
               Cancel
             </Button>
             <Button form="create-form" type="submit">
               Add
             </Button>
           </ModalFooter>
-          <ModalCloseButton />
+          <ModalCloseButton
+            onClick={() => {
+              onClose();
+              setEmoji("");
+              setName("");
+            }}
+          />
         </ModalContent>
       </Modal>
     </>

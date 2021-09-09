@@ -1,19 +1,17 @@
 import { db } from "@app/lib/db";
 import { MovieGroup, User } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
-export interface NewMovieGroup {
-  emoji: string;
-  name: string;
-}
+//Interface used in the service
+export type CreateMovieGroupInput = Prisma.MovieGroupCreateArgs;
 
-export async function createMovieGroup(group: NewMovieGroup, userId: User["id"]) {
-  const createResult = await db.movieGroup.create({
-    data: {
-      emoji: group.emoji,
-      name: group.name,
-      movieIds: [],
-      ownerId: userId,
-    },
-  });
+//Return type of service
+export type CreateMovieGroupResult = MovieGroup;
+
+export async function createMovieGroup(
+  args: CreateMovieGroupInput
+): Promise<CreateMovieGroupResult> {
+  const createResult = await db.movieGroup.create(args);
+
   return createResult;
 }
