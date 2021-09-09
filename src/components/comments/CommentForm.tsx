@@ -8,7 +8,7 @@ interface CommentFormProps {
 const CommentForm: React.FC<CommentFormProps> = ({}) => {
     return (
         <>
-            <Text fontSize="xl">Comments</Text>
+            <Text fontSize="md" fontWeight="bold" >COMMENTS</Text>
             <Textarea placeholder="Type your comment here..."/>
             <Button size="xs">Comment</Button>
         </>
