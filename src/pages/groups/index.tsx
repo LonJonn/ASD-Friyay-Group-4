@@ -1,7 +1,6 @@
 import CreateGroupForm from "@app/components/groups/CreateGroupForm";
 import GroupCard from "@app/components/groups/GroupCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import { GetMovieGroupResponse } from "@app/services/groups/get-movie-groups";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -20,8 +19,9 @@ import {
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
+import { GetMovieGroupsResponse } from "../api/groups/movies";
 
-async function getAllMovieGroups(): Promise<GetMovieGroupResponse> {
+async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
   const res = await fetch("/api/groups/movies");
 
   if (!res.ok) {
@@ -32,7 +32,7 @@ async function getAllMovieGroups(): Promise<GetMovieGroupResponse> {
 }
 
 const GroupsPage: NextPage = () => {
-  const query = useQuery<GetMovieGroupResponse, Error>({
+  const query = useQuery<GetMovieGroupsResponse, Error>({
     queryKey: "movieGroups",
     queryFn: getAllMovieGroups,
   });
