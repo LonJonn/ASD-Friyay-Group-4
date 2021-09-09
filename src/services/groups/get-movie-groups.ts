@@ -1,4 +1,5 @@
 import { db } from "@app/lib/db";
+import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { MovieGroup, User } from "@prisma/client";
 
 export interface TransformedMovieGroup {
@@ -9,9 +10,7 @@ export interface TransformedMovieGroup {
   movieCount: number;
 }
 
-export type GetMovieGroupResponse = TransformedMovieGroup[];
-
-export async function getMovieGroups(userId: User["id"]): Promise<GetMovieGroupResponse> {
+export async function getMovieGroups(userId: User["id"]): Promise<GetMovieGroupsResponse> {
   const movieGroups = await db.movieGroup.findMany({ where: { ownerId: userId } }); //query to db through Prisma Client
 
   /**
