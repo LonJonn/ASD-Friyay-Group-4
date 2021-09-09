@@ -1,4 +1,4 @@
-import { NewMovieGroup } from "@app/services/groups";
+import { MovieGroupPostBody } from "@app/pages/api/groups/movies";
 import {
   Button,
   FormControl,
@@ -30,7 +30,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
 
-    const requestBody: NewMovieGroup = {
+    const requestBody: MovieGroupPostBody = {
       emoji,
       name,
     };

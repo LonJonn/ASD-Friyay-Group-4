@@ -1,7 +1,8 @@
 import { NextApiHandler } from "next";
-import { getMovieGroups, createMovieGroup, NewMovieGroup } from "@app/services/groups";
+import { getMovieGroups, createMovieGroup, CreateMovieGroupInput } from "@app/services/groups";
 import { getSession } from "next-auth/client";
-import { Prisma } from "@prisma/client";
+
+export interface MovieGroupPostBody extends Pick<CreateMovieGroupInput["data"], "emoji" | "name"> {}
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
@@ -15,17 +16,15 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "POST") {
-    const mGDetails: NewMovieGroup = req.body;
+    const mGDetails: MovieGroupPostBody = req.body;
 
-    const args: Prisma.MovieGroupCreateArgs = {
+    const newMovieGroup = await createMovieGroup({
       data: {
         emoji: mGDetails.emoji,
         name: mGDetails.name,
         ownerId: session.uid!,
       },
-    };
-
-    const newMovieGroup = await createMovieGroup(args);
+    });
     return res.send(newMovieGroup);
   }
 
