@@ -46,6 +46,8 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
 
     queryClient.invalidateQueries("movieGroups");
     console.log(response);
+    setEmoji("");
+    setName("");
 
     onClose();
   }
@@ -84,14 +86,28 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
           </ModalBody>
 
           <ModalFooter>
-            <Button mr={3} onClick={onClose} colorScheme="red">
+            <Button
+              mr={3}
+              onClick={() => {
+                onClose();
+                setEmoji("");
+                setName("");
+              }}
+              colorScheme="red"
+            >
               Cancel
             </Button>
             <Button form="create-form" type="submit">
               Add
             </Button>
           </ModalFooter>
-          <ModalCloseButton />
+          <ModalCloseButton
+            onClick={() => {
+              onClose();
+              setEmoji("");
+              setName("");
+            }}
+          />
         </ModalContent>
       </Modal>
     </>

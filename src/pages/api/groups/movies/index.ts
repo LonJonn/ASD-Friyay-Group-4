@@ -1,8 +1,15 @@
 import { NextApiHandler } from "next";
-import { getMovieGroups, createMovieGroup, CreateMovieGroupInput } from "@app/services/groups";
+import {
+  getMovieGroups,
+  createMovieGroup,
+  deleteMovieGroup,
+  CreateMovieGroupInput,
+  DeleteMovieGroupInput,
+} from "@app/services/groups";
 import { getSession } from "next-auth/client";
 
 export interface MovieGroupPostBody extends Pick<CreateMovieGroupInput["data"], "emoji" | "name"> {}
+export interface MovieGroupDeleteBody extends Pick<DeleteMovieGroupInput["where"], "id"> {}
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
@@ -33,10 +40,11 @@ const handler: NextApiHandler = async (req, res) => {
   //   return res.send(updatedMovieGroup);
   // }
 
-  // if (req.method === "DELETE"){
-  //   const deletedResult = await deleteMovieGroup(session.uid!);
-  //   return res.send(deletedResult);
-  // }
+  if (req.method === "DELETE") {
+    const mGDetails: MovieGroupDeleteBody = req.body;
+    const deletedResult = await deleteMovieGroup({ where: { id: mGDetails.id } });
+    return res.send(deletedResult);
+  }
 
   return res.status(404).end();
 };
