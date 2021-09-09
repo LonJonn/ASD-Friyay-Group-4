@@ -5,11 +5,19 @@ import {
   deleteMovieGroup,
   CreateMovieGroupInput,
   DeleteMovieGroupInput,
+  TransformedMovieGroup,
+  CreateMovieGroupResult,
+  DeleteMovieGroupResult,
 } from "@app/services/groups";
 import { getSession } from "next-auth/client";
+import { MovieGroup } from ".prisma/client";
 
 export interface MovieGroupPostBody extends Pick<CreateMovieGroupInput["data"], "emoji" | "name"> {}
 export interface MovieGroupDeleteBody extends Pick<DeleteMovieGroupInput["where"], "id"> {}
+
+export type GetMovieGroupsResponse = TransformedMovieGroup[];
+export type CreateMovieGroupResponse = CreateMovieGroupResult;
+export type DeleteMovieGroupResponse = DeleteMovieGroupResult;
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
@@ -18,20 +26,20 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "GET") {
-    const movieGroups = await getMovieGroups(session.uid!);
+    const movieGroups = (await getMovieGroups(session.uid!)) as GetMovieGroupsResponse;
     return res.send(movieGroups);
   }
 
   if (req.method === "POST") {
-    const mGDetails: MovieGroupPostBody = req.body;
+    const mGDetails = req.body as MovieGroupPostBody;
 
-    const newMovieGroup = await createMovieGroup({
+    const newMovieGroup = (await createMovieGroup({
       data: {
         emoji: mGDetails.emoji,
         name: mGDetails.name,
         ownerId: session.uid!,
       },
-    });
+    })) as CreateMovieGroupResponse;
     return res.send(newMovieGroup);
   }
 
@@ -41,8 +49,10 @@ const handler: NextApiHandler = async (req, res) => {
   // }
 
   if (req.method === "DELETE") {
-    const mGDetails: MovieGroupDeleteBody = req.body;
-    const deletedResult = await deleteMovieGroup({ where: { id: mGDetails.id } });
+    const mGDetails = req.body as MovieGroupDeleteBody;
+    const deletedResult = (await deleteMovieGroup({
+      where: { id: mGDetails.id },
+    })) as DeleteMovieGroupResponse;
     return res.send(deletedResult);
   }
 
