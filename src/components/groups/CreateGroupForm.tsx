@@ -35,7 +35,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
       name,
     };
 
-    //useMutation from reactQuery
+    //useMutation from reactQuery should be used
     const response = await fetch("/api/groups/movies", {
       method: "POST",
       headers: {
