@@ -94,6 +94,10 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Groups",
     href: "/groups",
   },
+  {
+    label: "Movie Reviews",
+    href: "/reviews",
+  },
 ];
 
 const Navbar: React.FC<BoxProps> = (props) => {
