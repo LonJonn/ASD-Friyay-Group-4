@@ -1,5 +1,19 @@
-import { Box, Image, Badge, Tooltip, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, ModalFooter } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Badge,
+  Tooltip,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalBody,
+  ModalFooter,
+} from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
+import Comments from "../comments/Comments";
+import CommentForm from "../comments/CommentForm";
 
 interface IMovieCard {
   title: string;
@@ -12,8 +26,17 @@ interface IMovieCard {
   vote_average: number;
 }
 
-const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_language, release_month, release_year, vote_average, overview, backdrop_path  }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const PopularMovieCard: React.FC<IMovieCard> = ({
+  title,
+  poster_path,
+  original_language,
+  release_month,
+  release_year,
+  vote_average,
+  overview,
+  backdrop_path,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl">
@@ -22,28 +45,38 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_l
 
       <Box p="6">
         <Box alignItems="baseline">
-
           {/* Conditional rendering of a badge, wrapped around a tooltip element */}
-          <Tooltip label={{original_language}.original_language.match("en")  ? 'English' : 'Non-English Language'} >
-            <Badge borderRadius="full" mr="2" px="2" colorScheme={{original_language}.original_language.match("en")  ? 'teal' : 'orange'}>
-              {{original_language}.original_language.match("en")  ? 'ENG' : 'NEL'} 
+          <Tooltip
+            label={
+              { original_language }.original_language.match("en")
+                ? "English"
+                : "Non-English Language"
+            }
+          >
+            <Badge
+              borderRadius="full"
+              mr="2"
+              px="2"
+              colorScheme={{ original_language }.original_language.match("en") ? "teal" : "orange"}
+            >
+              {{ original_language }.original_language.match("en") ? "ENG" : "NEL"}
             </Badge>
-          </Tooltip> 
+          </Tooltip>
 
           {/* Rendering of the star rating element, wrapped around a tooltip element */}
-          <Tooltip label={"converted vote average: " + vote_average/2}>
+          <Tooltip label={"converted vote average: " + vote_average / 2}>
             <span>
               {Array(5)
-                .fill('')
+                .fill("")
                 .map((_, i) => (
-                  <StarIcon key={i} color={i < vote_average/2 ? "teal.500" : "gray.300"}/>
-              ))} 
+                  <StarIcon key={i} color={i < vote_average / 2 ? "teal.500" : "gray.300"} />
+                ))}
             </span>
           </Tooltip>
-                
+
           {/* Rendering of the nested box element, with a modal popup within */}
           <Box
-            as='button'
+            as="button"
             onClick={onOpen}
             fontWeight="bold"
             letterSpacing="wide"
@@ -52,33 +85,37 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_l
             textAlign="left"
           >
             {title}
-            
+
             {/* Rendering of the modal popup that appears when the title is clicked */}
-            <Modal onClose={onClose} size='xl' isOpen={isOpen}>
+            <Modal onClose={onClose} size="xl" isOpen={isOpen}>
               <ModalOverlay />
               <ModalContent>
                 <ModalBody>
                   <Box p="1" overflow="hidden">
-                    
-                    <Image objectFit="cover" src={"https://image.tmdb.org/t/p/original/" + backdrop_path} />
-                    
+                    <Image
+                      objectFit="cover"
+                      src={"https://image.tmdb.org/t/p/original/" + backdrop_path}
+                    />
+
                     <Box alignItems="baseline">
-                      <Box 
+                      <Box
                         fontWeight="bold"
                         letterSpacing="wide"
                         fontSize="s"
                         textTransform="uppercase"
                       >
                         {title}
-                        
                       </Box>
 
                       <Box d="flex" alignItems="baseline">
                         {Array(5)
-                          .fill('')
+                          .fill("")
                           .map((_, i) => (
-                            <StarIcon key={i} color={i < vote_average/2 ? "teal.500" : "gray.300"}/>
-                        ))}
+                            <StarIcon
+                              key={i}
+                              color={i < vote_average / 2 ? "teal.500" : "gray.300"}
+                            />
+                          ))}
 
                         <Box
                           color="gray.500"
@@ -91,25 +128,37 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_l
                           &bull; {vote_average} &bull; {original_language}
                         </Box>
                       </Box>
-
                       <Box>
-                        {{overview}.overview ? {overview}.overview : 'Description unavailable.' } 
+                        {{ overview }.overview ? { overview }.overview : "Description unavailable."}
                       </Box>
+                      <CommentForm />
+                      <Comments
+                        userId="Norman Osborn"
+                        comment="So long Spiderman!"
+                        dateCreated=""
+                        parentId="Peter Parker"
+                        likes={4}
+                        movieId="The Amazing Spiderman"
+                      />
                     </Box>
                   </Box>
-
                 </ModalBody>
 
                 <ModalFooter>
                   <Button onClick={onClose}>Close</Button>
                 </ModalFooter>
-
               </ModalContent>
             </Modal>
           </Box>
-        
+
           {/* Rendering of the release month and year*/}
-          <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
+          <Box
+            color="gray.500"
+            fontWeight="semibold"
+            letterSpacing="wide"
+            fontSize="xs"
+            textTransform="uppercase"
+          >
             {release_month} {release_year}
           </Box>
         </Box>

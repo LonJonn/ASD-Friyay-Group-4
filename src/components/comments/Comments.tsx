@@ -17,7 +17,7 @@ import { MovieCommentsGetResponse } from "@app/pages/api/comments/[movieId]";
 interface CommentProps {
   parentId: string;
   userId: string;
-  movidId: string;
+  movieId: string;
   comment: string;
   likes: number;
   dateCreated: string; // Date
