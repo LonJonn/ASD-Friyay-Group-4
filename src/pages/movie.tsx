@@ -6,7 +6,6 @@ import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie"
 import PopularMovieCard from "@app/components/movie/PopularMovieCard";
 import { useQuery } from "react-query";
 
-/*
 async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
   const res = await fetch("/api/movies");
 
@@ -16,7 +15,6 @@ async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
 
   return await res.json();
 }
-*/
 
 const PopularMoviesPage: NextPage = () => {
   const query = useQuery<GetPopularMoviesResponse, Error>({
@@ -41,7 +39,6 @@ const PopularMoviesPage: NextPage = () => {
         {query.data.map((movie) => (
           <PopularMovieCard
             key={movie.id}
-            id={movie.id}
             title={movie.title}
             poster_path={movie.poster_path}
             original_language={movie.original_language}

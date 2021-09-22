@@ -1,7 +1,10 @@
 import { Box, Image, Badge, Tooltip, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, ModalFooter } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 interface IMovieCard {
+  key: number;
+  id: number;
   title: string;
   poster_path: string;
   backdrop_path: string;
@@ -12,8 +15,13 @@ interface IMovieCard {
   vote_average: number;
 }
 
-const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_language, release_month, release_year, vote_average, overview, backdrop_path  }) => {
+const PopularMovieCard: React.FC<IMovieCard> = ({ key, id, title, poster_path, original_language, release_month, release_year, vote_average, overview, backdrop_path  }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter();
+
+  const handleClick = (id: number) => {
+    router.push(`/movies/${id}`);
+  };
 
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl">
@@ -44,7 +52,7 @@ const PopularMovieCard: React.FC<IMovieCard> = ({ title, poster_path, original_l
           {/* Rendering of the nested box element, with a modal popup within */}
           <Box
             as='button'
-            onClick={onOpen}
+            onClick={() => handleClick(id)}
             fontWeight="bold"
             letterSpacing="wide"
             fontSize="s"
