@@ -11,7 +11,7 @@ const handler: NextApiHandler = async (req, res) => {
     
     const { id } = req.query;
     const movie = await getMovie(id as string);
-    console.log("API ID:" + id);
+
     return res.send(movie);
   };
 

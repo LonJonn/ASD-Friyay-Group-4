@@ -1,4 +1,4 @@
-import { MovieDetail } from "@app/typings/TMDB";
+import { MovieDetail, Cast } from "@app/typings/TMDB";
 
 const MONTHS = [
     "January",
@@ -21,10 +21,13 @@ const MONTHS = [
 interface TransformedMovie
   extends Pick<
     MovieDetail,
-    "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path" | "production_companies" | "status" | "budget" | "runtime" | "revenue"
+    "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path" | "production_companies" | "status" | "budget" | "runtime" | "revenue" | "tagline" | "genres"
   > {
   release_month: string;
   release_year: number;
+  writers: Cast[];
+  execProducers: Cast[];
+  producers: Cast[];
 }
 
 /**
@@ -35,7 +38,7 @@ export type GetMovieResponse = TransformedMovie;
 export async function getMovie(id: string): Promise<GetMovieResponse> {
   // Make request to TMDB
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=credits`
   );
 
   // Parse as JSON, and cast to our type from the TMDB.ts file
@@ -47,6 +50,10 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
   const releaseDate = new Date(movieData.release_date);
   const year = releaseDate.getFullYear();
   const month = releaseDate.getMonth();
+
+  const processedWriters = movieData.credits.crew.filter(member => member.job == "Writer" || member.job == "Screenplay");
+  const processedexExecutiveProducers = movieData.credits.crew.filter(member => member.job == "Executive Producer");
+  const processedProducers = movieData.credits.crew.filter(member => member.job == "Producer");
 
   const transformedMovie: TransformedMovie = {
         id: movieData.id,
@@ -62,7 +69,12 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
         status: movieData.status,
         budget: movieData.budget,
         runtime: movieData.runtime,
-        revenue: movieData.runtime
+        revenue: movieData.revenue,
+        tagline: movieData.tagline,
+        genres: movieData.genres,
+        writers: processedWriters,
+        execProducers: processedexExecutiveProducers,
+        producers: processedProducers
     };
   return transformedMovie;
 }

@@ -24,6 +24,7 @@ export interface MovieDetail {
   video: boolean;
   vote_average: number;
   vote_count: number;
+  credits: Credits;
 }
 
 export interface Genre {
@@ -44,6 +45,28 @@ export interface ProductionCountry {
 
 export interface SpokenLanguage {
   name: string;
+}
+
+export interface Credits {
+  cast: Cast[];
+  crew: Cast[];
+}
+
+export interface Cast {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: null | string;
+  cast_id: number;
+  character: string;
+  credit_id: string;
+  order: number;
+  department: string;
+  job: string;
 }
 
 export interface PopularMoviesResponse {

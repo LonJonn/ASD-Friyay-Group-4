@@ -46,6 +46,14 @@ const Movie: NextPage = () => {
       vote_average={query.data.vote_average}
       overview={query.data.overview}
       backdrop_path={query.data.backdrop_path}
+      tagline={query.data.tagline}
+      budget={query.data.budget}
+      revenue={query.data.revenue}
+      runtime={query.data.runtime}
+      genres={query.data.genres}
+      writers={query.data.writers}
+      exec_producers={query.data.execProducers}
+      producers={query.data.producers}
     />
   );
 };
