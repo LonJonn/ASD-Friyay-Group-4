@@ -1,8 +1,9 @@
 import type { NextPage } from "next";
-import { Stack, Image, AspectRatio, Box, Text, SimpleGrid } from "@chakra-ui/react";
+import { Stack, Image, AspectRatio, Box, Text, SimpleGrid, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { getMovie, GetMovieResponse } from "@app/services/movie";
-import MovieInfo from "@app/components/movie/MovieInfo";
+import MovieBaseInfo from "@app/components/movie/MovieBaseInfo";
+import ActorPreviewCard from "@app/components/movie/ActorPreviewCard";
 import { useQuery } from "react-query";
 
 async function getMovieDetails(id: string): Promise<GetMovieResponse> {
@@ -32,29 +33,50 @@ const Movie: NextPage = () => {
     return <Text>Error...{query.error.message}</Text>;
     console.log(query.data);
   }
-
+  
+  // Return 2 components by combining them into a div
+  // The MovieBaseInfo card will display summary info about a movie
+  // The function also returns an array of cards in a grid with the movie actors
   console.log("Movie ID: " + query.data.title);
   return (
-    <MovieInfo
-      key={query.data.id}
-      id={query.data.id}
-      title={query.data.title}
-      poster_path={query.data.poster_path}
-      original_language={query.data.original_language}
-      release_month={query.data.release_month}
-      release_year={String(query.data.release_year)}
-      vote_average={query.data.vote_average}
-      overview={query.data.overview}
-      backdrop_path={query.data.backdrop_path}
-      tagline={query.data.tagline}
-      budget={query.data.budget}
-      revenue={query.data.revenue}
-      runtime={query.data.runtime}
-      genres={query.data.genres}
-      writers={query.data.writers}
-      exec_producers={query.data.execProducers}
-      producers={query.data.producers}
-    />
+    <div>
+      <MovieBaseInfo
+        key={query.data.id}
+        id={query.data.id}
+        title={query.data.title}
+        poster_path={query.data.poster_path}
+        original_language={query.data.original_language}
+        release_month={query.data.release_month}
+        release_year={String(query.data.release_year)}
+        vote_average={query.data.vote_average}
+        overview={query.data.overview}
+        backdrop_path={query.data.backdrop_path}
+        tagline={query.data.tagline}
+        budget={query.data.budget}
+        revenue={query.data.revenue}
+        runtime={query.data.runtime}
+        genres={query.data.genres}
+        writers={query.data.writers}
+        exec_producers={query.data.execProducers}
+        producers={query.data.producers}
+        classificationRating={query.data.classificationRating}
+      />
+      <Heading>Cast</Heading>
+      <br></br>
+      <Stack spacing={5}>
+        <SimpleGrid columns={4} spacingX={4} spacingY={4}>
+          {query.data.actors.map((actor) => (
+          <ActorPreviewCard
+            key={actor.id}
+            id={actor.id}
+            name={actor.name}
+            character={actor.character}
+            profile_path={actor.profile_path == null ? 'https://safetyaustraliagroup.com.au/wp-content/uploads/2019/05/image-not-found.png' : "https://image.tmdb.org/t/p/w500/" + actor.profile_path}
+          />
+          ))}
+        </SimpleGrid>
+      </Stack>
+    </div>
   );
 };
 

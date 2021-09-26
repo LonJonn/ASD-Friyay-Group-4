@@ -25,6 +25,7 @@ export interface MovieDetail {
   vote_average: number;
   vote_count: number;
   credits: Credits;
+  releases: Releases;
 }
 
 export interface Genre {
@@ -60,7 +61,7 @@ export interface Cast {
   name: string;
   original_name: string;
   popularity: number;
-  profile_path: null | string;
+  profile_path: string;
   cast_id: number;
   character: string;
   credit_id: string;
@@ -98,4 +99,15 @@ export enum OriginalLanguage {
   En = "en",
   Es = "es",
   Fr = "fr",
+}
+
+export interface Releases {
+  countries: Country[];
+}
+
+export interface Country {
+  certification: string;
+  iso_3166_1: string;
+  primary: boolean;
+  release_date: Date;
 }

@@ -1,7 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import NextLink from "next/link";
-import { Stack, Tab, Tabs, SimpleGrid, TabList, TabPanels, TabPanel, Icon, Box, Heading, List, ListItem, Text } from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
+import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
 import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie";
 import PopularMovieCard from "@app/components/movie/PopularMovieCard";
 import { useQuery } from "react-query";
@@ -48,8 +47,6 @@ const PopularMoviesPage: NextPage = () => {
             release_month={movie.release_month}
             release_year={String(movie.release_year)}
             vote_average={movie.vote_average}
-            overview={movie.overview}
-            backdrop_path={movie.backdrop_path}
           />
         ))}
       </SimpleGrid>

@@ -1,4 +1,4 @@
-import { MovieDetail, Cast } from "@app/typings/TMDB";
+import { MovieDetail, Cast, Country } from "@app/typings/TMDB";
 
 const MONTHS = [
     "January",
@@ -28,6 +28,8 @@ interface TransformedMovie
   writers: Cast[];
   execProducers: Cast[];
   producers: Cast[];
+  classificationRating: Country[];
+  actors: Cast[];
 }
 
 /**
@@ -38,7 +40,7 @@ export type GetMovieResponse = TransformedMovie;
 export async function getMovie(id: string): Promise<GetMovieResponse> {
   // Make request to TMDB
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=credits`
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=credits,releases`
   );
 
   // Parse as JSON, and cast to our type from the TMDB.ts file
@@ -54,6 +56,8 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
   const processedWriters = movieData.credits.crew.filter(member => member.job == "Writer" || member.job == "Screenplay");
   const processedexExecutiveProducers = movieData.credits.crew.filter(member => member.job == "Executive Producer");
   const processedProducers = movieData.credits.crew.filter(member => member.job == "Producer");
+  
+  const classificationRating = movieData.releases.countries.filter(country => country.iso_3166_1 == "AU");
 
   const transformedMovie: TransformedMovie = {
         id: movieData.id,
@@ -74,7 +78,9 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
         genres: movieData.genres,
         writers: processedWriters,
         execProducers: processedexExecutiveProducers,
-        producers: processedProducers
+        producers: processedProducers,
+        classificationRating: classificationRating,
+        actors: movieData.credits.cast
     };
   return transformedMovie;
 }

@@ -1,9 +1,8 @@
-import { AspectRatio, Box, Image, Text, Heading, Table, Flex, Stack, Link, Badge, Tooltip, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, ModalFooter, TableCaption, Tbody, Td, Tfoot, Th, Thead, Tr } from "@chakra-ui/react";
-import { StarIcon } from "@chakra-ui/icons";
-import { Genre, Cast } from "@app/typings";
+import { Box, Image, Text, Heading, Table, Stack, Badge, Tooltip, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Genre, Cast, Country } from "@app/typings";
 import React from "react";
 
-interface IMovieCard {
+interface IMovieBaseInfoCard {
   key: number;
   id: number;
   title: string;
@@ -22,12 +21,15 @@ interface IMovieCard {
   writers: Cast[];
   exec_producers: Cast[];
   producers: Cast[];
+  classificationRating: Country[];
 }
 
-const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_language, release_month, release_year, vote_average, overview, backdrop_path, tagline, budget, revenue, runtime, genres, writers, exec_producers, producers }) => {
+const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, original_language, release_month, release_year,
+  overview, tagline, budget, revenue, runtime, genres, writers, exec_producers, producers, classificationRating }) => {
   return (
     <Box p={4} display={{ md: "flex" }}>
       <Box flexShrink={0}>
+        {/* Rendering of the movie poster*/}
         <Image
           borderRadius="lg"
           width="400px"
@@ -35,7 +37,9 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
           alt="Movie Poster"
         />
       </Box>
+      
       <Box mt={{ base: 4, md: 0 }} ml={{ md: 6 }}>
+        {/* Rendering of the movie title as the page heading*/}
         <Heading
           fontWeight="bold"
           textTransform="uppercase"
@@ -51,20 +55,33 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
             </Badge>
           </Tooltip>
 
+          {/* A check is performed to determine if an Australian classification rating is available*/}
+          {classificationRating.length > 1 ? 
+            <Badge borderRadius="full" ml="2" px="2"
+              colorScheme={classificationRating[0].certification.match("/MA|MA15+|R|X/g")  ? 'red' : 'teal'}>
+              {/* If a classification is provided, it is displayed, else NA is displayed*/}
+              {classificationRating[0].certification}</Badge>
+            : <Badge borderRadius="full" ml="2" px="2" colorScheme="gray">
+              Australian Classification N/A</Badge>
+          }
+          
+
         </Heading>
         
         {/* Rendering of the release month and year*/}
         <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="l" textTransform="uppercase">
           {release_month} {release_year}
         </Box>
-
+        
+        {/* Rendering of the genre*/}
         {genres.map(genre => <Badge borderRadius="full" mb="2" mr="2" px="2" colorScheme={genre["name"].match("Horror") ? 'red' : 'teal'}>
           {genre.name}
         </Badge>
         )}
 
         <br></br>
-
+        
+        {/* Rendering of the tag line with custom styling*/}
         <Text
           fontWeight="medium"
           fontSize="lg"
@@ -76,13 +93,16 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
         </Text>
 
         
-        <br></br>        
+        <br></br>
+
+        {/* Rendering of movie overview*/}        
         <Text mt={2} color="gray.500">
           {overview}
         </Text>
 
         <br></br>
-
+        
+        {/* Rendering of a table to display budget, revenue and runtime*/}
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -93,15 +113,18 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
           </Thead>
           <Tbody>
             <Tr>
-              <Td>{budget > 0 ? ("$" + budget) : "N/A"}</Td>
-              <Td>{revenue > 0 ? ("$" + revenue) : "N/A"}</Td>
-              <Td>{runtime}</Td>
+              {/* The budget and revenue are convered to EN locale to display as currency*/}
+                <Td>{budget > 0 ? ("$" + Number(budget).toLocaleString('en')) : "N/A"}</Td>
+                <Td>{revenue > 0 ? ("$" + Number(revenue).toLocaleString('en')) : "N/A"}</Td>
+              {/* Movie runtime is converted from minutes to hrs and mins format*/}
+                <Td>{Math.floor(runtime / 60)} hr {runtime % 60} mins</Td>
             </Tr>
           </Tbody>
         </Table>
         
         <br></br>
         
+        {/* Key credits are rendered as a horizontal stack of boxes*/}
         <Stack direction={["column", "row"]} spacing="24px">
           <Box overflow="hidden">
             <Box
@@ -115,6 +138,7 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
               {"Writers/Screenplay"}
             </Box>
 
+            {/* Rendering of writers by iterating through the array to render text*/}
             <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
               {writers.map(writer => <Text ml="2">{writer.name}</Text>)}
             </Box>
@@ -132,8 +156,9 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
               {"Executive Producers"}
             </Box>
 
+            {/* Rendering of executive producers by iterating through the array to render text*/}
             <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
-            {exec_producers.map(exec_producer => <Text ml="2">{exec_producer.name}</Text>)}
+              {exec_producers.map(exec_producer => <Text ml="2">{exec_producer.name}</Text>)}
             </Box>
           </Box>
 
@@ -150,6 +175,7 @@ const MovieHeader: React.FC<IMovieCard> = ({ id, title, poster_path, original_la
             </Box>
 
             <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
+              {/* Rendering of producers by iterating through the array to render text elements*/}
               {producers.map(producer => <Text ml="2">{producer.name}</Text>)}
             </Box>
           </Box>
