@@ -1,11 +1,21 @@
-import type { NextPage } from "next";
-import { Stack, Image, AspectRatio } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { MovieGroup } from ".prisma/client";
 import { withAuthRequired } from "@app/lib/with-auth-required";
+import { Image, Stack, useQuery } from "@chakra-ui/react";
+import type { NextPage } from "next";
+import { useRouter } from "next/router";
+
+// async function getMovieGroup(movieGroupID:string):Promise<MovieGroupResponse>{
+
+// }
 
 const Group: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
+
+  // const query = useQuery<MovieGroup, Error>({
+  //   queryKey: "movieGroup",
+  //   queryFn: ()=>getMovieGroup(id as string),
+  // });
 
   return (
     <Stack>
