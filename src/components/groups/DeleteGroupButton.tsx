@@ -1,4 +1,5 @@
-import { MovieGroupDeleteBody } from "@app/pages/api/groups/movies/[id]";
+import { MovieGroup } from ".prisma/client";
+import { DeleteMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@chakra-ui/modal";
 import { Button, Text } from "@chakra-ui/react";
 import { useRef } from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 export interface IDeleteGroupButton {
   groupId: string;
@@ -29,8 +30,8 @@ const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({ groupId, emoji, name,
 
   //useMutation plox!!! later
   async function deleteMovieRequest() {
-    const requestBody: MovieGroupDeleteBody = { id: groupId };
-    const response = await fetch(`/api/groups/movies/${groupId}`, {
+    const requestBody: DeleteMovieGroupBody = { id: groupId };
+    const response = await fetch(`api/groups/movies/${groupId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -16,7 +16,7 @@ export type GetMovieGroupResponse = MovieGroup & {
 };
 
 export type DeleteMovieGroupResponse = DeleteMovieGroupResult;
-export interface MovieGroupDeleteBody extends Pick<DeleteMovieGroupInput["where"], "id"> {}
+export interface DeleteMovieGroupBody extends Pick<DeleteMovieGroupInput["where"], "id"> {}
 
 export type UpdateMovieGroupBody = UpdateMovieGroupInput;
 
@@ -47,7 +47,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "DELETE") {
-    const mGDetails = req.body as MovieGroupDeleteBody;
+    const mGDetails = req.body as DeleteMovieGroupBody;
     const deletedResult = (await deleteMovieGroup({
       where: { id: mGDetails.id },
     })) as DeleteMovieGroupResponse;
