@@ -45,6 +45,8 @@ model User {
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
   sessions      Session[]
+  reviews       Review[]
+  comments      Comment[]
   movieGroups   MovieGroup[]
   actorGroups   ActorGroup[]
   }
@@ -58,6 +60,29 @@ model VerificationRequest {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
+}
+
+model Review {
+  id                     String       @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  ownerId                String       @db.ObjectId
+  createdAt              DateTime     @default(now())
+  updatedAt              DateTime     @updatedAt
+  ratings                Int
+  title                  String
+  text                   String
+  movieId                String
+  owner                  User         @relation(fields: [ownerId], references:[id])
+}
+
+model Comment {
+  id          String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  userId      String    @db.ObjectId
+  text        String
+  movieId     Int
+  likes       Int        @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id])
 }
 
 model MovieGroup {
