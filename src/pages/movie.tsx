@@ -1,11 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import NextLink from "next/link";
-import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
+import { Stack, Tab, Tabs, SimpleGrid, TabList, TabPanels, TabPanel, Icon, Box, Heading, List, ListItem, Text } from "@chakra-ui/react";
+import { AddIcon } from "@chakra-ui/icons";
 import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie";
 import PopularMovieCard from "@app/components/movie/PopularMovieCard";
 import { useQuery } from "react-query";
 
-/*
 async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
   const res = await fetch("/api/movies");
 
@@ -15,7 +15,6 @@ async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
 
   return await res.json();
 }
-*/
 
 const PopularMoviesPage: NextPage = () => {
   const query = useQuery<GetPopularMoviesResponse, Error>({
@@ -40,13 +39,14 @@ const PopularMoviesPage: NextPage = () => {
         {query.data.map((movie) => (
           <PopularMovieCard
             key={movie.id}
-            id={movie.id}
             title={movie.title}
             poster_path={movie.poster_path}
             original_language={movie.original_language}
             release_month={movie.release_month}
             release_year={String(movie.release_year)}
             vote_average={movie.vote_average}
+            overview={movie.overview}
+            backdrop_path={movie.backdrop_path}
           />
         ))}
       </SimpleGrid>
