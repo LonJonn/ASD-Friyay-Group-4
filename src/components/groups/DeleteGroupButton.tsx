@@ -1,4 +1,4 @@
-import { MovieGroupDeleteBody } from "@app/pages/api/groups/movies";
+import { MovieGroupDeleteBody } from "@app/pages/api/groups/movies/[id]";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
@@ -30,7 +30,7 @@ const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({ groupId, emoji, name,
   //useMutation plox!!! later
   async function deleteMovieRequest() {
     const requestBody: MovieGroupDeleteBody = { id: groupId };
-    const response = await fetch("/api/groups/movies", {
+    const response = await fetch(`/api/groups/movies/${groupId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -29,7 +29,7 @@ const Group: NextPage = () => {
   return (
     <Stack>
       <Stack direction="row" maxW="sm">
-        <pre>{JSON.stringify(movieGroupQuery.data.movies, null, 2)}</pre>
+        <pre>{JSON.stringify(movieGroupQuery.data, null, 2)}</pre>
       </Stack>
     </Stack>
   );
