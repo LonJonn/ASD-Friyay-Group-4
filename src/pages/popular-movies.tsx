@@ -2,10 +2,10 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import NextLink from "next/link";
 import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
 import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie";
-import PopularMovieCard from "@app/components/movie/PopularMovieCard";
+import PopularMovieCard from "@app/components/movie/MovieCard";
 import { useQuery } from "react-query";
 
-/*
+
 async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
   const res = await fetch("/api/movies");
 
@@ -15,12 +15,12 @@ async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
 
   return await res.json();
 }
-*/
+
 
 const PopularMoviesPage: NextPage = () => {
   const query = useQuery<GetPopularMoviesResponse, Error>({
     queryKey: "popularMovies",
-    queryFn: getPopularMovies,
+    queryFn: getAllPopularMovies,
   });
 
   if (query.status === "loading" || query.status === "idle") {
@@ -42,7 +42,7 @@ const PopularMoviesPage: NextPage = () => {
             key={movie.id}
             id={movie.id}
             title={movie.title}
-            poster_path={movie.poster_path}
+            poster_path={movie.poster_path == null ? 'https://safetyaustraliagroup.com.au/wp-content/uploads/2019/05/image-not-found.png' : "https://image.tmdb.org/t/p/w500/" + movie.poster_path}
             original_language={movie.original_language}
             release_month={movie.release_month}
             release_year={String(movie.release_year)}
