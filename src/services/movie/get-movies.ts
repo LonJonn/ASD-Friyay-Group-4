@@ -31,7 +31,7 @@ interface IResponse {
   movies: TransformedMovie[];
   page: number;
   isLast: boolean;
-  query: string;
+  totalPages: number;
 }
 
 /**
@@ -78,7 +78,7 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
   processed.page = moviesSearchData.page;
   processed.isLast = (moviesSearchData.page === moviesSearchData.total_pages);
   processed.movies = transformedMovies;
-  processed.query = query;
+  processed.totalPages = moviesSearchData.total_pages;
   
 
   return processed;

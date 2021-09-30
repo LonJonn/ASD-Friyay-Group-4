@@ -7,6 +7,7 @@ import MovieSearchBar from "@app/components/movie/MovieSearchBar";
 import NavigationButton from "@app/components/movie/NavigationButton";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import React from "react";
 
 
 async function getMoviesResult(search: string): Promise<GetMoviesSearchResponse> {
@@ -56,15 +57,21 @@ const MoviesSearchPage: NextPage = () => {
                 />
                 ))}
             </SimpleGrid>
+            {/* If this is not the last page render nav bars, otherwise show no more results */}
             {!query.data.isLast ?
                 <HStack space="24px">
+                    {/* If this is not the first page, show a back button */}
                     {query.data.page != 1 ?
                         <NavigationButton search={String(router.query['id'])} nextPage={Number(query.data.page - 1)} navigationDirection="Previous"></NavigationButton>
                     : "N/A"}
+                    {/* The next button will show provided the outer if statement holds true */}
                     <NavigationButton search={String(router.query['id'])} nextPage={Number(query.data.page + 1)} navigationDirection="Next"></NavigationButton>
                 </HStack>
-                
-            : <Text>No more results</Text>}
+            :   
+                <Text>No more results {/* Renders when only one page was returned from the API */}</Text> 
+            }
+            {/* If this is the last page and more than 1 page in total was returned */}
+            {query.data.isLast && query.data.totalPages > 1 ? <NavigationButton search={String(router.query['id'])} nextPage={Number(query.data.page - 1)} navigationDirection="Previous"></NavigationButton> : "N/A"}
         </Stack>
     );
 };
