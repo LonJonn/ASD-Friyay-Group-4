@@ -32,7 +32,7 @@ interface TransformedMovie
  */
 export type GetMoviesSearchResponse = TransformedMovie[];
 
-export async function getMovies(query: string, page: number): Promise<GetMoviesSearchResponse> {
+export async function getMovies(query: string): Promise<GetMoviesSearchResponse> {
   // Make request to TMDB
   console.log(query);
   const response = await fetch(

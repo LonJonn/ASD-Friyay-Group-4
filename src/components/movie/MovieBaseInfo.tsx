@@ -74,7 +74,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
         </Box>
         
         {/* Rendering of the genre*/}
-        {genres.map(genre => <Badge borderRadius="full" mb="2" mr="2" px="2" colorScheme={genre["name"].match("Horror") ? 'red' : 'teal'}>
+        {genres.map(genre => <Badge borderRadius="full" mb="2" mr="2" px="2" colorScheme={genre["name"].match("Horror") ? 'red' : 'teal'} key={genre.name}>
           {genre.name}
         </Badge>
         )}
@@ -140,7 +140,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
 
             {/* Rendering of writers by iterating through the array to render text*/}
             <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
-              {writers.map(writer => <Text ml="2">{writer.name}</Text>)}
+              {writers.map(writer => <Text ml="2" key={writer.name}>{writer.name}</Text>)}
             </Box>
           </Box>
 
@@ -158,7 +158,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
 
             {/* Rendering of executive producers by iterating through the array to render text*/}
             <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
-              {exec_producers.map(exec_producer => <Text ml="2">{exec_producer.name}</Text>)}
+              {exec_producers.map(exec_producer => <Text ml="2" key={exec_producer.name}>{exec_producer.name}</Text>)}
             </Box>
           </Box>
 
@@ -176,7 +176,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
 
             <Box color="gray.500" fontWeight="semibold" letterSpacing="wide" fontSize="xs" textTransform="uppercase">
               {/* Rendering of producers by iterating through the array to render text elements*/}
-              {producers.map(producer => <Text ml="2">{producer.name}</Text>)}
+              {producers.map(producer => <Text ml="2" key={producer.name}>{producer.name}</Text>)}
             </Box>
           </Box>
       </Stack>            

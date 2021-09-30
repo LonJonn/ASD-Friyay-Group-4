@@ -8,15 +8,16 @@ const SearchBar: React.FC = ({  }) => {
     const router = useRouter();
     const queryClient = useQueryClient();
 
-    const handleClick = (search: string) => {
-        router.push(`/movies/search/${search}`);
+    const handleClick = (search: string, year: string) => {
+        router.push(`/movies/search/${search}&year=${year}`);
     };
 
     const [search, setSearch] = useState("");
+    const [year, setYear] = useState("");
 
     async function onSubmit(event: React.FormEvent) {
         event.preventDefault();
-        handleClick(search);
+        handleClick(search, year);
         queryClient.removeQueries("getMovies");
     }
 
@@ -25,6 +26,12 @@ const SearchBar: React.FC = ({  }) => {
           <FormControl id="search" isRequired>
             <Input placeholder="Enter movie name" value={search} onChange={(q) => {
                 setSearch(q.target.value);
+            }} />
+          </FormControl>
+
+          <FormControl id="year">
+            <Input placeholder="year limit (optional)" value={year} ml="1" onChange={(y) => {
+                setYear(y.target.value);
             }} />
           </FormControl>
           

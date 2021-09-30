@@ -49,7 +49,8 @@ const PopularMoviesPage: NextPage = () => {
             vote_average={movie.vote_average}
           />
         ))}
-      </SimpleGrid>
+      </SimpleGrid>     
+      
     </Stack>
   );
 };
