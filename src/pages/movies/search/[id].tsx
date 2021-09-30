@@ -1,9 +1,10 @@
 import { NextPage } from "next";
 import NextLink from "next/link";
-import { Stack, SimpleGrid, Heading, Text, Button } from "@chakra-ui/react";
+import { Stack, HStack, SimpleGrid, Heading, Text, Button, Box, FormControl, Input } from "@chakra-ui/react";
 import { getMovies, GetMoviesSearchResponse } from "@app/services/movie";
 import PopularMovieCard from "@app/components/movie/MovieCard";
 import MovieSearchBar from "@app/components/movie/MovieSearchBar";
+import NavigationButton from "@app/components/movie/NavigationButton";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
@@ -18,22 +19,8 @@ async function getMoviesResult(search: string): Promise<GetMoviesSearchResponse>
     return await res.json();
 }
 
-async function getNextPage(search: string, page: number): Promise<GetMoviesSearchResponse> {
-    const res = await fetch("/api/movies/search/" + search + "&page=" + page);
-
-    if (!res.ok) {
-    throw new Error("Unable to perform search for movies movies.");
-    }
-
-    return await res.json();
-}
-
-
 const MoviesSearchPage: NextPage = () => {
     const router = useRouter();
-    console.log(router.pathname);
-
-    console.log("Search is " + router.query['id']);
 
     const query = useQuery<GetMoviesSearchResponse, Error>({
         queryKey: "getMovies",
@@ -48,7 +35,6 @@ const MoviesSearchPage: NextPage = () => {
         return <Text>Error...{query.error.message}</Text>;
         console.log(query.data);
     }
-
     
     return (
         <Stack spacing={8}>
@@ -57,7 +43,7 @@ const MoviesSearchPage: NextPage = () => {
             <Heading size="s">Seach results for: {router.query['id']}</Heading>
 
             <SimpleGrid columns={6} spacingX={4} spacingY={4}>
-                {query.data.map((movie) => (
+                {query.data.movies.map((movie) => (
                 <PopularMovieCard
                     key={movie.id}
                     id={movie.id}
@@ -70,6 +56,15 @@ const MoviesSearchPage: NextPage = () => {
                 />
                 ))}
             </SimpleGrid>
+            {!query.data.isLast ?
+                <HStack space="24px">
+                    {query.data.page != 1 ?
+                        <NavigationButton search={String(router.query['id'])} nextPage={Number(query.data.page - 1)} navigationDirection="Previous"></NavigationButton>
+                    : "N/A"}
+                    <NavigationButton search={String(router.query['id'])} nextPage={Number(query.data.page + 1)} navigationDirection="Next"></NavigationButton>
+                </HStack>
+                
+            : <Text>No more results</Text>}
         </Stack>
     );
 };

@@ -27,10 +27,18 @@ interface TransformedMovie
   release_year: number;
 }
 
+interface IResponse {
+  movies: TransformedMovie[];
+  page: number;
+  isLast: boolean;
+  query: string;
+}
+
 /**
  * The shape of the service response. (An array of TranformedMovies from above)
  */
-export type GetMoviesSearchResponse = TransformedMovie[];
+//export type GetMoviesSearchResponse = TransformedMovie[];
+export type GetMoviesSearchResponse = IResponse;
 
 export async function getMovies(query: string): Promise<GetMoviesSearchResponse> {
   // Make request to TMDB
@@ -51,7 +59,7 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
 
     const year = releaseDate.getFullYear();
     const month = releaseDate.getMonth();
-
+    
     return {
       id: movie.id,
       title: movie.title,
@@ -65,5 +73,15 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
     };
   });
 
-  return transformedMovies;
+  
+  const processed = {} as IResponse;
+  processed.page = moviesSearchData.page;
+  processed.isLast = (moviesSearchData.page === moviesSearchData.total_pages);
+  processed.movies = transformedMovies;
+  processed.query = query;
+  
+
+  return processed;
+
+  //return transformedMovies;
 }

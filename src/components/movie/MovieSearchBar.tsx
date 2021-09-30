@@ -9,7 +9,14 @@ const SearchBar: React.FC = ({  }) => {
     const queryClient = useQueryClient();
 
     const handleClick = (search: string, year: string) => {
+      if (year.length > 0) {
         router.push(`/movies/search/${search}&year=${year}`);
+      }
+
+      else {
+        router.push(`/movies/search/${search}`);
+      }
+      
     };
 
     const [search, setSearch] = useState("");
