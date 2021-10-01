@@ -21,7 +21,7 @@ import {
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
 
-async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
+export async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
   const res = await fetch("/api/groups/movies");
 
   if (!res.ok) {
