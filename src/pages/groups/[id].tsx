@@ -1,7 +1,9 @@
+import EditGroupForm from "@app/components/groups/EditGroupForm";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import { Button, Stack } from "@chakra-ui/react";
+import { Button, Stack, useDisclosure } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   GetMovieGroupResponse,
@@ -16,22 +18,29 @@ async function getMovieGroup(movieGroupID: string): Promise<GetMovieGroupRespons
 const Group: NextPage = () => {
   const router = useRouter();
   const id = router.query.id as string;
-  const queryClient = useQueryClient();
 
+  //-------------Query---------------------
   const movieGroupQuery = useQuery({
     queryKey: ["movieGroup", id],
     queryFn: () => getMovieGroup(id as string),
   });
 
-  const updateMutation = useMutation(async (updatedMovieGroup: UpdateMovieGroupBody) => {
-    const response = await fetch(`/api/groups/movies/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedMovieGroup),
-    });
-    queryClient.invalidateQueries(["movieGroup", id]);
-    return response;
-  });
+  const queryClient = useQueryClient();
+
+  //--------------State-------------------
+
+  const [groupDetails, setGroupDetails] = useState(movieGroupQuery.data);
+
+  //--------------Mutations---------------
+  // const updateMutation = useMutation(async (updatedMovieGroup: UpdateMovieGroupBody) => {
+  //   const response = await fetch(`/api/groups/movies/${id}`, {
+  //     method: "PUT",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(updatedMovieGroup),
+  //   });
+  //   queryClient.invalidateQueries(["movieGroup", id]);
+  //   return response;
+  // });
 
   const deleteMutation = useMutation(async (deletedMovieGroup: DeleteMovieGroupBody) => {
     const response = await fetch(`/api/groups/movies/${id}`, {
@@ -43,6 +52,9 @@ const Group: NextPage = () => {
     router.push("/groups");
     return response;
   });
+
+  //-------------------Modal--------------
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (movieGroupQuery.isLoading || movieGroupQuery.isIdle) {
     return <>lumfao</>;
@@ -56,16 +68,9 @@ const Group: NextPage = () => {
     <Stack>
       <Stack maxW="sm">
         <pre>{JSON.stringify(movieGroupQuery.data, null, 2)}</pre>
-        <Button
-          onClick={() => {
-            updateMutation.mutate({
-              where: { id: id },
-              data: { emoji: "🥶", name: "ICCE" },
-            });
-          }}
-        >
-          Ligma to edit
-        </Button>
+
+        <Button onClick={onOpen}>edit group</Button>
+
         <Button
           colorScheme="red"
           onClick={() => {
@@ -74,11 +79,18 @@ const Group: NextPage = () => {
             });
           }}
         >
-          Ligma to delete
+          delete group
         </Button>
       </Stack>
+      <EditGroupForm isOpen={isOpen} onClose={onClose} currentGroupData={movieGroupQuery.data} />
     </Stack>
   );
 };
 
+// () => {
+//   updateMutation.mutate({
+//     where: { id: id },
+//     data: { emoji: "🥶", name: "ICE" },
+//   });
+// }
 export default withAuthRequired(Group);

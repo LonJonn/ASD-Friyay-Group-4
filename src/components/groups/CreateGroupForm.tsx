@@ -16,12 +16,12 @@ import {
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
-export interface CreateModalDiclosure {
+export interface CreateModalDisclosure {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) => {
+const CreateGroupForm: React.FC<CreateModalDisclosure> = ({ isOpen, onClose }) => {
   const [emoji, setEmoji] = useState("");
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
@@ -72,7 +72,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
                 />
               </FormControl>
 
-              <FormControl id="emoji" isRequired>
+              <FormControl id="title" isRequired>
                 <FormLabel>Title</FormLabel>
                 <Input
                   placeholder="e.g. Favourites"
