@@ -1,4 +1,4 @@
-import { Box, Heading, List } from "@chakra-ui/react";
+import {Box, Heading, List, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, } from "@chakra-ui/react"
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { getSession } from "next-auth/client";
 
@@ -41,12 +41,13 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
         </div>
       </div>
     </div>
+    {BasicUsage()}
     <ul className="all-users-list">
       {users.map((user) => (
         <li key={user.id} className="list-item-users" data-firstName={user.firstName} data-email={user.email}>
           {user.firstName} | {user.email}
           <button className="button button-outline table-button" onClick={deleteUserInit}>Delete User</button>
-          <button className="button button-outline  table-button">Edit User</button>
+          <button className="button button-outline  table-button" onClick={editUser}>Edit User</button>
         </li>
 
       ))}
@@ -56,6 +57,85 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
 
   </Box>
 );
+
+function BasicUsage() {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  return (
+    <>
+      <button onClick={onOpen} id="modal-button" class="hide">Open Modal</button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit User</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+          <p className="search-text">Name</p>
+          <input type="text" name="name" className="admin-search-text" id="edit-input-name"/>
+          <p className="search-text">Email Address</p>
+          <label><input type="text" name="name" className="admin-search-text" id="edit-input-email"/></label>
+          <p className="search-text hide" id="edit-user-error">There's an error! Please fix</p>
+          <p id="email-data" class='hide'></p>
+          </ModalBody>
+
+          <ModalFooter>
+            <button variant="ghost" onClick={submitEditUser} id="modalSubmit">Submit</button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  )
+}
+
+function editUser(e: { currentTarget: any; }) {
+  $('#modal-button').click();
+  var clickedButton = e.currentTarget;
+  var collectFirstName = $(clickedButton).parent().data('firstname');
+  var collectEmail = $(clickedButton).parent().data('email');
+  setTimeout(function(){
+    $('#edit-input-name').val(collectFirstName);
+    $('#edit-input-email').val(collectEmail);
+    $('#email-data').text(collectEmail);
+}, 10);
+}
+
+function submitEditUser () {
+  var newName = $('#edit-input-name').val();
+  var newEmail = $('#edit-input-email').val();
+  var oldEmail = $('#email-data').text();
+
+  if (/^[a-zA-Z]+$/.test(newName)) {
+    if (validateEmail(newEmail)) {
+      //Call API to submit new name and email for the user
+      var dataArray = [newName, newEmail, oldEmail];
+
+      const res = fetch("/api/admin-view/editUser", {
+        method: 'POST',
+        body: dataArray.toString(),
+
+      });
+      //Refresh page
+      setTimeout(function(){
+     window.location.reload();
+  }, 3000);
+    } else {
+      $('#edit-user-error').removeClass('hide');
+      $('#edit-user-error').show();
+      setTimeout(function() {
+        $('#edit-user-error').fadeOut();
+    }, 5000);
+    }
+
+  } else {
+    $('#edit-user-error').removeClass('hide');
+    $('#edit-user-error').show();
+    setTimeout(function() {
+      $('#edit-user-error').fadeOut();
+  }, 5000);
+  }
+
+}
 
 //Fires when the the 'Create New User' button is pressed
 function createNewUser() {
