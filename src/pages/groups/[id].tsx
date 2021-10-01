@@ -20,6 +20,7 @@ const Group: NextPage = () => {
   const id = router.query.id as string;
 
   //-------------Query---------------------
+
   const movieGroupQuery = useQuery({
     queryKey: ["movieGroup", id],
     queryFn: () => getMovieGroup(id as string),
@@ -27,20 +28,7 @@ const Group: NextPage = () => {
 
   const queryClient = useQueryClient();
 
-  //--------------State-------------------
-
-  const [groupDetails, setGroupDetails] = useState(movieGroupQuery.data);
-
   //--------------Mutations---------------
-  // const updateMutation = useMutation(async (updatedMovieGroup: UpdateMovieGroupBody) => {
-  //   const response = await fetch(`/api/groups/movies/${id}`, {
-  //     method: "PUT",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(updatedMovieGroup),
-  //   });
-  //   queryClient.invalidateQueries(["movieGroup", id]);
-  //   return response;
-  // });
 
   const deleteMutation = useMutation(async (deletedMovieGroup: DeleteMovieGroupBody) => {
     const response = await fetch(`/api/groups/movies/${id}`, {
@@ -54,14 +42,15 @@ const Group: NextPage = () => {
   });
 
   //-------------------Modal--------------
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (movieGroupQuery.isLoading || movieGroupQuery.isIdle) {
-    return <>lumfao</>;
+    return <>Loading</>;
   }
 
   if (movieGroupQuery.isError) {
-    return <>lumfao</>;
+    return <>Error!</>;
   }
 
   return (
@@ -87,10 +76,4 @@ const Group: NextPage = () => {
   );
 };
 
-// () => {
-//   updateMutation.mutate({
-//     where: { id: id },
-//     data: { emoji: "🥶", name: "ICE" },
-//   });
-// }
 export default withAuthRequired(Group);

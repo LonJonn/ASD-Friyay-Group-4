@@ -49,7 +49,7 @@ const handler: NextApiHandler = async (req, res) => {
   if (req.method === "DELETE") {
     const mGDetails = req.body as DeleteMovieGroupBody;
     const deletedResult = (await deleteMovieGroup({
-      where: { id: mGDetails.id },
+      where: mGDetails,
     })) as DeleteMovieGroupResponse;
     return res.send(deletedResult);
   }
