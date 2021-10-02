@@ -40,10 +40,7 @@ const EditGroupForm: React.FC<EditModalDisclosure> = ({ isOpen, onClose, current
   //should be using ReactHookForms for validation.
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    updateMutation.mutate({
-      where: { id: currentGroupData.id },
-      data: { emoji: emoji, name: name },
-    });
+    updateMutation.mutate({ emoji: emoji, name: name });
     queryClient.invalidateQueries("movieGroups");
     onClose();
   }

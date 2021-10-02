@@ -18,7 +18,7 @@ export type GetMovieGroupResponse = MovieGroup & {
 export type DeleteMovieGroupResponse = DeleteMovieGroupResult;
 export interface DeleteMovieGroupBody extends Pick<DeleteMovieGroupInput["where"], "id"> {}
 
-export type UpdateMovieGroupBody = UpdateMovieGroupInput;
+export type UpdateMovieGroupBody = UpdateMovieGroupInput["data"];
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
@@ -40,8 +40,12 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "PUT") {
+    const movieGroupId = req.query.id as string;
     const updatedMovieGroupBody = req.body as UpdateMovieGroupBody;
-    const updatedMovieGroup = await updateMovieGroup(updatedMovieGroupBody);
+    const updatedMovieGroup = await updateMovieGroup({
+      where: { id: movieGroupId },
+      data: updatedMovieGroupBody,
+    });
 
     return res.send(updatedMovieGroup);
   }
