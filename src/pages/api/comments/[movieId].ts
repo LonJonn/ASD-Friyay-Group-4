@@ -28,7 +28,7 @@ const handler: NextApiHandler = async (req, res) => {
     const body = req.body as CommentPostBody;
 
     const newComment = (await createMovieComment({
-      movieId: Number(req.query.movieId),
+      movieId: req.query.movieId as string,
       text: body.text,
       user: { connect: { id: session.uid } },
     })) as CreateMovieCommentResponse;
@@ -38,7 +38,7 @@ const handler: NextApiHandler = async (req, res) => {
 
   if (req.method === "GET") {
     const { movieId } = req.query;
-    const movieComments = await getMovieComments(Number(movieId));
+    const movieComments = await getMovieComments(movieId as string);
 
     return res.status(200).send(movieComments);
   }

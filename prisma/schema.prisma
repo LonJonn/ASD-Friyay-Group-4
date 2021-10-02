@@ -78,7 +78,7 @@ model Comment {
   id          String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
   userId      String    @db.ObjectId
   text        String
-  movieId     Int
+  movieId     String
   likes       Int        @default(0)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
