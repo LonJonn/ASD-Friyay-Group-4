@@ -1,20 +1,41 @@
 import { NextApiHandler } from "next";
 
 import {
+  createMovieComment,
+  CreateMovieCommentInput,
+  CreateMovieCommentResult,
   deleteMovieComment,
   DeleteMovieCommentInput,
   DeleteMovieCommentResult,
   getMovieComments,
   GetMovieCommentsResult,
 } from "@app/services/comment";
+import { getSession } from "next-auth/client";
 
 export type MovieCommentsGetResponse = GetMovieCommentsResult;
+export type CommentPostBody = Pick<CreateMovieCommentInput, "movieId" | "text">;
 
+type CreateMovieCommentResponse = CreateMovieCommentResult;
 type CommentDeleteBody = Pick<DeleteMovieCommentInput["where"], "id">;
-
 type DeleteMovieCommentResponse = DeleteMovieCommentResult;
 
 const handler: NextApiHandler = async (req, res) => {
+  const session = await getSession({ req });
+  if (req.method === "POST") {
+    if (!session) {
+      return res.status(401).end();
+    }
+    const body = req.body as CommentPostBody;
+
+    const newComment = (await createMovieComment({
+      movieId: Number(req.query.movieId),
+      text: body.text,
+      user: { connect: { id: session.uid } },
+    })) as CreateMovieCommentResponse;
+
+    return res.status(201).send(newComment);
+  }
+
   if (req.method === "GET") {
     const { movieId } = req.query;
     const movieComments = await getMovieComments(Number(movieId));

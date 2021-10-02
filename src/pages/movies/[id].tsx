@@ -38,7 +38,7 @@ const Movie: NextPage = () => {
   });
 
   const movieCommentsQuery = useQuery<GetMovieCommentsResult, Error>({
-    queryKey: "comments",
+    queryKey: ["comments", id],
     queryFn: () => getMovieComments(String(id)),
   });
 
@@ -96,7 +96,7 @@ const Movie: NextPage = () => {
           ))}
         </SimpleGrid>
       </Stack>
-      <CommentForm />
+      <CommentForm movieId={id as string} />
       <Stack>
         {movieCommentsQuery.data?.map((comment) => (
           <Comments

@@ -1,19 +1,58 @@
 import { Box, Button, Text, Textarea, Avatar, Heading } from "@chakra-ui/react";
 import {} from "@chakra-ui/icons";
+import { QueryClient, useMutation, useQueryClient } from "react-query";
+import { CommentPostBody } from "@app/pages/api/comments";
+import { useState } from "react";
+// import { createMovieComment } from "@app/services/comment";
 
-interface CommentFormProps {}
+interface CommentFormProps {
+  movieId: string;
+}
 
-const CommentForm: React.FC<CommentFormProps> = ({}) => {
+interface CreateMovieCommentArgs {
+  movieId: string;
+  movieCommentContents: CommentPostBody;
+}
+
+async function createMovieCommentFunction(createMovieCommentArgs: CreateMovieCommentArgs) {
+  const response = await fetch(`/api/comments/${createMovieCommentArgs.movieId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(createMovieCommentArgs.movieCommentContents),
+  });
+  return response;
+}
+
+const CommentForm: React.FC<CommentFormProps> = ({ movieId }) => {
+  const queryClient = useQueryClient();
+  const [commentValue, setCommentValue] = useState("");
+
+  const createMutation = useMutation(createMovieCommentFunction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"]);
+      setCommentValue("");
+    },
+  });
+
   return (
     <>
       <Heading marginTop={8} marginBottom={8}>
         COMMENTS
       </Heading>
-      <Textarea placeholder="Type your comment here..." />
-      <Button marginBottom={8} size="xs" form="create-form" type="submit">
+      <Textarea
+        placeholder="Type your comment here..."
+        value={commentValue}
+        onChange={(e) => setCommentValue(e.target.value)}
+      />
+      <Button
+        marginBottom={8}
+        size="xs"
+        onClick={() =>
+          createMutation.mutate({ movieId: movieId, movieCommentContents: { text: commentValue } })
+        }
+      >
         COMMENT
       </Button>
-      {/* what is form? */}
     </>
   );
 };

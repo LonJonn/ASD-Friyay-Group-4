@@ -21,8 +21,9 @@ import {
 } from "@chakra-ui/react";
 import { ArrowUpIcon, ArrowDownIcon, DeleteIcon } from "@chakra-ui/icons";
 import { MovieCommentsGetResponse } from "@app/pages/api/comments/[movieId]";
-import { deleteMovieComment } from "@app/services/comment";
+// import { deleteMovieComment } from "@app/services/comment";
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "react-query";
 
 interface CommentProps {
   parentId: string;
@@ -39,8 +40,28 @@ interface CommentDataProps {
   dateCreated: Date;
 }
 
+interface DeleteCommentArgs {
+  movieCommentId: string;
+}
+
 const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated }) => {
+  // const queryClient = useQueryClient();
   const [lines, setLines] = useState(3);
+
+  async function deleteComment(deleteCommentArgs: DeleteCommentArgs) {
+    const response = await fetch(`/api/comments/${deleteCommentArgs.movieCommentId}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(deleteCommentArgs.movieCommentId),
+    });
+    return response;
+  }
+
+  // const deleteMutation = useMutation(deleteMovieComment, {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(["movieComment"]);
+  //   },
+  // });
 
   return (
     <Box>
@@ -95,12 +116,9 @@ const Comments: React.FC<CommentProps> = ({ userId, dateCreated, comment, likes 
             <ModalCloseButton />
             <ModalBody>Are you sure you want to delete this comment permanently?</ModalBody>
             <ModalFooter>
-              <Button variant="ghost" size="sm" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme="red" size="sm" onClick={onClose}>
+              {/* <Button colorScheme="red" size="sm" onClick={ () => deleteMovieComment()}>
                 DELETE
-              </Button>
+              </Button> */}
             </ModalFooter>
           </ModalContent>
         </Modal>
