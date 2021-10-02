@@ -7,9 +7,8 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Stack } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { Children } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { MovieGroupMenuItem } from "./MovieGroupMenuItem";
 
 interface UpdateGroupArgs {
   movieGroupId: string;
@@ -38,7 +37,7 @@ export const AddToMovieGroup: React.FC = () => {
 
   const updateMutation = useMutation(updateGroupFunction, {
     onSuccess: () => {
-      //queryClient.invalidateQueries(["movieGroup", movieGroup.id]);
+      queryClient.invalidateQueries(["movieGroups"]);
     },
   });
 
@@ -52,6 +51,7 @@ export const AddToMovieGroup: React.FC = () => {
         </MenuButton>
         <MenuList>
           {movieGroupsQuery.data?.map((movieGroup) => {
+            if (movieGroup.movieGroups.includes(movieId)) return;
             const movieGroupContents = { movieIds: [...movieGroup.movieGroups, movieId] };
             return (
               <MenuItem

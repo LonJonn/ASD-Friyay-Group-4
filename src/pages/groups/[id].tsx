@@ -1,15 +1,20 @@
 import EditGroupForm from "@app/components/groups/EditGroupForm";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import { Button, Stack, useDisclosure } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Box,
+  Button,
+  Image,
+  SimpleGrid,
+  Stack,
+  useDisclosure,
+  Text,
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  GetMovieGroupResponse,
-  DeleteMovieGroupBody,
-  UpdateMovieGroupBody,
-} from "../api/groups/movies/[id]";
+import { DeleteMovieGroupBody, GetMovieGroupResponse } from "../api/groups/movies/[id]";
 
 async function getMovieGroup(movieGroupID: string): Promise<GetMovieGroupResponse> {
   return fetch(`/api/groups/movies/${movieGroupID}`).then((res) => res.json());
@@ -20,13 +25,11 @@ const Group: NextPage = () => {
   const id = router.query.id as string;
 
   //-------------Query---------------------
-
+  const queryClient = useQueryClient();
   const movieGroupQuery = useQuery({
     queryKey: ["movieGroup", id],
     queryFn: () => getMovieGroup(id as string),
   });
-
-  const queryClient = useQueryClient();
 
   //--------------Mutations---------------
 
@@ -55,22 +58,39 @@ const Group: NextPage = () => {
 
   return (
     <Stack>
-      <Stack maxW="sm">
-        <pre>{JSON.stringify(movieGroupQuery.data, null, 2)}</pre>
-
-        <Button onClick={onOpen}>edit group</Button>
-
-        <Button
-          colorScheme="red"
-          onClick={() => {
-            deleteMutation.mutate({
-              id: id,
-            });
-          }}
-        >
-          delete group
-        </Button>
+      <Stack spacing={0}>
+        <Text align="center" fontSize="9xl">
+          {movieGroupQuery.data.emoji}
+        </Text>
+        <Text align="center" fontSize="9xl">
+          {movieGroupQuery.data.name}
+        </Text>
       </Stack>
+      <Button onClick={onOpen}>edit group</Button>
+      <Button
+        as={Stack}
+        colorScheme="red"
+        onClick={() => {
+          deleteMutation.mutate({
+            id: id,
+          });
+        }}
+      >
+        delete group
+      </Button>
+      <Stack pt={8}>
+        <SimpleGrid columns={2} spacingY={10} justifyItems={"center"}>
+          {movieGroupQuery.data.movies.map((movie) => (
+            <Box overflow="hidden" maxH="741px">
+              <Image
+                src={"https://image.tmdb.org/t/p/w500/" + movie.poster_path}
+                objectFit="cover"
+              />
+            </Box>
+          ))}
+        </SimpleGrid>
+      </Stack>
+
       <EditGroupForm isOpen={isOpen} onClose={onClose} currentGroupData={movieGroupQuery.data} />
     </Stack>
   );

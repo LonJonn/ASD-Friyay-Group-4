@@ -31,8 +31,8 @@ const handler: NextApiHandler = async (req, res) => {
 
     const movieGroup = await getMovieGroup({ id });
     const groupMovies = await getGroupMovies({ id });
+    Object.assign(movieGroup, { movies: groupMovies });
 
-    const result = Object.assign(movieGroup, { movies: groupMovies });
     return res.send(movieGroup);
   }
 

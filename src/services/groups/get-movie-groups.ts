@@ -18,7 +18,7 @@ export async function getMovieGroups(userId: User["id"]): Promise<GetMovieGroups
    * For each movie group, we have transformed the Movie model in the db to another model which we can use per business logic.
    */
   const transformedMovieGroups = movieGroups.map(async (mg): Promise<TransformedMovieGroup> => {
-    var imageBackdrop = "https://image.tmdb.org/t/p/original/rr7E0NoGKxvbkb89eR1GwfoYjpA.jpg";
+    var imageBackdrop = "https://via.placeholder.com/1000";
     if (mg.movieIds.length > 0) {
       const movieData = await getMovie(mg.movieIds[mg.movieIds.length - 1]);
       imageBackdrop = movieData.backdrop_path;

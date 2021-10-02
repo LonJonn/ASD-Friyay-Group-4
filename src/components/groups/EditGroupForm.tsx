@@ -12,7 +12,6 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/modal";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
