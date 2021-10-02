@@ -1,18 +1,21 @@
-import { Box, Button, Text, Textarea, Avatar } from "@chakra-ui/react"
-import {} from "@chakra-ui/icons"
+import { Box, Button, Text, Textarea, Avatar, Heading } from "@chakra-ui/react";
+import {} from "@chakra-ui/icons";
 
-interface CommentFormProps {
-
-}
+interface CommentFormProps {}
 
 const CommentForm: React.FC<CommentFormProps> = ({}) => {
-    return (
-        <>
-            <Text fontSize="md" fontWeight="bold" >COMMENTS</Text>
-            <Textarea placeholder="Type your comment here..."/>
-            <Button size="xs">Comment</Button>
-        </>
-    )
-}
+  return (
+    <>
+      <Heading marginTop={8} marginBottom={8}>
+        COMMENTS
+      </Heading>
+      <Textarea placeholder="Type your comment here..." />
+      <Button marginBottom={8} size="xs" form="create-form" type="submit">
+        COMMENT
+      </Button>
+      {/* what is form? */}
+    </>
+  );
+};
 
-export default CommentForm; 
+export default CommentForm;
