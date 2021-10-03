@@ -1,3 +1,4 @@
+import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { GetMovieGroupResponse, UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -14,6 +15,7 @@ import {
 } from "@chakra-ui/modal";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { updateGroupFunction } from "./AddToMovieGroup";
 
 interface EditModalDisclosure {
   isOpen: boolean;
@@ -21,25 +23,35 @@ interface EditModalDisclosure {
   currentGroupData: GetMovieGroupResponse;
 }
 
+// async function updateMovieGroupMutationFn(updateMoviegMutationFnArgs:GetMovieGroupsResponse){
+//   async (updatedMovieGroup: UpdateMovieGroupBody) => {
+//     const response = await fetch(`/api/groups/movies/${updatedMovieGroup.id}`, {
+//       method: "PUT",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(updatedMovieGroup),
+//     });
+
+//     return response;
+// }
+
 const EditGroupForm: React.FC<EditModalDisclosure> = ({ isOpen, onClose, currentGroupData }) => {
   const [emoji, setEmoji] = useState(currentGroupData.emoji);
   const [name, setName] = useState(currentGroupData.name);
   const queryClient = useQueryClient();
 
-  const updateMutation = useMutation(async (updatedMovieGroup: UpdateMovieGroupBody) => {
-    const response = await fetch(`/api/groups/movies/${currentGroupData.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedMovieGroup),
-    });
-    queryClient.invalidateQueries(["movieGroup", currentGroupData.id]);
-    return response;
+  const updateMutation = useMutation(updateGroupFunction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["movieGroup", currentGroupData.id]);
+    },
   });
 
   //should be using ReactHookForms for validation.
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    updateMutation.mutate({ emoji: emoji, name: name });
+    updateMutation.mutate({
+      movieGroupId: currentGroupData.id,
+      movieGroupContents: { emoji: emoji, name: name },
+    });
     queryClient.invalidateQueries("movieGroups");
     onClose();
   }

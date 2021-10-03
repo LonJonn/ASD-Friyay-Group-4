@@ -15,7 +15,7 @@ interface UpdateGroupArgs {
   movieGroupContents: UpdateMovieGroupBody;
 }
 
-async function updateGroupFunction(updateGroupArgs: UpdateGroupArgs) {
+export async function updateGroupFunction(updateGroupArgs: UpdateGroupArgs) {
   const response = await fetch(`/api/groups/movies/${updateGroupArgs.movieGroupId}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },

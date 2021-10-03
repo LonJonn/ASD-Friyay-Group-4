@@ -1,3 +1,4 @@
+import { DeleteConfirmationAlert } from "@app/components/groups/DeleteConfirmationAlert";
 import EditGroupForm from "@app/components/groups/EditGroupForm";
 import { withAuthRequired } from "@app/lib/with-auth-required";
 import {
@@ -31,22 +32,10 @@ const Group: NextPage = () => {
     queryFn: () => getMovieGroup(id as string),
   });
 
-  //--------------Mutations---------------
-
-  const deleteMutation = useMutation(async (deletedMovieGroup: DeleteMovieGroupBody) => {
-    const response = await fetch(`/api/groups/movies/${id}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(deletedMovieGroup),
-    });
-    queryClient.invalidateQueries("movieGroups");
-    router.push("/groups");
-    return response;
-  });
-
-  //-------------------Modal--------------
+  //-------------------Modal  & Delete Disclosures--------------
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenAlert, onOpen: onOpenAlert, onClose: onCloseAlert } = useDisclosure();
 
   if (movieGroupQuery.isLoading || movieGroupQuery.isIdle) {
     return <>Loading</>;
@@ -67,17 +56,19 @@ const Group: NextPage = () => {
         </Text>
       </Stack>
       <Button onClick={onOpen}>edit group</Button>
-      <Button
-        as={Stack}
-        colorScheme="red"
-        onClick={() => {
-          deleteMutation.mutate({
-            id: id,
-          });
-        }}
-      >
+      <Button as={Stack} colorScheme="red" onClick={onOpenAlert}>
         delete group
       </Button>
+
+      <DeleteConfirmationAlert
+        groupId={id}
+        emoji={movieGroupQuery.data.emoji}
+        groupName={movieGroupQuery.data.name}
+        movieCount={movieGroupQuery.data.movieIds.length}
+        onClose={onCloseAlert}
+        isOpen={isOpenAlert}
+      />
+
       <Stack pt={8}>
         <SimpleGrid columns={2} spacingY={10} justifyItems={"center"}>
           {movieGroupQuery.data.movies.map((movie) => (
