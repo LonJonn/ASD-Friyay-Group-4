@@ -4,7 +4,7 @@ import { useSession } from "next-auth/client";
 import { Stack, Tab, Tabs, SimpleGrid, TabList, TabPanels, TabPanel, Icon, Box, Heading, List, ListItem, Text } from "@chakra-ui/react";
 import { useQueryClient } from "react-query";
 import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie";
-import PopularMovieCard from "@app/components/movie/MovieCard";
+import MovieCard from "@app/components/movie/MovieCard";
 import { useQuery } from "react-query";
 import MovieSearchBar from "@app/components/movie/MovieSearchBar";
 
@@ -46,7 +46,7 @@ const Home: NextPage = () => {
       <Heading size="md">Now Popular</Heading>
       <SimpleGrid columns={6} spacingX={4} spacingY={4}>
         {query.data.map((movie) => (
-          <PopularMovieCard
+          <MovieCard
             key={movie.id}
             id={movie.id}
             title={movie.title}

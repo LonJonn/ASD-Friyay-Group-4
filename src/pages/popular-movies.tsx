@@ -2,7 +2,7 @@ import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next"
 import NextLink from "next/link";
 import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
 import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie";
-import PopularMovieCard from "@app/components/movie/MovieCard";
+import MovieCard from "@app/components/movie/MovieCard";
 import { useQuery } from "react-query";
 
 
@@ -38,7 +38,7 @@ const PopularMoviesPage: NextPage = () => {
 
       <SimpleGrid columns={6} spacingX={4} spacingY={4}>
         {query.data.map((movie) => (
-          <PopularMovieCard
+          <MovieCard
             key={movie.id}
             id={movie.id}
             title={movie.title}

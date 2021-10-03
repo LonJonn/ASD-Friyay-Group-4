@@ -44,8 +44,8 @@ export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
   // Now we transform the response from TMDB into our custom shape that we want
   // to return from our API.
   const transformedMovies = popularMoviesData.results.map((movie): TransformedMovie => {
+    // The release date is split into year and month to improve formatting
     const releaseDate = new Date(movie.release_date);
-
     const year = releaseDate.getFullYear();
     const month = releaseDate.getMonth();
 

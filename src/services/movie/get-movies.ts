@@ -35,19 +35,17 @@ interface IResponse {
 }
 
 /**
- * The shape of the service response. (An array of TranformedMovies from above)
+ * The shape of the service response. (An array of IResponse objects from the above)
  */
 //export type GetMoviesSearchResponse = TransformedMovie[];
 export type GetMoviesSearchResponse = IResponse;
 
 export async function getMovies(query: string): Promise<GetMoviesSearchResponse> {
   // Make request to TMDB
-  console.log(query);
   const response = await fetch(
     `https://api.themoviedb.org/3/search/movie/?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&query=${encodeURI(query)}&include_adult=false`
   );
   
-
   // Parse as JSON, and cast to our type from the TMDB.ts file
   const moviesSearchData = (await response.json()) as MovieSearchResponse;
 
@@ -55,8 +53,8 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
   // to return from our API.
 
   const transformedMovies = moviesSearchData.results.map((movie): TransformedMovie => {
+    // The release date is split into year and month to improve formatting
     const releaseDate = new Date(movie.release_date);
-
     const year = releaseDate.getFullYear();
     const month = releaseDate.getMonth();
     
@@ -73,7 +71,7 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
     };
   });
 
-  
+  // Data is transformed into the shape of the IResponse interfact to allow for pagination
   const processed = {} as IResponse;
   processed.page = moviesSearchData.page;
   processed.isLast = (moviesSearchData.page === moviesSearchData.total_pages);
@@ -82,6 +80,4 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
   
 
   return processed;
-
-  //return transformedMovies;
 }
