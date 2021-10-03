@@ -1,21 +1,12 @@
 import { DeleteConfirmationAlert } from "@app/components/groups/DeleteConfirmationAlert";
 import EditGroupForm from "@app/components/groups/EditGroupForm";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import {
-  AspectRatio,
-  Box,
-  Button,
-  Image,
-  SimpleGrid,
-  Stack,
-  useDisclosure,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Button, Image, SimpleGrid, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { DeleteMovieGroupBody, GetMovieGroupResponse } from "../api/groups/movies/[id]";
+import { useQuery } from "react-query";
+import { GetMovieGroupResponse } from "../api/groups/movies/[id]";
 
 async function getMovieGroup(movieGroupID: string): Promise<GetMovieGroupResponse> {
   return fetch(`/api/groups/movies/${movieGroupID}`).then((res) => res.json());
@@ -26,7 +17,6 @@ const Group: NextPage = () => {
   const id = router.query.id as string;
 
   //-------------Query---------------------
-  const queryClient = useQueryClient();
   const movieGroupQuery = useQuery({
     queryKey: ["movieGroup", id],
     queryFn: () => getMovieGroup(id as string),

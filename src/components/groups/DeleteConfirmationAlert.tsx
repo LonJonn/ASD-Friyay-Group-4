@@ -10,7 +10,7 @@ import {
   Button,
   Text,
 } from "@chakra-ui/react";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import React, { useRef } from "react";
 import { useMutation, useQueryClient } from "react-query";
 

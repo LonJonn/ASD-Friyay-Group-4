@@ -1,5 +1,4 @@
-import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
-import { GetMovieGroupResponse, UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
+import { GetMovieGroupResponse } from "@app/pages/api/groups/movies/[id]";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
@@ -22,17 +21,6 @@ interface EditModalDisclosure {
   onClose: () => void;
   currentGroupData: GetMovieGroupResponse;
 }
-
-// async function updateMovieGroupMutationFn(updateMoviegMutationFnArgs:GetMovieGroupsResponse){
-//   async (updatedMovieGroup: UpdateMovieGroupBody) => {
-//     const response = await fetch(`/api/groups/movies/${updatedMovieGroup.id}`, {
-//       method: "PUT",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(updatedMovieGroup),
-//     });
-
-//     return response;
-// }
 
 const EditGroupForm: React.FC<EditModalDisclosure> = ({ isOpen, onClose, currentGroupData }) => {
   const [emoji, setEmoji] = useState(currentGroupData.emoji);

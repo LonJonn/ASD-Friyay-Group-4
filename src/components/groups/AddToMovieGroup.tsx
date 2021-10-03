@@ -1,13 +1,12 @@
 import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { getAllMovieGroups } from "@app/pages/groups";
-import { TransformedMovieGroup } from "@app/services/groups";
 import { Button } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Stack } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { useRouter } from "next/router";
-import React, { Children } from "react";
+import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 interface UpdateGroupArgs {
