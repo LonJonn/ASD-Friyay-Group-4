@@ -37,19 +37,23 @@ const Group: NextPage = () => {
 
   return (
     <Stack>
-      <Stack spacing={0}>
-        <Text align="center" fontSize="9xl">
-          {movieGroupQuery.data.emoji}
-        </Text>
-        <Text align="center" fontSize="9xl">
-          {movieGroupQuery.data.name}
-        </Text>
+      <Stack>
+        <Text fontSize="7xl">{movieGroupQuery.data.emoji}</Text>
+        <Text fontSize="7xl">{movieGroupQuery.data.name}</Text>
       </Stack>
       <Button onClick={onOpen}>edit group</Button>
       <Button as={Stack} colorScheme="red" onClick={onOpenAlert}>
         delete group
       </Button>
-
+      <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
+        {movieGroupQuery.data.movies.map((movie) => (
+          <Box overflow="hidden" maxH="741px">
+            <Image src={"https://image.tmdb.org/t/p/w500/" + movie.poster_path} objectFit="cover" />
+          </Box>
+        ))}
+      </SimpleGrid>
+      //off screen
+      <EditGroupForm isOpen={isOpen} onClose={onClose} currentGroupData={movieGroupQuery.data} />
       <DeleteConfirmationAlert
         groupId={id}
         emoji={movieGroupQuery.data.emoji}
@@ -58,21 +62,6 @@ const Group: NextPage = () => {
         onClose={onCloseAlert}
         isOpen={isOpenAlert}
       />
-
-      <Stack pt={8}>
-        <SimpleGrid columns={2} spacingY={10} justifyItems={"center"}>
-          {movieGroupQuery.data.movies.map((movie) => (
-            <Box overflow="hidden" maxH="741px">
-              <Image
-                src={"https://image.tmdb.org/t/p/w500/" + movie.poster_path}
-                objectFit="cover"
-              />
-            </Box>
-          ))}
-        </SimpleGrid>
-      </Stack>
-
-      <EditGroupForm isOpen={isOpen} onClose={onClose} currentGroupData={movieGroupQuery.data} />
     </Stack>
   );
 };

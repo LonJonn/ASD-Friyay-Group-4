@@ -1,6 +1,7 @@
 import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { getAllMovieGroups } from "@app/pages/groups";
+import { TransformedMovieGroup } from "@app/services/groups";
 import { Button } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Stack } from "@chakra-ui/layout";
@@ -41,32 +42,44 @@ export const AddToMovieGroup: React.FC = () => {
   });
 
   if (movieGroupsQuery.isLoading) return <Button>Loading...</Button>;
+  if (!movieGroupsQuery.data) return <>Lumfao</>;
+
+  const availableGroups = movieGroupsQuery.data.filter(
+    (movieGroup) => !movieGroup.movieIds.includes(movieId)
+  );
+
+  console.log(availableGroups);
 
   return (
     <Stack pb={4}>
-      <Menu>
-        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          Add to Movie Group
-        </MenuButton>
-        <MenuList>
-          {movieGroupsQuery.data?.map((movieGroup) => {
-            if (movieGroup.movieGroups.includes(movieId)) return;
-            const movieGroupContents = { movieIds: [...movieGroup.movieGroups, movieId] };
-            return (
-              <MenuItem
-                onClick={() =>
-                  updateMutation.mutate({
-                    movieGroupId: movieGroup.id,
-                    movieGroupContents: movieGroupContents,
-                  })
-                }
-              >
-                {movieGroup.emoji} {movieGroup.name}
-              </MenuItem>
-            );
-          })}
-        </MenuList>
-      </Menu>
+      {availableGroups.length === 0 && <Button disabled>No Available Groups</Button>}
+
+      {availableGroups.length > 0 && (
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            Add to Movie Group
+          </MenuButton>
+
+          <MenuList>
+            {availableGroups.map((movieGroup) => {
+              const movieGroupContents = { movieIds: [...movieGroup.movieIds, movieId] };
+              return (
+                <MenuItem
+                  key={movieGroup.id}
+                  onClick={() =>
+                    updateMutation.mutate({
+                      movieGroupId: movieGroup.id,
+                      movieGroupContents: movieGroupContents,
+                    })
+                  }
+                >
+                  {movieGroup.emoji} {movieGroup.name}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Menu>
+      )}
     </Stack>
   );
 };

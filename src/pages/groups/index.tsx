@@ -74,7 +74,7 @@ const GroupsPage: NextPage = () => {
               groupId={group.id}
               emoji={group.emoji}
               imageBackdrop={group.imageBackdrop}
-              movieCount={group.movieGroups.length}
+              movieCount={group.movieIds.length}
               name={group.name}
             />
           ))}

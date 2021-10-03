@@ -8,7 +8,7 @@ export interface TransformedMovieGroup {
   emoji: MovieGroup["emoji"];
   name: MovieGroup["name"];
   imageBackdrop: string;
-  movieGroups: string[];
+  movieIds: string[];
 }
 
 export async function getMovieGroups(userId: User["id"]): Promise<GetMovieGroupsResponse> {
@@ -28,7 +28,7 @@ export async function getMovieGroups(userId: User["id"]): Promise<GetMovieGroups
       id: mg.id,
       emoji: mg.emoji,
       imageBackdrop: `https://image.tmdb.org/t/p/original/${imageBackdrop}`,
-      movieGroups: mg.movieIds,
+      movieIds: mg.movieIds,
       name: mg.name,
     };
   });
