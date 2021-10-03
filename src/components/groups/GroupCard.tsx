@@ -42,7 +42,9 @@ const GroupCard: React.FC<IGroupCard> = ({ group }) => {
         </Heading>
         <Heading size="lg">{group.name}</Heading>
         <Spacer />
-        <Text fontSize="lg">{group.movieIds.length} 🎬</Text>
+        <Heading fontSize="2xl" color="teal.400">
+          {group.movieIds.length} 🎬
+        </Heading>
       </Stack>
     </Box>
   );

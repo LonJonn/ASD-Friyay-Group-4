@@ -45,7 +45,7 @@ const EditGroupForm: React.FC<EditModalDisclosure> = ({ isOpen, onClose, current
   }
 
   return (
-    <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose}>
+    <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Edit Group</ModalHeader>

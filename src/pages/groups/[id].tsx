@@ -2,7 +2,7 @@ import { DeleteConfirmationAlert } from "@app/components/groups/DeleteConfirmati
 import EditGroupForm from "@app/components/groups/EditGroupForm";
 import MovieCard from "@app/components/groups/MovieCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import { Button, SimpleGrid, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Heading, SimpleGrid, Stack, useDisclosure } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -38,17 +38,23 @@ const Group: NextPage = () => {
 
   return (
     <Stack>
-      <Stack>
-        <Text fontSize="7xl">{movieGroupQuery.data.emoji}</Text>
-        <Text fontSize="7xl">{movieGroupQuery.data.name}</Text>
+      <Stack direction="row" justifyContent="space-between" spacing={0}>
+        <Box>
+          <Heading fontSize="9xl">{movieGroupQuery.data.emoji}</Heading>
+          <Heading color="teal.400" fontSize="9xl">
+            {movieGroupQuery.data.name}
+          </Heading>
+        </Box>
+        <Stack alignItems="right" justifyContent="flex-start" pt={4}>
+          <Button onClick={onOpen}>edit</Button>
+          <Button as={Stack} colorScheme="red" onClick={onOpenAlert}>
+            delete
+          </Button>
+        </Stack>
       </Stack>
-      <Button onClick={onOpen}>edit group</Button>
-      <Button as={Stack} colorScheme="red" onClick={onOpenAlert}>
-        delete group
-      </Button>
       <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
         {movieGroupQuery.data.movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+          <MovieCard key={movie.id} movie={movie} movieGroup={movieGroupQuery.data} />
         ))}
       </SimpleGrid>
       //off screen
