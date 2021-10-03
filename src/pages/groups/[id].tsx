@@ -1,7 +1,8 @@
 import { DeleteConfirmationAlert } from "@app/components/groups/DeleteConfirmationAlert";
 import EditGroupForm from "@app/components/groups/EditGroupForm";
+import MovieCard from "@app/components/groups/MovieCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import { Box, Button, Image, SimpleGrid, Stack, Text, useDisclosure } from "@chakra-ui/react";
+import { Button, SimpleGrid, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -47,9 +48,7 @@ const Group: NextPage = () => {
       </Button>
       <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
         {movieGroupQuery.data.movies.map((movie) => (
-          <Box overflow="hidden" maxH="741px">
-            <Image src={"https://image.tmdb.org/t/p/w500/" + movie.poster_path} objectFit="cover" />
-          </Box>
+          <MovieCard key={movie.id} movie={movie} />
         ))}
       </SimpleGrid>
       //off screen

@@ -1,7 +1,6 @@
 import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { getAllMovieGroups } from "@app/pages/groups";
-import { TransformedMovieGroup } from "@app/services/groups";
 import { Button } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Stack } from "@chakra-ui/layout";
@@ -47,8 +46,6 @@ export const AddToMovieGroup: React.FC = () => {
   const availableGroups = movieGroupsQuery.data.filter(
     (movieGroup) => !movieGroup.movieIds.includes(movieId)
   );
-
-  console.log(availableGroups);
 
   return (
     <Stack pb={4}>

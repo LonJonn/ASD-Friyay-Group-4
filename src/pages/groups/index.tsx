@@ -69,14 +69,7 @@ const GroupsPage: NextPage = () => {
       <Box>
         <SimpleGrid columns={2} spacingY={10} justifyItems="center">
           {query.data.map((group) => (
-            <GroupCard
-              key={group.id}
-              groupId={group.id}
-              emoji={group.emoji}
-              imageBackdrop={group.imageBackdrop}
-              movieCount={group.movieIds.length}
-              name={group.name}
-            />
+            <GroupCard group={group} />
           ))}
         </SimpleGrid>
       </Box>

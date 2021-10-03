@@ -1,6 +1,4 @@
 import { MovieGroup } from ".prisma/client";
-import { db } from "@app/lib/db";
-import { MovieDetail } from "@app/typings";
 import { getMovie, GetMovieResponse } from "../movie";
 import { getMovieGroup } from "./get-movie-group";
 

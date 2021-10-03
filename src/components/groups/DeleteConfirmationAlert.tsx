@@ -47,6 +47,7 @@ export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = (
 
   const deleteMutation = useMutation(deleteMutationFn, {
     onSuccess: () => {
+      onClose();
       queryClient.invalidateQueries("movieGroups");
       router.push("/groups");
     },

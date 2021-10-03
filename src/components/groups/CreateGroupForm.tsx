@@ -45,7 +45,6 @@ const CreateGroupForm: React.FC<CreateModalDisclosure> = ({ isOpen, onClose }) =
     });
 
     queryClient.invalidateQueries("movieGroups");
-    console.log(response);
     setEmoji("");
     setName("");
 
