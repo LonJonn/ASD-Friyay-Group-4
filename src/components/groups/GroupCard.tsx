@@ -40,7 +40,7 @@ const GroupCard: React.FC<IGroupCard> = ({ group }) => {
         <Heading pos="absolute" top={0} transform="auto" translateY="-50%" fontSize="5xl">
           {group.emoji}
         </Heading>
-        <Heading size="lg">{group.name}</Heading>
+        <Heading size="lg">{group.name.toUpperCase()}</Heading>
         <Spacer />
         <Heading fontSize="2xl" color="teal.400">
           {group.movieIds.length} 🎬

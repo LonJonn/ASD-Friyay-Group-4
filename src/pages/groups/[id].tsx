@@ -40,10 +40,8 @@ const Group: NextPage = () => {
     <Stack>
       <Stack direction="row" justifyContent="space-between" spacing={0}>
         <Box>
-          <Heading fontSize="9xl">{movieGroupQuery.data.emoji}</Heading>
-          <Heading color="teal.400" fontSize="9xl">
-            {movieGroupQuery.data.name}
-          </Heading>
+          <Heading fontSize="7xl">{movieGroupQuery.data.emoji}</Heading>
+          <Heading fontSize="7xl">{movieGroupQuery.data.name.toUpperCase()}</Heading>
         </Box>
         <Stack alignItems="right" justifyContent="flex-start" pt={4}>
           <Button onClick={onOpen}>edit</Button>

@@ -53,7 +53,7 @@ const CreateGroupForm: React.FC<CreateModalDisclosure> = ({ isOpen, onClose }) =
 
   return (
     <>
-      <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create a New Group</ModalHeader>

@@ -56,8 +56,10 @@ const GroupsPage: NextPage = () => {
 
         <TabPanels>
           <TabPanel p={0}>
-            <Stack a spacing={0}>
-              <Heading py={4}>Movie Groups</Heading>
+            <Stack a spacing={0} alignItems="center">
+              <Heading py={4} fontSize="7xl">
+                MOVIE GROUPS
+              </Heading>
               <Button leftIcon={<AddIcon />} onClick={onOpen}>
                 Add new
               </Button>
