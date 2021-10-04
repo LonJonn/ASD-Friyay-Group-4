@@ -1,14 +1,10 @@
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import { useSession } from "next-auth/client";
-import { Stack, Tab, Tabs, SimpleGrid, TabList, TabPanels, TabPanel, Icon, Box, Heading, List, ListItem, Text } from "@chakra-ui/react";
-import { useQueryClient } from "react-query";
-import { getPopularMovies, GetPopularMoviesResponse } from "@app/services/movie";
+import { Stack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
+import { GetPopularMoviesResponse } from "@app/services/movie";
 import MovieCard from "@app/components/movie/MovieCard";
 import { useQuery } from "react-query";
 import MovieSearchBar from "@app/components/movie/MovieSearchBar";
-
-import { getAllUsers } from "./all-users-client";
 
 async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
   const res = await fetch("/api/movies");
@@ -22,9 +18,6 @@ async function getAllPopularMovies(): Promise<GetPopularMoviesResponse> {
 
 
 const Home: NextPage = () => {
-  const [session, loading] = useSession();
-  const queryClient = useQueryClient();
-
   const query = useQuery<GetPopularMoviesResponse, Error>({
     queryKey: "popularMovies",
     queryFn: getAllPopularMovies,
@@ -36,7 +29,6 @@ const Home: NextPage = () => {
 
   if (query.status === "error") {
     return <Text>Error...{query.error.message}</Text>;
-    console.log(query.data);
   }
 
   return (
