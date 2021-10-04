@@ -27,7 +27,7 @@ interface IMovieCard {
   vote_average: number;
 }
 
-const PopularMovieCard: React.FC<IMovieCard> = ({
+const MovieCard: React.FC<IMovieCard> = ({
   id,
   title,
   poster_path,
@@ -45,7 +45,7 @@ const PopularMovieCard: React.FC<IMovieCard> = ({
   return (
     <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl">
       {/* The poster photo for each 'card' */}
-      <Image objectFit="cover" src={"https://image.tmdb.org/t/p/w500/" + poster_path} />
+      <Image objectFit="cover" src={poster_path} />
 
       <Box p="6">
         <Box alignItems="baseline">
@@ -91,7 +91,7 @@ const PopularMovieCard: React.FC<IMovieCard> = ({
             {title}
           </Box>
 
-          {/* Rendering of the release month and year*/}
+          {/* Rendering of the release month and year */}
           <Box
             color="gray.500"
             fontWeight="semibold"
@@ -99,7 +99,9 @@ const PopularMovieCard: React.FC<IMovieCard> = ({
             fontSize="xs"
             textTransform="uppercase"
           >
-            {release_month} {release_year}
+            {release_month != null && release_year != null
+              ? `${release_month} ${release_year}`
+              : "Release Date N/A"}
           </Box>
         </Box>
       </Box>
@@ -107,4 +109,4 @@ const PopularMovieCard: React.FC<IMovieCard> = ({
   );
 };
 
-export default PopularMovieCard;
+export default MovieCard;

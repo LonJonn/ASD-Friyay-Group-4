@@ -10,6 +10,7 @@ import CommentForm from "@app/components/comments/CommentForm";
 import Comments from "@app/components/comments/Comments";
 
 async function getMovieDetails(id: string): Promise<GetMovieResponse> {
+  // Data is retrieved from the API layer
   const res = await fetch("/api/movies/" + id);
 
   if (!res.ok) {
@@ -32,6 +33,7 @@ const Movie: NextPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  // A query executes to retrieve the data elements that need to be displayed
   const query = useQuery<GetMovieResponse, Error>({
     queryKey: "movie",
     queryFn: () => getMovieDetails(String(id)),
@@ -53,7 +55,7 @@ const Movie: NextPage = () => {
   // Return 2 components by combining them into a div
   // The MovieBaseInfo card will display summary info about a movie
   // The function also returns an array of cards in a grid with the movie actors
-  console.log("Movie ID: " + query.data.title);
+
   return (
     <div>
       <MovieBaseInfo
@@ -78,6 +80,11 @@ const Movie: NextPage = () => {
         classificationRating={query.data.classificationRating}
       />
       <Heading>CAST</Heading>
+      {query.data.actors.length > 0 ? (
+        <Heading>Cast</Heading>
+      ) : (
+        <Text ml="2">Cast Info Unavailable</Text>
+      )}
       <br></br>
       <Stack spacing={5}>
         <SimpleGrid columns={4} spacingX={4} spacingY={4}>

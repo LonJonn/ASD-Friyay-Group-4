@@ -1,6 +1,7 @@
 import CreateGroupForm from "@app/components/groups/CreateGroupForm";
 import GroupCard from "@app/components/groups/GroupCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
+import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -19,9 +20,8 @@ import {
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
-import { GetMovieGroupsResponse } from "../api/groups/movies";
 
-async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
+export async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
   const res = await fetch("/api/groups/movies");
 
   if (!res.ok) {
@@ -56,10 +56,12 @@ const GroupsPage: NextPage = () => {
 
         <TabPanels>
           <TabPanel p={0}>
-            <Stack a spacing={0}>
-              <Heading py={4}>Movie Groups</Heading>
-              <Button leftIcon={<AddIcon />} onClick={onOpen}>
-                Add new
+            <Stack spacing={0} display="inline-flex" mx={6} mt={6}>
+              <Heading mb={10} fontSize="4xl">
+                Movie Groups
+              </Heading>
+              <Button leftIcon={<AddIcon />} onClick={onOpen} display="inline-flex">
+                New Group
               </Button>
             </Stack>
           </TabPanel>
@@ -69,14 +71,7 @@ const GroupsPage: NextPage = () => {
       <Box>
         <SimpleGrid columns={2} spacingY={10} justifyItems="center">
           {query.data.map((group) => (
-            <GroupCard
-              key={group.id}
-              groupId={group.id}
-              emoji={group.emoji}
-              imageBackdrop={group.imageBackdrop}
-              movieCount={group.movieCount}
-              name={group.name}
-            />
+            <GroupCard key={group.id} group={group} />
           ))}
         </SimpleGrid>
       </Box>
