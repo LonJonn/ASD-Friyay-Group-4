@@ -1,7 +1,7 @@
 import { Actor } from "@app/typings";
 
 export type GetActorInput = {
-  id: number;
+  id: string;
 };
 
 export type GetActorResult = Actor | undefined;
