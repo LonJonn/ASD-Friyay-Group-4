@@ -46,6 +46,7 @@ import {
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Comment } from "@prisma/client";
+import Id from "@app/pages/groups/[id]";
 
 interface CommentProps {
   comment: Comment;
@@ -53,6 +54,7 @@ interface CommentProps {
 }
 
 interface CommentDataProps {
+  commentId: string;
   userId: string;
   comment: string;
   dateCreated: Date;
@@ -64,6 +66,7 @@ interface DeleteMovieCommentArgs {
 
 interface UpdateMovieCommentArgs {
   id: string;
+  text: string;
 }
 
 interface CommentLikes {}
@@ -79,6 +82,10 @@ async function deleteMovieCommentFunction(deleteMovieCommentArgs: DeleteMovieCom
 async function updateMovieCommentFunction(updateMovieCommentArgs: UpdateMovieCommentArgs) {
   const response = await fetch(`/api/comments/${updateMovieCommentArgs.id}`, {
     method: "PUT",
+    body: JSON.stringify(updateMovieCommentArgs),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
   return response;
 }
@@ -87,6 +94,7 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
   const queryClient = useQueryClient();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [likes, setLikes] = useState(comment.likes);
+
   const deleteMutation = useMutation(deleteMovieCommentFunction, {
     onSuccess: () => {
       queryClient.invalidateQueries(["comments", movieId]);
@@ -95,13 +103,11 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
   });
   const updateMutation = useMutation(updateMovieCommentFunction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments"], comment.id);
+      queryClient.invalidateQueries(["comments", movieId]);
     },
   });
 
-  const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated }) => {
-    const [lines, setLines] = useState(3);
-
+  const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated, commentId }) => {
     function EditComment() {
       function EditableControls() {
         const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } =
@@ -134,7 +140,14 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
         );
       }
       return (
-        <Editable defaultValue={comment} fontSize="md" isPreviewFocusable={false}>
+        <Editable
+          defaultValue={comment}
+          fontSize="md"
+          isPreviewFocusable={false}
+          onSubmit={(newComment) => {
+            updateMutation.mutate({ id: commentId, text: newComment });
+          }}
+        >
           <EditablePreview />
           <EditableInput />
           <EditableControls />
@@ -153,12 +166,7 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
           <Text color="gray.500" mb={4} fontSize="xs" marginBottom={0}>
             {dateCreated}
           </Text>
-          {/* <Text noOfLines={lines}>{comment}</Text> */}
-
           <EditComment />
-          <Button variant="link" onClick={() => setLines(lines + 100)}>
-            Show More
-          </Button>
         </Box>
       </>
     );
@@ -200,13 +208,14 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
           <Upvote></Upvote>
         </VStack>
         <CommentData
+          commentId={comment.id}
           comment={comment.text}
           userId={comment.userId}
           dateCreated={comment.createdAt}
         />
-        <Popover>
+        {/* <Popover isLazy placement="bottom-start">
           <PopoverTrigger>
-            <Button variant="ghost">
+            <Button variant="ghost" flexShrink={0}>
               <AddIcon />
             </Button>
           </PopoverTrigger>
@@ -221,10 +230,10 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
               </PopoverBody>
             </PopoverContent>
           </Portal>
-        </Popover>
+        </Popover> */}
         <Spacer />
         <Menu>
-          <MenuButton variant="ghost" as={Button}>
+          <MenuButton variant="ghost" alignItems="center" as={Button} flexShrink={0}>
             <HamburgerIcon />
           </MenuButton>
           <MenuList>

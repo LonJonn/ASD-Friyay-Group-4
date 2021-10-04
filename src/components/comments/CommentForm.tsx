@@ -1,8 +1,9 @@
 import { Box, Button, Text, Textarea, Avatar, Heading } from "@chakra-ui/react";
 import {} from "@chakra-ui/icons";
 import { QueryClient, useMutation, useQueryClient } from "react-query";
-import { CommentPostBody } from "@app/pages/api/comments";
+// import { CommentPostBody } from "@app/pages/api/comments";
 import { useState } from "react";
+import { CommentPostBody } from "@app/pages/api/comments/movie/[movieId]";
 // import { createMovieComment } from "@app/services/comment";
 
 interface CommentFormProps {
