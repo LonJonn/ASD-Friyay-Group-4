@@ -2,14 +2,16 @@ import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
 
 import {
-  createMovieComment,
   CreateMovieCommentInput,
-  CreateMovieCommentResult,
+  deleteMovieComment,
+  DeleteMovieCommentInput,
+  DeleteMovieCommentResult,
 } from "@app/services/comment";
 
 export type CommentPostBody = Pick<CreateMovieCommentInput, "text">;
 
-type CreateMovieCommentResponse = CreateMovieCommentResult;
+type CommentDeleteBody = Pick<DeleteMovieCommentInput["where"], "id">;
+type DeleteMovieCommentResponse = DeleteMovieCommentResult;
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });

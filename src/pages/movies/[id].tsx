@@ -20,7 +20,7 @@ async function getMovieDetails(id: string): Promise<GetMovieResponse> {
 }
 
 async function getMovieComments(id: string): Promise<GetMovieCommentsResult> {
-  const commentRes = await fetch("/api/comments/" + id);
+  const commentRes = await fetch("/api/comments/movie/" + id);
 
   if (!commentRes.ok) {
     throw new Error("Unable to get comments");
@@ -99,15 +99,7 @@ const Movie: NextPage = () => {
       <CommentForm movieId={id as string} />
       <Stack>
         {movieCommentsQuery.data?.map((comment) => (
-          <Comments
-            key={comment.id}
-            comment={comment.text}
-            dateCreated={comment.createdAt}
-            likes={comment.likes}
-            userId={comment.userId}
-            parentId={comment.userId}
-            movieId={comment.movieId}
-          />
+          <Comments key={comment.id} comment={comment} movieId={id as string} />
         ))}
       </Stack>
     </div>
