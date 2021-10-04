@@ -15,7 +15,7 @@ interface CreateMovieCommentArgs {
 }
 
 async function createMovieCommentFunction(createMovieCommentArgs: CreateMovieCommentArgs) {
-  const response = await fetch(`/api/comments/${createMovieCommentArgs.movieId}`, {
+  const response = await fetch(`/api/comments/movie/${createMovieCommentArgs.movieId}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(createMovieCommentArgs.movieCommentContents),
@@ -41,12 +41,15 @@ const CommentForm: React.FC<CommentFormProps> = ({ movieId }) => {
       </Heading>
       <Textarea
         placeholder="Type your comment here..."
+        size="lg"
         value={commentValue}
         onChange={(e) => setCommentValue(e.target.value)}
       />
       <Button
+        marginTop={4}
         marginBottom={8}
         size="xs"
+        resize="horizontal"
         onClick={() =>
           createMutation.mutate({ movieId: movieId, movieCommentContents: { text: commentValue } })
         }
