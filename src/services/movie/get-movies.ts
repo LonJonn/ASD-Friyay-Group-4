@@ -1,4 +1,4 @@
-import { PopularMoviesResponse, PopularMovieResult } from "@app/typings/TMDB";
+import { MovieSearchResponse, MovieSearchResult } from "@app/typings/TMDB";
 
 const MONTHS = [
   "January",
@@ -20,35 +20,44 @@ const MONTHS = [
  */
 interface TransformedMovie
   extends Pick<
-    PopularMovieResult,
+    MovieSearchResult,
     "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path"
   > {
   release_month: string;
   release_year: number;
 }
 
-/**
- * The shape of the service response. (An array of TranformedMovies from above)
- */
-export type GetPopularMoviesResponse = TransformedMovie[];
+interface IResponse {
+  movies: TransformedMovie[];
+  page: number;
+  isLast: boolean;
+  totalPages: number;
+}
 
-export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
+/**
+ * The shape of the service response. (An array of IResponse objects from the above)
+ */
+//export type GetMoviesSearchResponse = TransformedMovie[];
+export type GetMoviesSearchResponse = IResponse;
+
+export async function getMovies(query: string): Promise<GetMoviesSearchResponse> {
   // Make request to TMDB
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+    `https://api.themoviedb.org/3/search/movie/?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&query=${encodeURI(query)}&include_adult=false`
   );
-
+  
   // Parse as JSON, and cast to our type from the TMDB.ts file
-  const popularMoviesData = (await response.json()) as PopularMoviesResponse;
+  const moviesSearchData = (await response.json()) as MovieSearchResponse;
 
   // Now we transform the response from TMDB into our custom shape that we want
   // to return from our API.
-  const transformedMovies = popularMoviesData.results.map((movie): TransformedMovie => {
+
+  const transformedMovies = moviesSearchData.results.map((movie): TransformedMovie => {
     // The release date is split into year and month to improve formatting
     const releaseDate = new Date(movie.release_date);
     const year = releaseDate.getFullYear();
     const month = releaseDate.getMonth();
-
+    
     return {
       id: movie.id,
       title: movie.title,
@@ -62,5 +71,13 @@ export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
     };
   });
 
-  return transformedMovies;
+  // Data is transformed into the shape of the IResponse interfact to allow for pagination
+  const processed = {} as IResponse;
+  processed.page = moviesSearchData.page;
+  processed.isLast = (moviesSearchData.page === moviesSearchData.total_pages);
+  processed.movies = transformedMovies;
+  processed.totalPages = moviesSearchData.total_pages;
+  
+
+  return processed;
 }

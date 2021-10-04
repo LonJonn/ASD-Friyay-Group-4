@@ -112,6 +112,13 @@ export interface Country {
   release_date: Date;
 }
 
+export interface MovieSearchResponse {
+  page: number;
+  results: MovieSearchResult[];
+  total_results: number;
+  total_pages: number;
+}
+
 export interface Actor {
   birthday: Date;
   known_for_department: string;
@@ -132,10 +139,24 @@ export interface Actor {
 export interface ActorSearchResult {
   page: number;
   results: ActorResult[];
-  total_results: number;
-  total_pages: number;
 }
 
+export interface MovieSearchResult {
+  adult: boolean;
+  genre_ids: number[];
+  id: number;
+  original_language: OriginalLanguage;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  backdrop_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
+}
 export interface ActorResult {
   profile_path: string;
   adult: boolean;
