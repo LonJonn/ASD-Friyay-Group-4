@@ -20,9 +20,18 @@ steps:
       npm run build
     displayName: "npm install and build"
 
-  - script: |
-      npm run test
-    displayName: "run npm unit tests"
+  - task: Npm@1
+    displayName: npm run test
+    inputs:
+      command: 'custom'
+      workingDir: 'src/services'
+      customCommand: 'run test:ci'
+  
+  - task: PublishTestResults@2
+    displayName: 'supply npm test results to pipelines'
+    condition: succeededOrFailed() # because otherwise we won't know what tests failed
+    inputs:
+      testResultsFiles: 'src/services/junit.xml'
 
   - task: CopyFiles@2
     inputs:
