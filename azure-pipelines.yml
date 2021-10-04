@@ -25,8 +25,8 @@ steps:
     displayName: "npm test-ci"
   
   - task: PublishTestResults@2
-    displayName: 'supply npm test results to pipelines'
-    condition: succeededOrFailed() # because otherwise we won't know what tests failed
+    displayName: 'report on test results'
+    condition: succeededOrFailed()
     inputs:
       testResultsFiles: './junit.xml'
 
