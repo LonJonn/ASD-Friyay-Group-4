@@ -1,4 +1,5 @@
-import { MovieGroupDeleteBody } from "@app/pages/api/groups/movies";
+import { MovieGroup } from ".prisma/client";
+import { DeleteMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { CloseIcon } from "@chakra-ui/icons";
 import {
@@ -12,7 +13,8 @@ import {
 } from "@chakra-ui/modal";
 import { Button, Text } from "@chakra-ui/react";
 import { useRef } from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
+import DeleteConfirmationAlert from "./DeleteConfirmationAlert";
 
 export interface IDeleteGroupButton {
   groupId: string;
@@ -23,25 +25,6 @@ export interface IDeleteGroupButton {
 
 const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({ groupId, emoji, name, movieCount }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef(null);
-
-  const queryClient = useQueryClient();
-
-  //useMutation plox!!! later
-  async function deleteMovieRequest() {
-    const requestBody: MovieGroupDeleteBody = { id: groupId };
-    const response = await fetch("/api/groups/movies", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    queryClient.invalidateQueries("movieGroups");
-    console.log(response);
-    onClose();
-  }
 
   return (
     <>
@@ -65,34 +48,14 @@ const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({ groupId, emoji, name,
         }}
       />
 
-      <AlertDialog
-        motionPreset="slideInBottom"
+      <DeleteConfirmationAlert
+        groupId={groupId}
+        emoji={emoji}
+        groupName={name}
+        movieCount={movieCount}
         onClose={onClose}
         isOpen={isOpen}
-        isCentered
-        leastDestructiveRef={cancelRef}
-      >
-        <AlertDialogOverlay />
-
-        <AlertDialogContent>
-          <AlertDialogHeader>Delete Group?</AlertDialogHeader>
-          <AlertDialogCloseButton />
-          <AlertDialogBody>
-            <Text>
-              Are you sure you want to delete the {emoji} {name} group?
-            </Text>
-            <Text>All {movieCount.toString()} movie(s) in the group will be lost. </Text>
-          </AlertDialogBody>
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              No
-            </Button>
-            <Button colorScheme="red" ml={3} onClick={deleteMovieRequest}>
-              Yes
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      />
     </>
   );
 };
