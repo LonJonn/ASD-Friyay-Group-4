@@ -1,5 +1,21 @@
-import { Box, Image, Text, Heading, Table, Stack, Badge, Tooltip, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Text,
+  Heading,
+  Table,
+  Stack,
+  Badge,
+  Tooltip,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { Genre, Cast, Country } from "@app/typings";
+import React from "react";
+import { AddToMovieGroup } from "../groups/AddToMovieGroup";
 
 interface IMovieBaseInfoCard {
   key: number;
@@ -23,8 +39,23 @@ interface IMovieBaseInfoCard {
   classificationRating: Country[];
 }
 
-const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, original_language, release_month, release_year,
-  overview, tagline, budget, revenue, runtime, genres, writers, exec_producers, producers, classificationRating }) => {
+const MovieHeader: React.FC<IMovieBaseInfoCard> = ({
+  title,
+  poster_path,
+  original_language,
+  release_month,
+  release_year,
+  overview,
+  tagline,
+  budget,
+  revenue,
+  runtime,
+  genres,
+  writers,
+  exec_producers,
+  producers,
+  classificationRating,
+}) => {
   return (
     <Box p={4} display={{ md: "flex" }}>
       <Box flexShrink={0}>
@@ -36,7 +67,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
           alt="Movie Poster"
         />
       </Box>
-      
+
       <Box mt={{ base: 4, md: 0 }} ml={{ md: 6 }}>
         {/* Rendering of the movie title as the page heading */}
         <Heading
@@ -47,10 +78,21 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
           color="teal.600"
         >
           {title}
-          
-          <Tooltip label={{original_language}.original_language.match("en")  ? 'English' : 'Non-English Language'} >
-            <Badge borderRadius="full" ml="2" px="2" colorScheme={{original_language}.original_language.match("en")  ? 'teal' : 'orange'}>
-              {{original_language}.original_language.match("en")  ? 'ENG' : 'NEL'} 
+
+          <Tooltip
+            label={
+              { original_language }.original_language.match("en")
+                ? "English"
+                : "Non-English Language"
+            }
+          >
+            <Badge
+              borderRadius="full"
+              ml="2"
+              px="2"
+              colorScheme={{ original_language }.original_language.match("en") ? "teal" : "orange"}
+            >
+              {{ original_language }.original_language.match("en") ? "ENG" : "NEL"}
             </Badge>
           </Tooltip>
 
@@ -98,7 +140,9 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
 
         <br></br>
         
-        {/* Rendering of a table to display budget, revenue and runtime */}
+        <AddToMovieGroup />
+
+        {/* Rendering of a table to display budget, revenue and runtime*/}
         <Table variant="simple">
           <Thead>
             <Tr>
@@ -123,10 +167,10 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
             </Tr>
           </Tbody>
         </Table>
-        
+
         <br></br>
-        
-        {/* Key credits are rendered as a horizontal stack of boxes */}
+
+        {/* Key credits are rendered as a horizontal stack of boxes*/}
         <Stack direction={["column", "row"]} spacing="24px">
           <Box overflow="hidden">
             <Box
@@ -152,7 +196,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
               letterSpacing="wide"
               fontSize="s"
               textTransform="uppercase"
-              textAlign="left" 
+              textAlign="left"
               ml="2"
             >
               {"Executive Producers"}
@@ -172,7 +216,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
               letterSpacing="wide"
               fontSize="s"
               textTransform="uppercase"
-              textAlign="left" 
+              textAlign="left"
               ml="2"
             >
               {"Producers"}
@@ -183,8 +227,7 @@ const MovieHeader: React.FC<IMovieBaseInfoCard> = ({ title, poster_path, origina
               {producers.length != 0 ? producers.map(producer => <Text ml="2" key={producer.name}>{producer.name}</Text>) : <Text ml="2">N/A</Text>}
             </Box>
           </Box>
-      </Stack>            
-
+        </Stack>
       </Box>
     </Box>
   );

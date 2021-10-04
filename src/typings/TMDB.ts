@@ -119,6 +119,28 @@ export interface MovieSearchResponse {
   total_pages: number;
 }
 
+export interface Actor {
+  birthday: Date;
+  known_for_department: string;
+  deathday: null;
+  id: number;
+  name: string;
+  also_known_as: string[];
+  gender: number;
+  biography: string;
+  popularity: number;
+  place_of_birth: string;
+  profile_path: string;
+  adult: boolean;
+  imdb_id: string;
+  homepage: null;
+}
+
+export interface ActorSearchResult {
+  page: number;
+  results: ActorResult[];
+}
+
 export interface MovieSearchResult {
   adult: boolean;
   genre_ids: number[];
@@ -134,4 +156,46 @@ export interface MovieSearchResult {
   video: boolean;
   vote_average: number;
   vote_count: number;
+}
+export interface ActorResult {
+  profile_path: string;
+  adult: boolean;
+  id: number;
+  known_for: KnownFor[];
+  name: string;
+  popularity: number;
+  gender: 1 | 2;
+}
+
+export interface KnownFor {
+  poster_path: string;
+  adult?: boolean;
+  overview: string;
+  release_date?: Date;
+  original_title?: string;
+  genre_ids: number[];
+  id: number;
+  media_type: MediaType;
+  original_language: OriginalLanguage;
+  title?: string;
+  backdrop_path: string;
+  popularity: number;
+  vote_count: number;
+  video?: boolean;
+  vote_average: number;
+  first_air_date?: Date;
+  origin_country?: string[];
+  name?: string;
+  original_name?: string;
+}
+
+export enum MediaType {
+  Movie = "movie",
+  Tv = "tv",
+}
+
+export interface ActorCredits {
+  cast: Cast[];
+  crew: Cast[];
+  id: number;
 }
