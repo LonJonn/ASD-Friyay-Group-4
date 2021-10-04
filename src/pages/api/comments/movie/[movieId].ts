@@ -13,7 +13,7 @@ import {
 import { getSession } from "next-auth/client";
 
 export type MovieCommentsGetResponse = GetMovieCommentsResult;
-export type CommentPostBody = Pick<CreateMovieCommentInput, "movieId" | "text">;
+export type CommentPostBody = Pick<CreateMovieCommentInput, "text">;
 
 type CreateMovieCommentResponse = CreateMovieCommentResult;
 type CommentDeleteBody = Pick<DeleteMovieCommentInput["where"], "id">;

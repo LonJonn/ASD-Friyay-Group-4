@@ -79,7 +79,6 @@ const Movie: NextPage = () => {
         producers={query.data.producers}
         classificationRating={query.data.classificationRating}
       />
-      <Heading>CAST</Heading>
       {query.data.actors.length > 0 ? (
         <Heading>Cast</Heading>
       ) : (
