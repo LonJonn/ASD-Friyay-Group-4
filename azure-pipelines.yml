@@ -21,14 +21,14 @@ steps:
     displayName: "npm install and build"
 
   - script: |
-      npm run test:ci
-    displayName: "npm run tests"
+      npm run test-ci
+    displayName: "npm test-ci"
   
   - task: PublishTestResults@2
     displayName: 'supply npm test results to pipelines'
     condition: succeededOrFailed() # because otherwise we won't know what tests failed
     inputs:
-      testResultsFiles: 'src/services/junit.xml'
+      testResultsFiles: './junit.xml'
 
   - task: CopyFiles@2
     inputs:
