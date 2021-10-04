@@ -20,12 +20,9 @@ steps:
       npm run build
     displayName: "npm install and build"
 
-  - task: Npm@1
-    displayName: npm run test
-    inputs:
-      command: 'custom'
-      workingDir: 'src/services'
-      customCommand: 'npm run test:ci'
+  - script: |
+      npm run test:ci
+    displayName: "npm run tests"
   
   - task: PublishTestResults@2
     displayName: 'supply npm test results to pipelines'
