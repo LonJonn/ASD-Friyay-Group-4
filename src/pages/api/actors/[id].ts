@@ -7,7 +7,7 @@ const handler: NextApiHandler = async (req, res) => {
   if (req.method === "GET") {
     const id = req.query.id as string;
 
-    const actor = await getActor({ id: parseInt(id) });
+    const actor = await getActor({ id: id });
 
     return res.json(actor as GetActorByIDResponse);
   }

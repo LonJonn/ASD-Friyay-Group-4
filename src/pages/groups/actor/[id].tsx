@@ -1,3 +1,4 @@
+import { ActorCard } from "@app/components/groups/actor/ActorCard";
 import DeleteConfirmationAlert from "@app/components/groups/DeleteConfirmationAlert";
 import EditGroupForm from "@app/components/groups/EditGroupForm";
 import { withAuthRequired } from "@app/lib/with-auth-required";
@@ -48,7 +49,7 @@ const ActorGroupPage: NextPage = () => {
       </Stack>
       <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
         {actorGroupQuery.data.actors.map((actor) => (
-          <div key={actor?.id}>{actor?.name}</div>
+          <ActorCard key={actor?.id} actor={actor} actorGroup={actorGroupQuery.data} />
         ))}
       </SimpleGrid>
       <EditGroupForm
