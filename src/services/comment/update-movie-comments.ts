@@ -1,5 +1,5 @@
 import { db } from "@app/lib/db";
-import { Comment, Prisma } from "@prisma/client";
+import { Comment } from "@prisma/client";
 
 export type UpdateMovieCommentInput = { id: Comment["id"]; text: Comment["text"] };
 export type UpdateMovieCommentResult = Comment;

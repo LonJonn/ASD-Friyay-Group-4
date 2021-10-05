@@ -23,11 +23,6 @@ import {
   MenuItem,
   MenuList,
   Spacer,
-  Popover,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  Portal,
   Editable,
   EditableInput,
   EditablePreview,
@@ -38,7 +33,6 @@ import {
   ArrowUpIcon,
   ArrowDownIcon,
   HamburgerIcon,
-  AddIcon,
   CheckIcon,
   CloseIcon,
   EditIcon,
@@ -46,7 +40,6 @@ import {
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Comment } from "@prisma/client";
-import Id from "@app/pages/groups/movie/[id]";
 
 interface CommentProps {
   comment: Comment;
@@ -75,7 +68,6 @@ async function deleteMovieCommentFunction(deleteMovieCommentArgs: DeleteMovieCom
   const response = await fetch(`/api/comments/${deleteMovieCommentArgs.movieCommentId}`, {
     method: "DELETE",
   });
-
   return response;
 }
 
@@ -213,24 +205,6 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
           userId={comment.userId}
           dateCreated={comment.createdAt}
         />
-        {/* <Popover isLazy placement="bottom-start">
-          <PopoverTrigger>
-            <Button variant="ghost" flexShrink={0}>
-              <AddIcon />
-            </Button>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent>
-              <PopoverBody>
-                <Button variant="ghost">😆</Button>
-                <Button variant="ghost">😲</Button>
-                <Button variant="ghost">😢</Button>
-                <Button variant="ghost">😠</Button>
-                <Button variant="ghost">👍</Button>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover> */}
         <Spacer />
         <Menu>
           <MenuButton variant="ghost" alignItems="center" as={Button} flexShrink={0}>

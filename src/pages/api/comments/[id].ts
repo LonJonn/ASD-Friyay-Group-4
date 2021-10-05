@@ -2,9 +2,7 @@ import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
 
 import {
-  CreateMovieCommentInput,
   deleteMovieComment,
-  DeleteMovieCommentInput,
   DeleteMovieCommentResult,
   updateMovieComment,
   UpdateMovieCommentInput,
@@ -33,7 +31,6 @@ const handler: NextApiHandler = async (req, res) => {
   if (req.method === "PUT") {
     const id = req.query.id as string;
     const body = req.body as CommentUpdateBody;
-    // console.log(typeof body);
     const updateComment = (await updateMovieComment({
       id: id,
       text: body.text,

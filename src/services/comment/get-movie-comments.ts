@@ -5,9 +5,9 @@ export type GetMovieCommentsInput = Comment["movieId"];
 export type GetMovieCommentsResult = Comment[];
 
 export async function getMovieComments(
-  movieId: GetMovieCommentsInput
+  args: GetMovieCommentsInput
 ): Promise<GetMovieCommentsResult> {
-  const movieComments = await db.comment.findMany({ where: { movieId } });
+  const movieComments = await db.comment.findMany({ where: { movieId: args } });
 
   if (!movieComments) {
     throw new Error("Comments not found...");
