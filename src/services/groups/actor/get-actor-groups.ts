@@ -18,7 +18,7 @@ export async function getActorGroups(args: GetActorGroupsInput): Promise<GetActo
 
   const summarisedActorGroups = actorGroups.map(
     async (actorGroup): Promise<SummarisedActorGroup> => {
-      var imageBackdrop = "https://via.placeholder.com/1000";
+      var imageBackdrop = "https://via.placeholder.com/500";
       if (actorGroup.actorIds.length > 0) {
         const actorData = await getActor({
           id: actorGroup.actorIds[actorGroup.actorIds.length - 1],
@@ -26,10 +26,20 @@ export async function getActorGroups(args: GetActorGroupsInput): Promise<GetActo
         imageBackdrop = actorData!.profile_path;
       }
 
+      if (imageBackdrop === "https://via.placeholder.com/500") {
+        return {
+          id: actorGroup.id,
+          emoji: actorGroup.emoji,
+          imageBackdrop: imageBackdrop,
+          actorIds: actorGroup.actorIds,
+          name: actorGroup.name,
+        };
+      }
+
       return {
         id: actorGroup.id,
         emoji: actorGroup.emoji,
-        imageBackdrop: imageBackdrop,
+        imageBackdrop: `https://image.tmdb.org/t/p/original/${imageBackdrop}`,
         name: actorGroup.name,
         actorIds: actorGroup.actorIds,
       };
