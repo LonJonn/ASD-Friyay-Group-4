@@ -82,7 +82,7 @@ const GroupsPage: NextPage = () => {
         <TabPanels>
           {/*--------------------------Movies Page--------------------------*/}
           <TabPanel>
-            <Stack spacing={0} m={6} display="inline-flex">
+            <Stack spacing={0} m={6} display="inline-flex" flexGrow={0}>
               <Heading mb={10} fontSize="4xl">
                 Movie Groups
               </Heading>
@@ -109,7 +109,7 @@ const GroupsPage: NextPage = () => {
 
           {/*--------------------------Actors Page--------------------------*/}
           <TabPanel>
-            <Stack spacing={0} m={6} display="inline-flex">
+            <Stack spacing={0} m={6} display="inline-flex" flexGrow={0}>
               <Heading mb={10} fontSize="4xl">
                 Actor Groups
               </Heading>

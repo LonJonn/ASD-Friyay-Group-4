@@ -52,6 +52,7 @@ export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = (
 }) => {
   const cancelRef = useRef(null);
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const deleteMutation = useMutation(deleteMutationFn, {
     onSuccess: () => {
@@ -61,6 +62,10 @@ export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = (
       }
       if (type === "actors") {
         queryClient.invalidateQueries("actorGroups");
+      }
+
+      if (router.query.id) {
+        router.push("/groups");
       }
     },
   });
@@ -81,7 +86,6 @@ export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = (
           <Text>
             Are you sure you want to delete the {emoji} {groupName} group?
           </Text>
-          {/*Conditional HERE*/}
           {type === "movies" && (
             <Text>All {itemCount.toString()} movie(s) in the group will be lost. </Text>
           )}

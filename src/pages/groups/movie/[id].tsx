@@ -55,7 +55,12 @@ const Group: NextPage = () => {
           <MovieCard key={movie.id} movie={movie} movieGroup={movieGroupQuery.data} />
         ))}
       </SimpleGrid>
-      <EditGroupForm isOpen={isOpen} onClose={onClose} currentGroupData={movieGroupQuery.data} />
+      <EditGroupForm
+        isOpen={isOpen}
+        onClose={onClose}
+        currentGroupData={movieGroupQuery.data}
+        type="movies"
+      />
       <DeleteConfirmationAlert
         groupId={id}
         emoji={movieGroupQuery.data.emoji}

@@ -37,7 +37,7 @@ const GroupCard: React.FC<IGroupCard> = ({ group }) => {
         type={"movies"}
       />
 
-      <Stack pos="relative" direction="row" alignItems="center" p={10} pt={12} spacing={0}>
+      <Stack pos="relative" direction="row" alignItems="center" p={8} pt={10} spacing={0}>
         <Heading pos="absolute" top={0} transform="auto" translateY="-50%" fontSize="5xl">
           {group.emoji}
         </Heading>
