@@ -1,25 +1,25 @@
-import { GetMovieGroupResponse } from "@app/pages/api/groups/movies/[id]";
-import { GetMovieResponse } from "@app/services/movie";
+import { GetActorResponse } from "@app/pages/api/actors";
+import { GetActorGroupResponse } from "@app/pages/api/groups/actors/[id]";
+import { Actor, ActorResult } from "@app/typings";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { Box, Image } from "@chakra-ui/react";
-import { updateLayoutMeasurement } from "framer-motion/types/render/dom/projection/utils";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { updateGroupFunction } from "./AddToMovieGroup";
+import { updateGroupFunction } from "../AddToMovieGroup";
 
-interface IMovieCard {
-  movie: GetMovieResponse;
-  movieGroup: GetMovieGroupResponse;
+interface IActorCard {
+  actor: Actor;
+  actorGroup: GetActorGroupResponse;
 }
 
-const MovieCard: React.FC<IMovieCard> = ({ movie, movieGroup }) => {
+export const ActorCard: React.FC<IActorCard> = ({ actor, actorGroup }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation(updateGroupFunction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["movieGroup", movieGroup.id]);
+      queryClient.invalidateQueries(["actorGroup", actorGroup.id]);
     },
   });
 
@@ -28,10 +28,10 @@ const MovieCard: React.FC<IMovieCard> = ({ movie, movieGroup }) => {
       overflow="hidden"
       maxH="445px"
       _hover={{ transform: "scale(1.02)", transition: "0.5s" }}
-      onClick={() => router.push(`/movies/${movie.id}`)}
+      onClick={() => router.push(`/actors/${actor.id}`)}
     >
       <Image
-        src={"https://image.tmdb.org/t/p/w500/" + movie.poster_path}
+        src={"https://image.tmdb.org/t/p/w500/" + actor.profile_path}
         objectFit="cover"
         position="relative"
       />
@@ -48,11 +48,11 @@ const MovieCard: React.FC<IMovieCard> = ({ movie, movieGroup }) => {
         color="gray.100"
         _hover={{ color: "red.300", transition: "0.5s" }}
         onClick={(e) => {
-          const updatedMovieIds = movieGroup.movieIds.filter((id) => id != movie.id.toString());
+          const updatedActorIds = actorGroup.actorIds.filter((id) => id != actor.id.toString());
           updateMutation.mutate({
-            type: "movies",
-            movieGroupId: movieGroup.id,
-            movieGroupContents: { movieIds: updatedMovieIds },
+            type: "actors",
+            actorGroupId: actorGroup.id,
+            actorGroupContents: { actorIds: updatedActorIds },
           });
           e.stopPropagation();
         }}
@@ -60,5 +60,3 @@ const MovieCard: React.FC<IMovieCard> = ({ movie, movieGroup }) => {
     </Box>
   );
 };
-
-export default MovieCard;

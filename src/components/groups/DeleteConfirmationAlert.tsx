@@ -15,31 +15,40 @@ import React, { useRef } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 interface DeleteConfirmationAlertProps {
-  movieCount: number;
+  itemCount: number;
   onClose: () => void;
   isOpen: boolean;
   emoji: string;
   groupName: string;
   groupId: string;
+  type: string;
 }
 
-async function deleteMutationFn(deleteMovieGroupArgs: DeleteMovieGroupBody) {
-  const response = await fetch(`/api/groups/movies/${deleteMovieGroupArgs.id}`, {
+interface DeleteMutationFnArgs extends DeleteMovieGroupBody {
+  type?: string;
+}
+
+//used for both Actor and MovieGroup but uses only DeleteMovieGroupBody type as they are the same!
+async function deleteMutationFn(deleteGroupArgs: DeleteMutationFnArgs) {
+  const type = deleteGroupArgs.type;
+  delete deleteGroupArgs.type;
+  const response = await fetch(`/api/groups/${type}/${deleteGroupArgs.id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(deleteMovieGroupArgs),
+    body: JSON.stringify(deleteGroupArgs),
   });
 
   return response;
 }
 
 export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = ({
-  movieCount,
+  itemCount,
   onClose,
   isOpen,
   emoji,
   groupName,
   groupId,
+  type,
 }) => {
   const cancelRef = useRef(null);
   const queryClient = useQueryClient();
@@ -48,8 +57,16 @@ export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = (
   const deleteMutation = useMutation(deleteMutationFn, {
     onSuccess: () => {
       onClose();
-      queryClient.invalidateQueries("movieGroups");
-      router.push("/groups");
+      if (type === "movies") {
+        queryClient.invalidateQueries("movieGroups");
+      }
+      if (type === "actors") {
+        queryClient.invalidateQueries("actorGroups");
+      }
+
+      if (router.query.id) {
+        router.push("/groups");
+      }
     },
   });
 
@@ -69,13 +86,22 @@ export const DeleteConfirmationAlert: React.FC<DeleteConfirmationAlertProps> = (
           <Text>
             Are you sure you want to delete the {emoji} {groupName} group?
           </Text>
-          <Text>All {movieCount.toString()} movie(s) in the group will be lost. </Text>
+          {type === "movies" && (
+            <Text>All {itemCount.toString()} movie(s) in the group will be lost. </Text>
+          )}
+          {type === "actors" && (
+            <Text>All {itemCount.toString()} actor(s) in the group will be lost. </Text>
+          )}
         </AlertDialogBody>
         <AlertDialogFooter>
           <Button ref={cancelRef} onClick={onClose}>
             No
           </Button>
-          <Button colorScheme="red" ml={3} onClick={() => deleteMutation.mutate({ id: groupId })}>
+          <Button
+            colorScheme="red"
+            ml={3}
+            onClick={() => deleteMutation.mutate({ id: groupId, type: type })}
+          >
             Yes
           </Button>
         </AlertDialogFooter>

@@ -36,9 +36,6 @@ const handler: NextApiHandler = async (req, res) => {
     return res.send(movieGroup);
   }
 
-  if (req.method === "POST") {
-  }
-
   if (req.method === "PUT") {
     const movieGroupId = req.query.id as string;
     const updatedMovieGroupBody = req.body as UpdateMovieGroupBody;

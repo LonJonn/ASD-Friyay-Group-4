@@ -19,9 +19,16 @@ import { useQueryClient } from "react-query";
 export interface CreateModalDisclosure {
   isOpen: boolean;
   onClose: () => void;
+  apiEndPoint: string;
+  queryInvalidationKey: string;
 }
 
-const CreateGroupForm: React.FC<CreateModalDisclosure> = ({ isOpen, onClose }) => {
+const CreateGroupForm: React.FC<CreateModalDisclosure> = ({
+  isOpen,
+  onClose,
+  apiEndPoint,
+  queryInvalidationKey,
+}) => {
   const [emoji, setEmoji] = useState("");
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
@@ -36,7 +43,7 @@ const CreateGroupForm: React.FC<CreateModalDisclosure> = ({ isOpen, onClose }) =
     };
 
     //useMutation from reactQuery should be used
-    const response = await fetch("/api/groups/movies", {
+    const response = await fetch(`/api/groups/${apiEndPoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +51,7 @@ const CreateGroupForm: React.FC<CreateModalDisclosure> = ({ isOpen, onClose }) =
       body: JSON.stringify(requestBody),
     });
 
-    queryClient.invalidateQueries("movieGroups");
+    queryClient.invalidateQueries(`${queryInvalidationKey}`);
     setEmoji("");
     setName("");
 

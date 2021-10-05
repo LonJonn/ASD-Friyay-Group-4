@@ -1,7 +1,5 @@
 import { db } from "@app/lib/db";
-import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
-import createCache from "@emotion/cache";
-import { MovieGroup, Prisma } from "@prisma/client";
+import { MovieGroup } from "@prisma/client";
 
 export type GetMovieGroupInput = { id: MovieGroup["id"] };
 
