@@ -46,7 +46,7 @@ import {
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Comment } from "@prisma/client";
-import Id from "@app/pages/groups/[id]";
+import Id from "@app/pages/groups/movie/[id]";
 
 interface CommentProps {
   comment: Comment;

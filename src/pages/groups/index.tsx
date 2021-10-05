@@ -1,3 +1,4 @@
+import ActorGroupCard from "@app/components/groups/actor/ActorGroupCard";
 import CreateGroupForm from "@app/components/groups/CreateGroupForm";
 import GroupCard from "@app/components/groups/GroupCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
@@ -5,9 +6,9 @@ import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Heading,
   SimpleGrid,
-  Spacer,
   Stack,
   Tab,
   TabList,
@@ -15,10 +16,10 @@ import {
   TabPanels,
   Tabs,
   Text,
-  Button,
   useDisclosure,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import React from "react";
 import { useQuery } from "react-query";
 import { GetActorGroupsResponse } from "../api/groups/actors";
 
@@ -91,7 +92,7 @@ const GroupsPage: NextPage = () => {
               </Button>
             </Stack>
             <Box>
-              <SimpleGrid columns={2} spacingY={10} justifyItems="center">
+              <SimpleGrid columns={2} spacingY={6} justifyItems="center">
                 {movieGroupsQuery.data.map((group) => (
                   <GroupCard key={group.id} group={group} />
                 ))}
@@ -119,9 +120,9 @@ const GroupsPage: NextPage = () => {
             </Stack>
 
             <Box>
-              <SimpleGrid columns={2} spacingY={10} justifyItems="center">
+              <SimpleGrid columns={3} spacingY={4} justifyItems="center">
                 {actorGroupsQuery.data.map((actorGroup) => (
-                  <div key={actorGroup.id}> {actorGroup.name}</div>
+                  <ActorGroupCard actorGroup={actorGroup} key={actorGroup.id} />
                 ))}
               </SimpleGrid>
             </Box>
