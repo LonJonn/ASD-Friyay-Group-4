@@ -153,4 +153,24 @@ input[type='submit'].button-outline[disabled]:hover {
 .newuser-gif {
   max-width: 250px;
 }
+#search-NoUsers {
+  justify-content: center;
+}
+.noUsers-img {
+  display: flex;
+  width: 80px;
+  margin: 0 auto;
+}
+.noUsers-txt {
+  text-align: center;
+  margin-top: 20px;
+}
+#search-NoUsers {
+  margin-top: 20px;
+}
+.searchClosebtn {
+  width: 30px;
+  margin-left: 10px;
+}
+
 /* Anastasia's CSS end */

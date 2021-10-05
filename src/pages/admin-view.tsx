@@ -19,7 +19,8 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
     <form id="seach-div">
     <p className="search-text">Search Users</p>
     <label><input type="text" name="name" id="admin-search-text"/></label>
-    <input type="submit" value="Submit" id="admin-search"/>
+    <input type="submit" value="Submit" id="admin-search" onClick={submitSearch}/>
+    <img className="hide searchClosebtn" id="clearSearchBtn" onClick={clearSearch} src="https://cdn-icons-png.flaticon.com/512/1617/1617543.png"></img>
     </form>
     <div className="new-user-container hide">
       <Heading mb="4">Create New User</Heading>
@@ -42,7 +43,8 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
       </div>
     </div>
     {BasicUsage()}
-    <ul className="all-users-list">
+
+    <ul className="all-users-list" id="allUsersList">
       {users.map((user) => (
         <li key={user.id} className="list-item-users" data-firstName={user.firstName} data-email={user.email}>
           {user.firstName} | {user.email}
@@ -52,18 +54,118 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
 
       ))}
     </ul>
-
-    <Heading mb="4" id="nil-login" className="hide">You are not logged in as an admin</Heading>
-
+    <div id="search-NoUsers" className="hide">
+      <img className="noUsers-img" src="https://cdn-icons-png.flaticon.com/512/2371/2371628.png"></img>
+      <p className="noUsers-txt">No users matched this search result! Try again</p>
+    </div>
   </Box>
 );
+
+function submitSearch() {
+  var searchVal = $('#admin-search-text').val();
+  $('#clearSearchBtn').removeClass('hide');
+  $('#clearSearchBtn').show();
+  const returnedUsers = getSearchedUsers(searchVal);
+
+}
+
+export async function getSearchedUsers(searchVal) {
+  const res = await fetch("/api/admin-view/searchUser", {
+    method: 'POST',
+    body: searchVal.toString(),
+  })
+  const data = await res.json()
+  //console.log(data[0].id, data[1].name);
+  //console.log(data[0].id);
+
+  if (!data) {
+    //No users in this search
+    console.log('No users');
+  } else {
+    displaySearch(data, searchVal);
+  }
+
+  return {
+    props: { data },
+  }
+}
+
+function displaySearch(data, searchVal) {
+  checkFirstName(data, searchVal);
+  var newLength = Object.keys(data).length;
+  var a = 0;
+
+  var totalUsers = $('#allUsersList > li').length;
+  while (a < totalUsers) {
+    var i = 0;
+    var domName = $('#allUsersList').children().eq(a).data('firstname');
+    checkUser(a, i, newLength, data, domName);
+    if (a == totalUsers - 1) {
+      if($('#allUsersList').children(':visible').length == 0) {
+         $('#search-NoUsers').removeClass('hide');
+         $('#search-NoUsers').show();
+      }
+    }
+    a++;
+  }
+}
+
+function checkUser(a, i, newLength, data, domName) {
+  var counter = 0;
+  while (i <= newLength) {
+
+    if (data[i]) {
+      var searchFirstName = data[i].name.split(".")[0];
+      var searchEmail = data[i].email;
+      if (domName == searchFirstName) {
+        //User is in the search
+        counter++;
+      }
+    }
+    if (i == newLength) {
+      if (counter == 0) {
+        $('#allUsersList').children().eq(a).hide();
+      }
+    }
+    i++;
+  }
+}
+
+function checkFirstName (data, searchVal) {
+  var length = Object.keys(data).length;
+  let i = 0;
+  while (i < length) {
+    //Check if name contains search only in the last name (only first not last)
+    var name = data[i].name;
+    var splitName = name.split(".");
+
+    if (!splitName[0].includes(searchVal)) {
+      //Remove these records from the JSON file
+      delete data[i];
+    }
+    i++;
+  }
+
+}
+
+function clearSearch() {
+  $('#clearSearchBtn').hide();
+  $('#admin-search-text').val('');
+  $('#search-NoUsers').hide();
+  var totalUsers = $('#allUsersList > li').length;
+  var a = 0;
+  while (a < totalUsers) {
+    var element = $('#allUsersList').children().eq(a).show();
+    a++;
+  }
+}
 
 function BasicUsage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
-      <button onClick={onOpen} id="modal-button" class="hide">Open Modal</button>
+      <button onClick={onOpen} id="modal-button" className="hide">Open Modal</button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -76,7 +178,7 @@ function BasicUsage() {
           <p className="search-text">Email Address</p>
           <label><input type="text" name="name" className="admin-search-text" id="edit-input-email"/></label>
           <p className="search-text hide" id="edit-user-error">There's an error! Please fix</p>
-          <p id="email-data" class='hide'></p>
+          <p id="email-data" className='hide'></p>
           </ModalBody>
 
           <ModalFooter>
@@ -220,6 +322,7 @@ export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersRespons
 ) => {
   // Check if user is logged in, if not, return out
   const session = await getSession(ctx);
+
   if (!session) {
     return {
       props: {},
@@ -228,6 +331,23 @@ export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersRespons
       //   permanent: false,
       // },
     };
+  } else {
+    //Check if user is an admin. If not, redirect them to a 404 page.
+    if (session.user.email = 'admin@gmail.com' || 'anastasia.grivas@student.uts.edu.au') {
+      //User is an admin
+      console.log('admin');
+
+    } else {
+      //User is not an admin
+      console.log('no admin');
+      return {
+        props: {},
+         redirect: {
+           destination: "/admin-error",
+           permanent: false,
+         },
+      };
+    }
   }
 
   const users = await getAllUsers();
