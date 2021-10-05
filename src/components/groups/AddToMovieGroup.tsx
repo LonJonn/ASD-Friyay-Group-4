@@ -1,9 +1,10 @@
+import { UpdateActorGroupBody } from "@app/pages/api/groups/actors/[id]";
 import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { getAllMovieGroups } from "@app/pages/groups";
 import { Button } from "@chakra-ui/button";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Stack } from "@chakra-ui/layout";
+import { Stack, Text } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { useRouter } from "next/router";
 import React from "react";
@@ -13,10 +14,11 @@ interface UpdateGroupArgs {
   movieGroupId?: string;
   movieGroupContents?: UpdateMovieGroupBody;
   actorGroupId?: string;
-  actorGroupContents?: UpdateMovieGroupBody;
+  actorGroupContents?: UpdateActorGroupBody;
   type?: string;
 }
 
+//This function shouldn't be located here LMAO... it is used everywhere to update any type of group.
 export async function updateGroupFunction(updateGroupArgs: UpdateGroupArgs) {
   const type = updateGroupArgs.type;
   delete updateGroupArgs.type;
@@ -58,7 +60,7 @@ export const AddToMovieGroup: React.FC = () => {
     },
   });
 
-  if (movieGroupsQuery.isLoading) return <Button>Loading...</Button>;
+  if (movieGroupsQuery.isLoading) return <Text>Loading...</Text>;
   if (!movieGroupsQuery.data) return <>Lumfao</>;
 
   const availableGroups = movieGroupsQuery.data.filter(
