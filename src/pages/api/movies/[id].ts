@@ -1,18 +1,17 @@
 import { NextApiHandler } from "next";
-import { getSession } from "next-auth/client";
 
 import { getMovie } from "@app/services/movie";
 
 const handler: NextApiHandler = async (req, res) => {
-    const session = await getSession({ req });
-    if (!session) {
-      return res.status(401).end();
-    }
-    
-    const { id } = req.query;
-    const movie = await getMovie(id as string);
+  // The API retrieves the id value from the API query
+  const { id } = req.query;
 
+  // The API then awaits a response from the getMovie service
+  if (req.method === "GET") {
+    const movie = await getMovie(id as string);
     return res.send(movie);
-  };
+  }
+
+};
 
 export default handler;
