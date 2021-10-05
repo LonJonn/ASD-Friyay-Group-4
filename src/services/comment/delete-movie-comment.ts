@@ -1,5 +1,5 @@
 import { db } from "@app/lib/db";
-import { Comment, User, Prisma } from "@prisma/client";
+import { Comment, Prisma } from "@prisma/client";
 
 export type DeleteMovieCommentInput = Prisma.CommentDeleteArgs;
 export type DeleteMovieCommentResult = Comment;
