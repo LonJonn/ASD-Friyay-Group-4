@@ -11,7 +11,8 @@
     "db-studio": "prisma studio",
     "gen:db": "prisma generate",
     "gen:theme-typings": "chakra-cli tokens ./src/styles/theme/index.ts",
-    "postinstall": "npm run gen:db && npm run gen:theme-typings"
+    "postinstall": "npm run gen:db && npm run gen:theme-typings",
+    "test-ci": "jest --watchAll=false --reporters=default --reporters=jest-junit"
   },
   "dependencies": {
     "@chakra-ui/cli": "^1.5.0",
@@ -29,6 +30,7 @@
     "jquery": "^3.6.0",
     "next": "11.1.0",
     "next-auth": "^3.29.0",
+    "node-fetch": "^3.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.12.2",
@@ -47,6 +49,7 @@
     "eslint-config-next": "11.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.6",
+    "jest-junit": "^12.3.0",
     "prisma": "^2.30.0",
     "react-test-renderer": "^17.0.2",
     "ts-jest": "^27.0.5",
@@ -54,5 +57,10 @@
   },
   "prettier": {
     "printWidth": 100
+  },
+  "jest-junit": {
+    "suiteNameTemplate": "{filepath}",
+    "outputDirectory": ".",
+    "outputName": "junit.xml"
   }
 }
