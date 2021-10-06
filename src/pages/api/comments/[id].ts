@@ -7,6 +7,7 @@ import {
   updateMovieComment,
   UpdateMovieCommentInput,
   UpdateMovieCommentResult,
+  getReportedMovieComments,
 } from "@app/services/comment";
 
 type DeleteMovieCommentResponse = DeleteMovieCommentResult;
@@ -36,6 +37,12 @@ const handler: NextApiHandler = async (req, res) => {
       text: body.text,
     })) as UpdateMovieCommentResponse;
     return res.send(updateComment);
+  }
+
+  if (req.method === "GET") {
+    const reportedComments = await getReportedMovieComments();
+
+    return res.status(200).send(reportedComments);
   }
   return res.status(404).end();
 };

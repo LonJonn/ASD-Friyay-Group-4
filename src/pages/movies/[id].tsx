@@ -21,7 +21,9 @@ async function getMovieDetails(id: string): Promise<GetMovieResponse> {
 }
 
 async function getMovieComments(id: string): Promise<GetMovieCommentsResult> {
-  const commentRes = await fetch("/api/comments/movie/" + id);
+  const commentRes = await fetch(`/api/comments/movie/${id}`, {
+    method: "GET",
+  });
 
   if (!commentRes.ok) {
     throw new Error("Unable to get comments");
