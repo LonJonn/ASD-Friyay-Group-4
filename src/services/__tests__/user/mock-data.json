@@ -1,0 +1,62 @@
+[
+  {
+    "id": "612ae75400a9b2d900299b5e",
+    "email": "justin.h.yuen@student.uts.edu.au",
+    "name": "justin.h.yuen",
+    "firstName": "justin"
+  },
+  {
+    "id": "612af05800b431e00009d011",
+    "email": "oliver.sarker1911@gmail.com",
+    "name": "oliver.sarker1911",
+    "firstName": "oliver"
+  },
+  {
+    "id": "612af74e005ea9de00c6e9de",
+    "email": "flamininja0@gmail.com",
+    "name": "flamininja0",
+    "firstName": "flamininja0"
+  },
+  {
+    "id": "612ca2dd008bc1470012531a",
+    "email": "dennis.zub@student.uts.edu.au",
+    "name": "dennis.zub",
+    "firstName": "dennis"
+  },
+  {
+    "id": "612cc293008066e2009bc2bb",
+    "email": "anastasia.grivas@student.uts.edu.au",
+    "name": "anastasia.grivas",
+    "firstName": "anastasia"
+  },
+  {
+    "id": "612e22d6000de38b002e9193",
+    "email": "admin@gmail.com",
+    "name": "admin",
+    "firstName": "admin"
+  },
+  {
+    "id": "613ab3ef003a49cb0082fe48",
+    "email": "leon.salsiccia@student.uts.edu.au",
+    "name": "leon.salsiccia",
+    "firstName": "leon"
+  },
+  {
+    "id": "613ab51700eea19a00663fe1",
+    "email": "leon.salsiccia@gmail.com",
+    "name": "leon.salsiccia",
+    "firstName": "leon"
+  },
+  {
+    "id": "615d682d00327af1000459cf",
+    "email": "name@gmail.com",
+    "name": "Name",
+    "firstName": "Name"
+  },
+  {
+    "id": "615d73bb00f0e8f200cd3600",
+    "email": "HelloWorld@prisma.io",
+    "name": "Rich Haines",
+    "firstName": "Rich Haines"
+  }
+]
