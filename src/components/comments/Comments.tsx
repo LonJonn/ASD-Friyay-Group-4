@@ -40,26 +40,15 @@ import {
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Comment } from "@prisma/client";
+import CommentData from "./CommentData";
 
 interface CommentProps {
   comment: Comment;
   movieId: string;
 }
 
-interface CommentDataProps {
-  commentId: string;
-  userId: string;
-  comment: string;
-  dateCreated: Date;
-}
-
 interface DeleteMovieCommentArgs {
   movieCommentId: string;
-}
-
-interface UpdateMovieCommentArgs {
-  id: string;
-  text: string;
 }
 
 interface CommentLikes {}
@@ -67,17 +56,6 @@ interface CommentLikes {}
 async function deleteMovieCommentFunction(deleteMovieCommentArgs: DeleteMovieCommentArgs) {
   const response = await fetch(`/api/comments/${deleteMovieCommentArgs.movieCommentId}`, {
     method: "DELETE",
-  });
-  return response;
-}
-
-async function updateMovieCommentFunction(updateMovieCommentArgs: UpdateMovieCommentArgs) {
-  const response = await fetch(`/api/comments/${updateMovieCommentArgs.id}`, {
-    method: "PUT",
-    body: JSON.stringify(updateMovieCommentArgs),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
   return response;
 }
@@ -90,80 +68,10 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
 
   const deleteMutation = useMutation(deleteMovieCommentFunction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments", movieId]);
+      queryClient.invalidateQueries(["comments"]);
       onDeleteClose();
     },
   });
-  const updateMutation = useMutation(updateMovieCommentFunction, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(["comments", movieId]);
-    },
-  });
-
-  const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated, commentId }) => {
-    function EditComment() {
-      function EditableControls() {
-        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } =
-          useEditableControls();
-
-        return isEditing ? (
-          <ButtonGroup>
-            <IconButton
-              aria-label="submit-button"
-              icon={<CheckIcon />}
-              variant="ghost"
-              {...getSubmitButtonProps()}
-            />
-            <IconButton
-              aria-label="cancel-button"
-              icon={<CloseIcon />}
-              variant="ghost"
-              {...getCancelButtonProps()}
-            />
-          </ButtonGroup>
-        ) : (
-          <Flex>
-            <IconButton
-              variant="ghost"
-              aria-label="edit-button"
-              icon={<EditIcon />}
-              {...getEditButtonProps()}
-            />
-          </Flex>
-        );
-      }
-      return (
-        <Editable
-          defaultValue={comment}
-          fontSize="md"
-          isPreviewFocusable={false}
-          onSubmit={(newComment) => {
-            updateMutation.mutate({ id: commentId, text: newComment });
-          }}
-        >
-          <EditablePreview />
-          <EditableInput />
-          <EditableControls />
-        </Editable>
-      );
-    }
-
-    return (
-      <>
-        <Box>
-          <Flex align="center">
-            <Heading size="sm" as="h3" mb={0} fontWeight="medium">
-              {userId}
-            </Heading>
-          </Flex>
-          <Text color="gray.500" mb={4} fontSize="xs" marginBottom={0}>
-            {dateCreated}
-          </Text>
-          <EditComment />
-        </Box>
-      </>
-    );
-  };
 
   const Upvote: React.FC<CommentLikes> = ({}) => {
     var voteCount = comment.likes;
