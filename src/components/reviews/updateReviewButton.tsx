@@ -1,6 +1,6 @@
-import { ReviewGroupPostBody } from "@app/pages/api/reviews"
+import { UpdateReviewBody } from "@app/pages/api/reviews";
 import React, { useState } from "react";
-import { useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import {
   Button,
   FormControl,
@@ -13,60 +13,76 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spacer,
   Stack,
+  Spacer,
   Textarea,
 } from "@chakra-ui/react";
+import { Review } from ".prisma/client";
 
-export interface CreateReviewModal {
+interface EditReviewModalDisclosure {
   isOpen: boolean;
   onClose: () => void;
+  currentReviewData: Review;
 }
 
-const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
-  const [title, setTitle] = useState("");
-  const [text, setText] = useState("");
-  const [ratings, setRating] = useState("");
+interface UpdateReviewBodyMutation extends UpdateReviewBody {
+  id?: string;
+}
+
+//create function that updates the likes and dislikes of a movie Review
+export async function updateReviewFunc(updatedUserReview: UpdateReviewBodyMutation){
+  const id = updatedUserReview.id;
+  delete updatedUserReview.id;   
+  
+  const response = await fetch(`/api/reviews/${id}`,{
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedUserReview),
+    });
+
+    return response;
+}
+
+const EditReviewForm: React.FC<EditReviewModalDisclosure> = ({
+  isOpen,
+  onClose,
+  currentReviewData,
+}) => {
+  const [title, setTitle] = useState(currentReviewData.title);
+  const [text, setText] = useState(currentReviewData.text);
+  const [ratings, setRating] = useState(currentReviewData.ratings);
   const queryClient = useQueryClient();
+
+  const updateMutation = useMutation(async (updatedUserReview: UpdateReviewBody) => {
+    const response = await fetch(`/api/reviews/${currentReviewData.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedUserReview),
+    });
+    queryClient.invalidateQueries("reviews");
+    return response;
+  });
 
   //should be using ReactHookForms for validation.
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-
-    const requestBody: ReviewGroupPostBody = {
-        title,
-        text,
-        ratings: parseInt(ratings),
-    }
-
-    //Should useMutation from reactQuery
-    const response = await fetch("/api/reviews", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-    });
-
+    updateMutation.mutate({title: title, text: text, ratings: ratings});
     queryClient.invalidateQueries("reviews");
-    console.log(response);
-
     onClose();
-  };
+  }
 
   return (
     <>
       <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create a New Review</ModalHeader>
+          <ModalHeader>Update Review</ModalHeader>
 
           <ModalBody>
-            <Stack as="form" spacing={2} id="create-form" onSubmit={onSubmit}>
+            <Stack as="form" spacing={2} id="edit-form" onSubmit={onSubmit}>
               <FormControl id="emoji" isRequired>
                 <FormLabel>Title</FormLabel>
                 <Input
-                  placeholder="Awesome Movie! 😍"
                   value={title}
                   onChange={(e) => {
                     setTitle(e.target.value);
@@ -77,7 +93,6 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
               <FormControl id="description" isRequired>
                 <FormLabel>Description</FormLabel>
                 <Textarea
-                  placeholder="This movie is Awesome!"
                   value={text}
                   onChange={(e) => {
                     setText(e.target.value);
@@ -89,10 +104,9 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
                 <FormLabel>Rating</FormLabel>
                 <Input
                   type="number"
-                  placeholder="/5"
                   value={ratings}
                   onChange={(e) => {
-                    setRating(e.target.value);
+                    setRating(parseInt(e.target.value))
                   }}
                 />
               </FormControl>
@@ -103,9 +117,9 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
             <Button mr={3} onClick={onClose} colorScheme="red">
               Cancel
             </Button>
-            <Spacer/>
-            <Button form="create-form" type="submit" colorScheme="teal">
-              Add
+            <Spacer />
+            <Button form="edit-form" type="submit" colorScheme="teal">
+              Update
             </Button>
           </ModalFooter>
           <ModalCloseButton />
@@ -115,4 +129,4 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
   );
 };
 
-export default CreateReviewForm;
+export default EditReviewForm;
