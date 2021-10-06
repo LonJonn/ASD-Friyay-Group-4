@@ -20,4 +20,3 @@ test("It computes first names for users", async () => {
   expect(randomUser.firstName).toBeDefined();
 });
 */
-
