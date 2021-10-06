@@ -1,5 +1,5 @@
 import { Editable, EditableInput, EditablePreview, useEditableControls } from "@chakra-ui/editable";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
+import { CheckIcon, CloseIcon, DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import { Flex, Box, Heading } from "@chakra-ui/layout";
 import { ButtonGroup, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
