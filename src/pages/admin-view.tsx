@@ -61,7 +61,11 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => (
   </Box>
 );
 
+//submit search
 function submitSearch() {
+  $("#seach-div").submit(function(e) {
+      e.preventDefault();
+  });
   var searchVal = $('#admin-search-text').val();
   $('#clearSearchBtn').removeClass('hide');
   $('#clearSearchBtn').show();
@@ -69,14 +73,13 @@ function submitSearch() {
 
 }
 
-export async function getSearchedUsers(searchVal) {
+//retrieve searched users from API
+export async function getSearchedUsers(searchVal: any) {
   const res = await fetch("/api/admin-view/searchUser", {
     method: 'POST',
     body: searchVal.toString(),
   })
   const data = await res.json()
-  //console.log(data[0].id, data[1].name);
-  //console.log(data[0].id);
 
   if (!data) {
     //No users in this search
@@ -90,7 +93,8 @@ export async function getSearchedUsers(searchVal) {
   }
 }
 
-function displaySearch(data, searchVal) {
+//loop to display search results
+function displaySearch(data: any, searchVal: any) {
   checkFirstName(data, searchVal);
   var newLength = Object.keys(data).length;
   var a = 0;
@@ -110,7 +114,8 @@ function displaySearch(data, searchVal) {
   }
 }
 
-function checkUser(a, i, newLength, data, domName) {
+// check if user is in returned search, if not it's excluded from view
+function checkUser(a: number, i: number, newLength: number, data: any, domName: any) {
   var counter = 0;
   while (i <= newLength) {
 
@@ -131,7 +136,8 @@ function checkUser(a, i, newLength, data, domName) {
   }
 }
 
-function checkFirstName (data, searchVal) {
+//ensure displayed users contain search result in first name only
+function checkFirstName (data: any[], searchVal: any) {
   var length = Object.keys(data).length;
   let i = 0;
   while (i < length) {
@@ -148,6 +154,7 @@ function checkFirstName (data, searchVal) {
 
 }
 
+//clear search
 function clearSearch() {
   $('#clearSearchBtn').hide();
   $('#admin-search-text').val('');
@@ -160,6 +167,7 @@ function clearSearch() {
   }
 }
 
+//pop up for edit user
 function BasicUsage() {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -182,7 +190,7 @@ function BasicUsage() {
           </ModalBody>
 
           <ModalFooter>
-            <button variant="ghost" onClick={submitEditUser} id="modalSubmit">Submit</button>
+            <button onClick={submitEditUser} id="modalSubmit">Submit</button>
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -190,6 +198,7 @@ function BasicUsage() {
   )
 }
 
+//edit user and filling pop up with user's data
 function editUser(e: { currentTarget: any; }) {
   $('#modal-button').click();
   var clickedButton = e.currentTarget;
@@ -202,9 +211,10 @@ function editUser(e: { currentTarget: any; }) {
 }, 10);
 }
 
+//submit edit user
 function submitEditUser () {
-  var newName = $('#edit-input-name').val();
-  var newEmail = $('#edit-input-email').val();
+  var newName = $('#edit-input-name').val() as string;
+  var newEmail = $('#edit-input-email').val() as string;
   var oldEmail = $('#email-data').text();
 
   if (/^[a-zA-Z]+$/.test(newName)) {
@@ -321,7 +331,7 @@ export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersRespons
   ctx
 ) => {
   // Check if user is logged in, if not, return out
-  const session = await getSession(ctx);
+  const session = await getSession(ctx) as any;
 
   if (!session) {
     return {
