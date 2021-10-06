@@ -48,39 +48,44 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
 
   // Now we transform the response from TMDB into our custom shape that we want
   // to return from our API.
-
+  
+  // The release date is split into year and month to improve formatting
   const releaseDate = new Date(movieData.release_date);
   const year = releaseDate.getFullYear();
   const month = releaseDate.getMonth();
 
+  // Variables are created to select credits at the business logic area and simplify rendering
   const processedWriters = movieData.credits.crew.filter(member => member.job == "Writer" || member.job == "Screenplay");
   const processedexExecutiveProducers = movieData.credits.crew.filter(member => member.job == "Executive Producer");
   const processedProducers = movieData.credits.crew.filter(member => member.job == "Producer");
   
+  // The Australan Classification Rating is selected from the response
   const classificationRating = movieData.releases.countries.filter(country => country.iso_3166_1 == "AU");
 
   const transformedMovie: TransformedMovie = {
-        id: movieData.id,
-        title: movieData.title,
-        poster_path: movieData.poster_path,
-        original_language: movieData.original_language,
-        release_month: MONTHS[month],
-        release_year: year,
-        vote_average: movieData.vote_average,
-        overview: movieData.overview,
-        backdrop_path: movieData.backdrop_path,
-        production_companies: movieData.production_companies,
-        status: movieData.status,
-        budget: movieData.budget,
-        runtime: movieData.runtime,
-        revenue: movieData.revenue,
-        tagline: movieData.tagline,
-        genres: movieData.genres,
-        writers: processedWriters,
-        execProducers: processedexExecutiveProducers,
-        producers: processedProducers,
-        classificationRating: classificationRating,
-        actors: movieData.credits.cast
-    };
+    // Data is extracted and organised into the correct fields
+    id: movieData.id,
+    title: movieData.title,
+    poster_path: movieData.poster_path,
+    original_language: movieData.original_language,
+    release_month: MONTHS[month],
+    release_year: year,
+    vote_average: movieData.vote_average,
+    overview: movieData.overview,
+    backdrop_path: movieData.backdrop_path,
+    production_companies: movieData.production_companies,
+    status: movieData.status,
+    budget: movieData.budget,
+    runtime: movieData.runtime,
+    revenue: movieData.revenue,
+    tagline: movieData.tagline,
+    genres: movieData.genres,
+    writers: processedWriters,
+    execProducers: processedexExecutiveProducers,
+    producers: processedProducers,
+    classificationRating: classificationRating,
+    actors: movieData.credits.cast
+  };
+
   return transformedMovie;
 }

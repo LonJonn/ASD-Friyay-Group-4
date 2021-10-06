@@ -4,8 +4,8 @@ test("Placeholder", async () => {
   const text = "Hello World";
 
   expect(text).toEqual("Hello World");
-
 });
+
 /*
 test("It grabs all users", async () => {
   const allUsers = await getAllUsers();

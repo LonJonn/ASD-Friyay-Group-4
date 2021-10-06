@@ -5,8 +5,8 @@ export type CreateMovieCommentInput = Prisma.CommentCreateInput;
 export type CreateMovieCommentResult = Comment;
 
 export async function createMovieComment(
-  input: CreateMovieCommentInput
+  args: CreateMovieCommentInput
 ): Promise<CreateMovieCommentResult> {
-  const newComment = await db.comment.create({ data: input });
+  const newComment = await db.comment.create({ data: args });
   return newComment;
 }

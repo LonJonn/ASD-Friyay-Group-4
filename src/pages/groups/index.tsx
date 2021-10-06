@@ -1,12 +1,14 @@
+import ActorGroupCard from "@app/components/groups/actor/ActorGroupCard";
 import CreateGroupForm from "@app/components/groups/CreateGroupForm";
 import GroupCard from "@app/components/groups/GroupCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
+import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Heading,
   SimpleGrid,
-  Spacer,
   Stack,
   Tab,
   TabList,
@@ -14,74 +16,126 @@ import {
   TabPanels,
   Tabs,
   Text,
-  Button,
   useDisclosure,
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
+import React from "react";
 import { useQuery } from "react-query";
-import { GetMovieGroupsResponse } from "../api/groups/movies";
+import { GetActorGroupsResponse } from "../api/groups/actors";
 
-async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
+//Query Functions
+export async function getAllMovieGroups(): Promise<GetMovieGroupsResponse> {
   const res = await fetch("/api/groups/movies");
-
   if (!res.ok) {
-    throw new Error("Unable to get all groups 😭.");
+    throw new Error("Unable to get all movie groups 😭.");
   }
+  return await res.json();
+}
 
+export async function getAllActorGroups(): Promise<GetActorGroupsResponse> {
+  const res = await fetch("/api/groups/actors");
+  if (!res.ok) {
+    throw new Error("Unable to get all actor groups 😭.");
+  }
   return await res.json();
 }
 
 const GroupsPage: NextPage = () => {
-  const query = useQuery<GetMovieGroupsResponse, Error>({
+  const movieGroupsQuery = useQuery<GetMovieGroupsResponse, Error>({
     queryKey: "movieGroups",
     queryFn: getAllMovieGroups,
   });
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const actorGroupsQuery = useQuery<GetActorGroupsResponse, Error>({
+    queryKey: "actorGroups",
+    queryFn: getAllActorGroups,
+  });
 
-  if (query.status === "loading" || query.status === "idle") {
+  const { isOpen: isOpenMG, onOpen: onOpenMG, onClose: onCloseMG } = useDisclosure();
+  const { isOpen: isOpenAG, onOpen: onOpenAG, onClose: onCloseAG } = useDisclosure();
+
+  if (
+    movieGroupsQuery.status === "loading" ||
+    movieGroupsQuery.status === "idle" ||
+    actorGroupsQuery.status === "loading" ||
+    actorGroupsQuery.status === "idle"
+  ) {
     return <Text>Loading...</Text>;
   }
 
-  if (query.status === "error") {
-    return <Text>Error...{query.error.message}</Text>;
+  if (movieGroupsQuery.status === "error") {
+    return <Text>Error...{movieGroupsQuery.error.message}</Text>;
+  }
+
+  if (actorGroupsQuery.status === "error") {
+    return <Text>Error...{actorGroupsQuery.error.message}</Text>;
   }
 
   return (
-    <Stack spacing={8}>
+    <Stack>
       <Tabs isFitted>
         <TabList>
           <Tab>Movies</Tab>
+          <Tab>Actors</Tab>
         </TabList>
 
         <TabPanels>
-          <TabPanel p={0}>
-            <Stack a spacing={0}>
-              <Heading py={4}>Movie Groups</Heading>
-              <Button leftIcon={<AddIcon />} onClick={onOpen}>
-                Add new
+          {/*--------------------------Movies Page--------------------------*/}
+          <TabPanel>
+            <Stack spacing={0} m={6} display="inline-flex" flexGrow={0}>
+              <Heading mb={10} fontSize="4xl">
+                Movie Groups
+              </Heading>
+
+              <Button leftIcon={<AddIcon />} onClick={onOpenMG}>
+                New Group
               </Button>
             </Stack>
+            <Box>
+              <SimpleGrid columns={2} spacingY={6} justifyItems="center">
+                {movieGroupsQuery.data.map((group) => (
+                  <GroupCard key={group.id} group={group} />
+                ))}
+              </SimpleGrid>
+            </Box>
+
+            <CreateGroupForm
+              isOpen={isOpenMG}
+              onClose={onCloseMG}
+              apiEndPoint="movies"
+              queryInvalidationKey="movieGroups"
+            />
+          </TabPanel>
+
+          {/*--------------------------Actors Page--------------------------*/}
+          <TabPanel>
+            <Stack spacing={0} m={6} display="inline-flex" flexGrow={0}>
+              <Heading mb={10} fontSize="4xl">
+                Actor Groups
+              </Heading>
+
+              <Button leftIcon={<AddIcon />} onClick={onOpenAG} display="inline-flex">
+                New Group
+              </Button>
+            </Stack>
+
+            <Box>
+              <SimpleGrid columns={3} spacingY={4} justifyItems="center">
+                {actorGroupsQuery.data.map((actorGroup) => (
+                  <ActorGroupCard actorGroup={actorGroup} key={actorGroup.id} />
+                ))}
+              </SimpleGrid>
+            </Box>
+
+            <CreateGroupForm
+              isOpen={isOpenAG}
+              onClose={onCloseAG}
+              apiEndPoint="actors"
+              queryInvalidationKey="actorGroups"
+            />
           </TabPanel>
         </TabPanels>
       </Tabs>
-
-      <Box>
-        <SimpleGrid columns={2} spacingY={10} justifyItems="center">
-          {query.data.map((group) => (
-            <GroupCard
-              key={group.id}
-              groupId={group.id}
-              emoji={group.emoji}
-              imageBackdrop={group.imageBackdrop}
-              movieCount={group.movieCount}
-              name={group.name}
-            />
-          ))}
-        </SimpleGrid>
-      </Box>
-
-      <CreateGroupForm isOpen={isOpen} onClose={onClose} />
     </Stack>
   );
 };

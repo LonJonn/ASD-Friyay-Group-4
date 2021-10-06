@@ -16,12 +16,19 @@ import {
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 
-export interface CreateModalDiclosure {
+export interface CreateModalDisclosure {
   isOpen: boolean;
   onClose: () => void;
+  apiEndPoint: string;
+  queryInvalidationKey: string;
 }
 
-const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) => {
+const CreateGroupForm: React.FC<CreateModalDisclosure> = ({
+  isOpen,
+  onClose,
+  apiEndPoint,
+  queryInvalidationKey,
+}) => {
   const [emoji, setEmoji] = useState("");
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
@@ -36,7 +43,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
     };
 
     //useMutation from reactQuery should be used
-    const response = await fetch("/api/groups/movies", {
+    const response = await fetch(`/api/groups/${apiEndPoint}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -44,8 +51,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
       body: JSON.stringify(requestBody),
     });
 
-    queryClient.invalidateQueries("movieGroups");
-    console.log(response);
+    queryClient.invalidateQueries(`${queryInvalidationKey}`);
     setEmoji("");
     setName("");
 
@@ -54,7 +60,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
 
   return (
     <>
-      <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose}>
+      <Modal blockScrollOnMount={false} size={"xl"} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create a New Group</ModalHeader>
@@ -72,7 +78,7 @@ const CreateGroupForm: React.FC<CreateModalDiclosure> = ({ isOpen, onClose }) =>
                 />
               </FormControl>
 
-              <FormControl id="emoji" isRequired>
+              <FormControl id="title" isRequired>
                 <FormLabel>Title</FormLabel>
                 <Input
                   placeholder="e.g. Favourites"
