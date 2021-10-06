@@ -18,6 +18,7 @@ import {
   Collapse,
 } from "@chakra-ui/react";
 import { useActorCreditsQuery, Cast } from "@app/hooks/actor/useActorCreditsQuery";
+import { AddToActorGroup } from "@app/components/actors/AddToActorGroup";
 
 const ActorsPage: NextPage = () => {
   const id = useRouter().query.id as string;
@@ -93,6 +94,8 @@ const ActorsPage: NextPage = () => {
             <Text>{creditsQuery.data?.cast.length}</Text>
           </Box>
         </Flex>
+
+        <AddToActorGroup />
 
         {/* Biography */}
         <Stack>

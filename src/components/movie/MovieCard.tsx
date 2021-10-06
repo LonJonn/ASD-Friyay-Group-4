@@ -12,8 +12,6 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
-import Comments from "../comments/Comments";
-import CommentForm from "../comments/CommentForm";
 import { useRouter } from "next/router";
 
 interface IMovieCard {

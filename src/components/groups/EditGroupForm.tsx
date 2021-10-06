@@ -1,3 +1,4 @@
+import { GetActorGroupResponse } from "@app/pages/api/groups/actors/[id]";
 import { GetMovieGroupResponse } from "@app/pages/api/groups/movies/[id]";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
@@ -19,28 +20,51 @@ import { updateGroupFunction } from "./AddToMovieGroup";
 interface EditModalDisclosure {
   isOpen: boolean;
   onClose: () => void;
-  currentGroupData: GetMovieGroupResponse;
+  currentGroupData: GetMovieGroupResponse | GetActorGroupResponse;
+  type: string;
 }
 
-const EditGroupForm: React.FC<EditModalDisclosure> = ({ isOpen, onClose, currentGroupData }) => {
+const EditGroupForm: React.FC<EditModalDisclosure> = ({
+  isOpen,
+  onClose,
+  currentGroupData,
+  type,
+}) => {
   const [emoji, setEmoji] = useState(currentGroupData.emoji);
   const [name, setName] = useState(currentGroupData.name);
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation(updateGroupFunction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["movieGroup", currentGroupData.id]);
+      if (type === "actors") {
+        queryClient.invalidateQueries(["actorGroup", currentGroupData.id]);
+      }
+
+      if (type === "movies") {
+        queryClient.invalidateQueries(["movieGroup", currentGroupData.id]);
+      }
     },
   });
 
   //should be using ReactHookForms for validation.
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    updateMutation.mutate({
-      movieGroupId: currentGroupData.id,
-      movieGroupContents: { emoji: emoji, name: name },
-    });
-    queryClient.invalidateQueries("movieGroups");
+    if (type === "actors") {
+      updateMutation.mutate({
+        type: "actors",
+        actorGroupId: currentGroupData.id,
+        actorGroupContents: { emoji: emoji, name: name },
+      });
+    }
+
+    if (type === "movies") {
+      updateMutation.mutate({
+        type: "movies",
+        movieGroupId: currentGroupData.id,
+        movieGroupContents: { emoji: emoji, name: name },
+      });
+    }
+
     onClose();
   }
 
