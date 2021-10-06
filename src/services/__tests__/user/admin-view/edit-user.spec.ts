@@ -39,14 +39,12 @@ test("should update a users name and email ", async () => {
 
   const id1 = String(newName + "," + newEmail + "," + oldEmail);
 
-  // 'create user' and 'update user' mock value in mock database
-  // prismaMock.user.create.mockResolvedValue(user);
-  // prismaMock.user.update.mockResolvedValue(userEdit);
-  // prismaMock.$disconnect();
+  // mock update user result
 
   mocked(db.user.update).mockResolvedValueOnce(editUser as any);
 
   const newUser = await editUser(id1);
 
+  //ensure that the edited user is returned
   expect(newUser.name).toBeDefined();
 });

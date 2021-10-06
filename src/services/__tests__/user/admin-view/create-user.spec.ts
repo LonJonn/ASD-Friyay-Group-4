@@ -1,7 +1,6 @@
 import { db } from "@app/lib/db";
 import { createUser } from "@app/services/admin-view/create-user";
 import { mocked } from "ts-jest/utils";
-// import { prismaMock } from "../../../../../singleton";
 
 const d = new Date("2015-03-25T12:00:00Z");
 
@@ -27,12 +26,11 @@ test("should create new user ", async () => {
   const id1 = String(name + "," + email);
 
   //'create user' mock value in mock db
-  // prismaMock.user.create.mockResolvedValue(user);
-  // prismaMock.$disconnect();
   mocked(db.user.create).mockResolvedValueOnce(user);
 
   //pass through createUser function in services and check it returns the same user
   const newUser = await createUser(id1);
 
+  //ensure the created user is returned
   expect(newUser.name).toBeDefined();
 });
