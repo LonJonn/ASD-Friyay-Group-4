@@ -21,6 +21,7 @@ test('should create new user ', async () => {
   
   //'create user' mock value in mock db
     prismaMock.user.create.mockResolvedValue(user)
+    prismaMock.$disconnect()
   
   //pass through createUser function in services and check it returns the same user
     expect(createUser(id1)).resolves.toEqual({

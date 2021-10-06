@@ -36,6 +36,7 @@ const d = new Date("2015-03-25T12:00:00Z");
   // 'create user' and 'update user' mock value in mock database
     prismaMock.user.create.mockResolvedValue(user)
     prismaMock.user.update.mockResolvedValue(userEdit)
+    prismaMock.$disconnect()
   
   //pass through editUser function in services and check it returns the updated user details
     expect(editUser(id1)).resolves.toEqual({
