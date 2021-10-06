@@ -84,13 +84,14 @@ async function updateMovieCommentFunction(updateMovieCommentArgs: UpdateMovieCom
 
 const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
   const queryClient = useQueryClient();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isReportOpen, onOpen: onReportOpen, onClose: onReportClose } = useDisclosure();
   const [likes, setLikes] = useState(comment.likes);
 
   const deleteMutation = useMutation(deleteMovieCommentFunction, {
     onSuccess: () => {
       queryClient.invalidateQueries(["comments", movieId]);
-      onClose();
+      onDeleteClose();
     },
   });
   const updateMutation = useMutation(updateMovieCommentFunction, {
@@ -211,11 +212,12 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
             <HamburgerIcon />
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={onOpen}>Delete</MenuItem>
+            <MenuItem onClick={onReportOpen}>Report</MenuItem>
+            <MenuItem onClick={onDeleteOpen}>Delete</MenuItem>
           </MenuList>
         </Menu>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Delete comment</ModalHeader>
@@ -228,6 +230,26 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
                 onClick={() => deleteMutation.mutate({ movieCommentId: comment.id })}
               >
                 DELETE
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isReportOpen} onClose={onReportClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Report comment</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>Are you sure you want to report this comment?</ModalBody>
+            <ModalBody fontSize={"sm"}>
+              A reported comment will be manually reviewed by a discord mod
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="red"
+                size="sm"
+                onClick={() => deleteMutation.mutate({ movieCommentId: comment.id })}
+              >
+                REPORT
               </Button>
             </ModalFooter>
           </ModalContent>
