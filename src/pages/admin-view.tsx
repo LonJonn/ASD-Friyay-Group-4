@@ -12,6 +12,11 @@ import {
   ModalBody,
   ModalCloseButton,
   Stack,
+  Tab,
+  TabList,
+  Tabs,
+  TabPanel,
+  TabPanels,
 } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { getSession } from "next-auth/client";
@@ -22,6 +27,7 @@ import $ from "jquery";
 
 import ReportedComment from "@app/components/comments/ReportedComment";
 import { GetReportedMovieCommentsResult } from "@app/services/comment/";
+import React from "react";
 
 type AllUsersProps = Required<InferGetServerSidePropsType<typeof getServerSideProps>>;
 
@@ -44,101 +50,122 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
 
   return (
     //Place box element which contains admin front end HTML
-    <Box>
-      <a className="button" id="new-user-button" onClick={toggleNewUser}>
-        Create new user
-      </a>
-      <Heading mb="4">Hello Admin!</Heading>
-      <p>You are logged in as an admin.</p>
-      <form id="seach-div">
-        <p className="search-text">Search Users</p>
-        <label>
-          <input type="text" name="name" id="admin-search-text" />
-        </label>
-        <input type="submit" value="Submit" id="admin-search" onClick={submitSearch} />
-        <img
-          className="hide searchClosebtn"
-          id="clearSearchBtn"
-          onClick={clearSearch}
-          src="https://cdn-icons-png.flaticon.com/512/1617/1617543.png"
-        ></img>
-      </form>
-      <div className="new-user-container hide">
-        <Heading mb="4">Create New User</Heading>
-        <form className="new-user-form">
-          <p className="search-text">Name</p>
-          <label>
-            <input type="text" name="name" className="admin-search-text" id="admin-search-name" />
-          </label>
-          <p className="search-text">Email Address</p>
-          <label>
-            <input type="text" name="name" className="admin-search-text" id="admin-search-email" />
-          </label>
-          <input
-            className="button"
-            value="Create New User"
-            id="admin-search"
-            onClick={createNewUser}
-          />
-        </form>
-        <div>
-          <div id="success-container" className="hide">
-            <img
-              className="newuser-gif"
-              src="https://c.tenor.com/TrAsjYbL720AAAAC/chris-pratt-wow.gif"
-              alt="Success!"
-            />
-            <p>New User Created! Reloading the page now...</p>
-          </div>
-          <div id="failure-container" className="hide">
-            <img
-              className="newuser-gif"
-              src="https://media.giphy.com/media/YTJXDIivNMPuNSMgc0/giphy.gif"
-              alt="Success!"
-            />
-            <p>There is an issue with the Name or Email Address. Please check again!</p>
-          </div>
-        </div>
-      </div>
-      {BasicUsage()}
+    <Tabs>
+      <TabList>
+        <Tab>User List</Tab>
+        <Tab>Reported Comments</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel>
+          <Box>
+            <a className="button" id="new-user-button" onClick={toggleNewUser}>
+              Create new user
+            </a>
+            <Heading mb="4">Hello Admin!</Heading>
+            <p>You are logged in as an admin.</p>
+            <form id="seach-div">
+              <p className="search-text">Search Users</p>
+              <label>
+                <input type="text" name="name" id="admin-search-text" />
+              </label>
+              <input type="submit" value="Submit" id="admin-search" onClick={submitSearch} />
+              <img
+                className="hide searchClosebtn"
+                id="clearSearchBtn"
+                onClick={clearSearch}
+                src="https://cdn-icons-png.flaticon.com/512/1617/1617543.png"
+              ></img>
+            </form>
+            <div className="new-user-container hide">
+              <Heading mb="4">Create New User</Heading>
+              <form className="new-user-form">
+                <p className="search-text">Name</p>
+                <label>
+                  <input
+                    type="text"
+                    name="name"
+                    className="admin-search-text"
+                    id="admin-search-name"
+                  />
+                </label>
+                <p className="search-text">Email Address</p>
+                <label>
+                  <input
+                    type="text"
+                    name="name"
+                    className="admin-search-text"
+                    id="admin-search-email"
+                  />
+                </label>
+                <input
+                  className="button"
+                  value="Create New User"
+                  id="admin-search"
+                  onClick={createNewUser}
+                />
+              </form>
+              <div>
+                <div id="success-container" className="hide">
+                  <img
+                    className="newuser-gif"
+                    src="https://c.tenor.com/TrAsjYbL720AAAAC/chris-pratt-wow.gif"
+                    alt="Success!"
+                  />
+                  <p>New User Created! Reloading the page now...</p>
+                </div>
+                <div id="failure-container" className="hide">
+                  <img
+                    className="newuser-gif"
+                    src="https://media.giphy.com/media/YTJXDIivNMPuNSMgc0/giphy.gif"
+                    alt="Success!"
+                  />
+                  <p>There is an issue with the Name or Email Address. Please check again!</p>
+                </div>
+              </div>
+            </div>
+            {BasicUsage()}
 
-      <ul className="all-users-list" id="allUsersList">
-        {users.map((user) => (
-          <li
-            key={user.id}
-            className="list-item-users"
-            data-firstName={user.firstName}
-            data-email={user.email}
-          >
-            {user.firstName} | {user.email}
-            <button className="button button-outline table-button" onClick={deleteUserInit}>
-              Delete User
-            </button>
-            <button className="button button-outline  table-button" onClick={editUser}>
-              Edit User
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div id="search-NoUsers" className="hide">
-        <img
-          className="noUsers-img"
-          src="https://cdn-icons-png.flaticon.com/512/2371/2371628.png"
-        ></img>
-        <p className="noUsers-txt">No users matched this search result! Try again</p>
-      </div>
+            <ul className="all-users-list" id="allUsersList">
+              {users.map((user) => (
+                <li
+                  key={user.id}
+                  className="list-item-users"
+                  data-firstName={user.firstName}
+                  data-email={user.email}
+                >
+                  {user.firstName} | {user.email}
+                  <button className="button button-outline table-button" onClick={deleteUserInit}>
+                    Delete User
+                  </button>
+                  <button className="button button-outline  table-button" onClick={editUser}>
+                    Edit User
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div id="search-NoUsers" className="hide">
+              <img
+                className="noUsers-img"
+                src="https://cdn-icons-png.flaticon.com/512/2371/2371628.png"
+              ></img>
+              <p className="noUsers-txt">No users matched this search result! Try again</p>
+            </div>
+            <Heading mb="4" id="nil-login" className="hide">
+              You are not logged in as an admin
+            </Heading>
+          </Box>
+        </TabPanel>
 
-      <Heading>REPORTED COMMENTS </Heading>
-      <Stack>
-        {reportedMovieCommentsQuery.data?.map((comment) => (
-          <ReportedComment key={comment.id} comment={comment} />
-        ))}
-      </Stack>
-
-      <Heading mb="4" id="nil-login" className="hide">
-        You are not logged in as an admin
-      </Heading>
-    </Box>
+        <TabPanel>
+          <Heading>REPORTED COMMENTS </Heading>
+          <Stack>
+            {reportedMovieCommentsQuery.data?.map((comment) => (
+              <ReportedComment key={comment.id} comment={comment} />
+            ))}
+          </Stack>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   );
 };
 
