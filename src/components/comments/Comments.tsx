@@ -167,7 +167,7 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
             <ModalCloseButton />
             <ModalBody>Are you sure you want to report this comment?</ModalBody>
             <ModalBody fontSize={"sm"}>
-              A reported comment will be manually reviewed by a discord mod
+              A reported comment will remtain and be manually reviewed by an admin
             </ModalBody>
             <ModalFooter>
               <Button
