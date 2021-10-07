@@ -13,19 +13,39 @@ interface DeleteMovieCommentArgs {
   movieCommentId: string;
 }
 
+interface UnreportCommentArgs {
+  id: string;
+}
+
 const ReportedComment: React.FC<ReportedCommentProps> = ({ comment }) => {
   const queryClient = useQueryClient();
+
   async function deleteMovieCommentFunction(deleteMovieCommentArgs: DeleteMovieCommentArgs) {
-    const response = await fetch(`/api/comments/${deleteMovieCommentArgs.movieCommentId}`, {
+    const res = await fetch(`/api/comments/${deleteMovieCommentArgs.movieCommentId}`, {
       method: "DELETE",
     });
-    return response;
+    return res;
   }
+
+  async function unreportCommentFunction(unreportCommentArgs: UnreportCommentArgs) {
+    const res = await fetch(`/api/comments/unreport/${unreportCommentArgs.id}`, {
+      method: "PUT",
+    });
+    return res;
+  }
+
   const deleteMutation = useMutation(deleteMovieCommentFunction, {
     onSuccess: () => {
       queryClient.invalidateQueries(["comments"]);
     },
   });
+
+  const unreportMutation = useMutation(unreportCommentFunction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["comments"]);
+    },
+  });
+
   return (
     <>
       <Box>
@@ -36,7 +56,12 @@ const ReportedComment: React.FC<ReportedCommentProps> = ({ comment }) => {
           userId={comment.userId}
           dateCreated={comment.createdAt}
         />
-        <IconButton variant="ghost" icon={<CheckIcon />} aria-label="approve"></IconButton>
+        <IconButton
+          variant="ghost"
+          icon={<CheckIcon />}
+          aria-label="approve"
+          onClick={() => unreportMutation.mutate({ id: comment.id })}
+        ></IconButton>
         <IconButton
           variant="ghost"
           icon={<NotAllowedIcon />}

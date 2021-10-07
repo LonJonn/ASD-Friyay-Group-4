@@ -1,6 +1,6 @@
 import {
-  updateReportedMovieCommentToTrue,
   UpdateReportedMovieCommentResult,
+  updateReportedMovieCommentToFalse,
 } from "@app/services/comment";
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
@@ -14,7 +14,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
   if (req.method === "PUT") {
     const id = req.query.id as string;
-    const updateComment = (await updateReportedMovieCommentToTrue({
+    const updateComment = (await updateReportedMovieCommentToFalse({
       id: id,
     })) as UpdateReportedCommentResponse;
     return res.send(updateComment);

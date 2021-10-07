@@ -8,7 +8,7 @@ import {
   UpdateMovieCommentInput,
   UpdateMovieCommentResult,
   getReportedMovieComments,
-  updateReportedMovieComment,
+  updateReportedMovieCommentToTrue,
   UpdateReportedMovieCommentResult,
 } from "@app/services/comment";
 
