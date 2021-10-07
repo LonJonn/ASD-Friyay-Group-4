@@ -8,6 +8,7 @@ export type UpdateReviewInput = {
 };
 export type UpdateReviewResult = Review;
 
+// update user Review function
 export async function updateUserReview(args: UpdateReviewInput): Promise<UpdateReviewResult> {
   const updatedUserReview = await db.review.update(args);
 
