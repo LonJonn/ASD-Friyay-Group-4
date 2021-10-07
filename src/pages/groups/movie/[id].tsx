@@ -7,7 +7,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
-import { GetMovieGroupResponse } from "../api/groups/movies/[id]";
+import { GetMovieGroupResponse } from "../../api/groups/movies/[id]";
 
 async function getMovieGroup(movieGroupID: string): Promise<GetMovieGroupResponse> {
   return fetch(`/api/groups/movies/${movieGroupID}`).then((res) => res.json());
@@ -55,14 +55,20 @@ const Group: NextPage = () => {
           <MovieCard key={movie.id} movie={movie} movieGroup={movieGroupQuery.data} />
         ))}
       </SimpleGrid>
-      <EditGroupForm isOpen={isOpen} onClose={onClose} currentGroupData={movieGroupQuery.data} />
+      <EditGroupForm
+        isOpen={isOpen}
+        onClose={onClose}
+        currentGroupData={movieGroupQuery.data}
+        type="movies"
+      />
       <DeleteConfirmationAlert
         groupId={id}
         emoji={movieGroupQuery.data.emoji}
         groupName={movieGroupQuery.data.name}
-        movieCount={movieGroupQuery.data.movieIds.length}
+        itemCount={movieGroupQuery.data.movieIds.length}
         onClose={onCloseAlert}
         isOpen={isOpenAlert}
+        type="movies"
       />
     </Stack>
   );

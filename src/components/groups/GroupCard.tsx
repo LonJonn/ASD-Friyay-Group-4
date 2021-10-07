@@ -12,7 +12,7 @@ const GroupCard: React.FC<IGroupCard> = ({ group }) => {
   const router = useRouter();
 
   const handleClick = (id: string) => {
-    router.push(`/groups/${id}`);
+    router.push(`/groups/movie/${id}`);
   };
 
   return (
@@ -33,17 +33,18 @@ const GroupCard: React.FC<IGroupCard> = ({ group }) => {
         groupId={group.id}
         name={group.name}
         emoji={group.emoji}
-        movieCount={group.movieIds.length}
+        itemCount={group.movieIds.length}
+        type={"movies"}
       />
 
-      <Stack pos="relative" direction="row" alignItems="center" p={10} pt={12} spacing={0}>
+      <Stack pos="relative" direction="row" alignItems="center" p={8} pt={10} spacing={0}>
         <Heading pos="absolute" top={0} transform="auto" translateY="-50%" fontSize="5xl">
           {group.emoji}
         </Heading>
         <Heading size="lg">{group.name.toUpperCase()}</Heading>
         <Spacer />
         <Heading fontSize="2xl" color="teal.400">
-          {group.movieIds.length} 🎬
+          {group.movieIds.length} 🎞
         </Heading>
       </Stack>
     </Box>

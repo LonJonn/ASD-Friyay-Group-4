@@ -83,8 +83,18 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/all-users-client",
   },
   {
-    label: "Popular Movies",
-    href: "/popular-movies",
+    label: "Popular",
+    children: [
+      { label: "Movies", subLabel: "All Popular Movies", href: "/popular-movies" },
+      { label: "Actors", subLabel: "All Popular Actors", href: "/actors" },
+    ],
+  },
+  {
+    label: "Search",
+    children: [
+      { label: "Movies", subLabel: "Search All Movies", href: "/" },
+      { label: "Actors", subLabel: "Search All Actors", href: "/actors/search" },
+    ],
   },
   {
     label: "Admin View",
@@ -95,7 +105,7 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/groups",
   },
   {
-    label: "My Reviews",
+    label: "My Movie Reviews",
     href: "/reviews",
   },
 ];

@@ -1,21 +1,43 @@
-import { PopularMoviesResponse } from "@app/typings";
-import { getMovie } from "../../movie/get-movie";
-require('node-fetch');
-require('jest-fetch-mock').enableMocks()
+// This test requires for the node-fetch and mocked modules to be imported
+import fetch from 'node-fetch';
+import { mocked } from 'ts-jest/utils';
 
-test("It grabs popular movies", async () => {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&api_key=e4fa39bf6f208cb92054054b1c0398d4`
-  );
+// Import the service to be tested
+import { getPopularMovies } from '@app/services/movie/get-popular-movies';
 
-  const popularMoviesData = (await response.json()) as PopularMoviesResponse;
+// Set node-fetch to be used globally during execution of the test
+global.fetch = require("node-fetch");
 
-  expect(popularMoviesData.results.length).toBeGreaterThan(0);
+// Load the sample data to be passed into the function
+const popularMoviesSample = require('./popularMoviesData.json');
+
+// Tell Jest to mock node-fetch
+jest.mock('node-fetch', () => {
+  return jest.fn();
 });
 
-// test("It computes first names for users", async () => {
-//   const allUsers = await getAllUsers();
-//   const randomUser = allUsers[Math.floor(Math.random() * allUsers.length)];
+// Clear existing mocks
+beforeEach(() => {
+  mocked(fetch).mockClear();
+});
 
-//   expect(randomUser.firstName).toBeDefined();
-// });
+// The test
+// Jest is configured to mock the fetch function in the servic
+// When the fetch function is called, the sample data is returned
+describe('getPopularMovies test', () => {
+  test('getPopularMovies should retrieve 20 popular movies', async () => {
+    mocked(fetch).mockImplementation((): Promise<any> => {
+      return Promise.resolve({
+        json() {
+          return Promise.resolve(popularMoviesSample);
+        }
+      });
+    });
+
+    // Call the getPopularMovies function and await for it to return processed results
+    const popularMovies = await getPopularMovies();
+    
+    // Check that the length of the returned array is equal to 20 
+    expect(popularMovies).toHaveLength(20);
+  })
+})

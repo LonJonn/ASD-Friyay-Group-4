@@ -50,6 +50,7 @@ const MovieCard: React.FC<IMovieCard> = ({ movie, movieGroup }) => {
         onClick={(e) => {
           const updatedMovieIds = movieGroup.movieIds.filter((id) => id != movie.id.toString());
           updateMutation.mutate({
+            type: "movies",
             movieGroupId: movieGroup.id,
             movieGroupContents: { movieIds: updatedMovieIds },
           });

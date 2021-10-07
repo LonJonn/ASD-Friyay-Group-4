@@ -13,10 +13,12 @@ import {
   Spacer,
   List,
   useDisclosure,
+  Select,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
-async function getUsersReviews(): Promise<GetUsersReviewsResponse> {
-  const res = await fetch("/api/reviews");
+async function getUsersReviews(sortType: string): Promise<GetUsersReviewsResponse>{
+  const res = await fetch(`/api/reviews?sort=${sortType}`);
 
   if (!res.ok) {
     throw new Error("Unable to get reviews😭");
@@ -26,9 +28,11 @@ async function getUsersReviews(): Promise<GetUsersReviewsResponse> {
 }
 
 const MovieReviewsPage: NextPage = () => {
+  const [sortType, setSortType] = useState("mostRecent");
+  
   const query = useQuery<GetUsersReviewsResponse, Error>({
-    queryKey: "reviews",
-    queryFn: getUsersReviews,
+    queryKey: ["reviews", sortType],
+    queryFn: () => getUsersReviews(sortType),
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -41,28 +45,33 @@ const MovieReviewsPage: NextPage = () => {
     return <Text>Error...{query.error.message}</Text>;
   }
 
-  return(
+  return (
     <Stack>
       <HStack spacing={5}>
-        <Heading py={4} paddingBottom={3}>User Movie Reviews</Heading>
-        <Spacer/>
+        <Heading py={4} paddingBottom={3}>
+          My Movie Reviews
+        </Heading>
+        <Spacer />
+        <Select
+          width={"200px"}
+          color={"teal"}
+          value={sortType}
+          onChange={(e) => setSortType(e.target.value)}
+        >
+          <option value="mostRecent">Sort By Recent</option>
+          <option value="mostLiked">Sort By Most Liked</option>
+          <option value="mostDisliked">Sort By Most Disliked</option>
+        </Select>
         <Button colorScheme={"teal"} size={"md"} onClick={onOpen}>
           Add Review
         </Button>
       </HStack>
 
-      <List>
-      {query.data.map((review) => (
-        <ReviewCards
-          key={review.id} 
-          title={review.title} 
-          description={review.text} 
-          userName={""} 
-          ratings={review.ratings} 
-          upVotes={0} 
-          downVotes={0}           
-        />
-       ))}
+      {/* Review Cards Displayed in UI */}
+      <List id="userReview">
+        {query.data?.map((review) => (
+          <ReviewCards key={review.id} review={review} />
+        ))}
       </List>
 
       <CreateReviewForm isOpen={isOpen} onClose={onClose} />

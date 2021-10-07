@@ -20,10 +20,17 @@ export interface IDeleteGroupButton {
   groupId: string;
   emoji: string;
   name: string;
-  movieCount: number;
+  itemCount: number;
+  type: string;
 }
 
-const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({ groupId, emoji, name, movieCount }) => {
+const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({
+  groupId,
+  emoji,
+  name,
+  itemCount,
+  type,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -52,9 +59,10 @@ const DeleteGroupButton: React.FC<IDeleteGroupButton> = ({ groupId, emoji, name,
         groupId={groupId}
         emoji={emoji}
         groupName={name}
-        movieCount={movieCount}
+        itemCount={itemCount}
         onClose={onClose}
         isOpen={isOpen}
+        type={type}
       />
     </>
   );
