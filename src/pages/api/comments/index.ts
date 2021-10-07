@@ -1,7 +1,6 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/client";
 import { getReportedMovieComments, updateReportedMovieCommentToTrue } from "@app/services/comment/";
-import Id from "@app/pages/groups/[id]";
 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
