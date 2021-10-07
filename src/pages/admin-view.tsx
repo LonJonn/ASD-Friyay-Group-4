@@ -425,7 +425,7 @@ export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersRespons
     };
   } else {
     //Check if user is an admin. If not, redirect them to a 404 page.
-    if ((session.user.email = "admin@gmail.com" || "anastasia.grivas@student.uts.edu.au")) {
+    if (String(session.user.email) == "admin@gmail.com") {
       //User is an admin
       console.log("admin");
     } else {
