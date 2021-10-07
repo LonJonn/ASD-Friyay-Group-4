@@ -12,6 +12,7 @@ interface CreateMovieCommentArgs {
   movieCommentContents: CommentPostBody;
 }
 
+//
 async function createMovieCommentFunction(createMovieCommentArgs: CreateMovieCommentArgs) {
   const response = await fetch(`/api/comments/movie/${createMovieCommentArgs.movieId}`, {
     method: "POST",
@@ -25,6 +26,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ movieId }) => {
   const queryClient = useQueryClient();
   const [commentValue, setCommentValue] = useState("");
 
+  // the mutation function handles the fetch request sent to the API and revalidates stale data
   const createMutation = useMutation(createMovieCommentFunction, {
     onSuccess: () => {
       queryClient.invalidateQueries(["comments"]);
@@ -43,6 +45,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ movieId }) => {
         value={commentValue}
         onChange={(e) => setCommentValue(e.target.value)}
       />
+      {/* on click the movie id and the comment text are sent to a mutation function */}
       <Button
         marginTop={4}
         marginBottom={8}

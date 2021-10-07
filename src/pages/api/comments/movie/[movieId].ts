@@ -13,13 +13,14 @@ type CreateMovieCommentResponse = CreateMovieCommentResult;
 export type CommentPostBody = Pick<CreateMovieCommentInput, "text">;
 
 const handler: NextApiHandler = async (req, res) => {
-  const session = await getSession({ req });
+  // ensure comments can be reported by logged in users
   if (req.method === "POST") {
+    const session = await getSession({ req });
     if (!session) {
       return res.status(401).end();
     }
     const body = req.body as CommentPostBody;
-
+    // create a comment by passing in the associated movie, text and associated user
     const newComment = (await createMovieComment({
       movieId: req.query.movieId as string,
       text: body.text,
@@ -28,7 +29,7 @@ const handler: NextApiHandler = async (req, res) => {
 
     return res.status(201).send(newComment);
   }
-
+  // return an array of comments assocaited to that movie
   if (req.method === "GET") {
     const { movieId } = req.query;
     const movieComments = await getMovieComments(movieId as string);

@@ -3,6 +3,7 @@ import { Comment } from "@prisma/client";
 
 export type GetReportedMovieCommentsResult = Comment[];
 
+// return comments that have been reported
 export async function getReportedMovieComments(): Promise<GetReportedMovieCommentsResult> {
   const reportedComments = await db.comment.findMany({ where: { reported: true } });
 

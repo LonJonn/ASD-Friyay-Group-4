@@ -104,6 +104,7 @@ const Movie: NextPage = () => {
           ))}
         </SimpleGrid>
       </Stack>
+      {/* map over each comment associated to that movie and display */}
       <CommentForm movieId={id as string} />
       <Stack>
         {movieCommentsQuery.data?.map((comment) => (

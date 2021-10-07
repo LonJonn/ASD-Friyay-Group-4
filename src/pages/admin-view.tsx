@@ -2,7 +2,6 @@ import { useQuery } from "react-query";
 import {
   Box,
   Heading,
-  List,
   useDisclosure,
   Modal,
   ModalOverlay,
@@ -49,7 +48,6 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
   });
 
   return (
-    //Place box element which contains admin front end HTML
     <Tabs>
       <TabList>
         <Tab>User List</Tab>
@@ -57,6 +55,7 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
       </TabList>
       <TabPanels>
         <TabPanel>
+          {/* Place box element which contains admin front end HTML */}
           <Box>
             <a className="button" id="new-user-button" onClick={toggleNewUser}>
               Create new user
@@ -158,6 +157,7 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
 
         <TabPanel>
           <Heading>REPORTED COMMENTS </Heading>
+          {/* map over each reported comment and display */}
           <Stack>
             {reportedMovieCommentsQuery.data?.map((comment) => (
               <ReportedComment key={comment.id} comment={comment} />

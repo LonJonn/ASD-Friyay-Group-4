@@ -1,7 +1,5 @@
 import {
   Box,
-  Heading,
-  Flex,
   Text,
   VStack,
   HStack,
@@ -23,20 +21,8 @@ import {
   MenuItem,
   MenuList,
   Spacer,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  ButtonGroup,
-  useEditableControls,
 } from "@chakra-ui/react";
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  HamburgerIcon,
-  CheckIcon,
-  CloseIcon,
-  EditIcon,
-} from "@chakra-ui/icons";
+import { ArrowUpIcon, ArrowDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Comment } from "@prisma/client";
@@ -91,6 +77,7 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
     },
   });
 
+  // comment upvote tracking function
   const Upvote: React.FC<CommentLikes> = ({}) => {
     var voteCount = comment.likes;
     var userVote = 0;
