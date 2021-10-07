@@ -6,6 +6,7 @@ export type DeleteReviewInput = Prisma.ReviewDeleteArgs;
 
 export type DeleteReviewResult = Review;
 
+// delete user Review function
 export async function deleteReview(args: DeleteReviewInput): Promise<DeleteReviewResult> {
   const createResult = await db.review.delete(args);
 

@@ -23,12 +23,14 @@ export type getUserReviewsInput = {
   sort: "mostRecent" | "mostLiked" | "mostDisliked"
 }
 
+//Review Api 
 const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
   if (!session) {
     return res.status(401).end();
   }
 
+  // Gets all user reviews sorted by 
   if (req.method === "GET") {
     const sort = req.query.sort as string
 
@@ -36,6 +38,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.send(userReviews);
   }
 
+  // Sends Input data to create-review service
   if (req.method === "POST") {
     const reviewDetails: ReviewGroupPostBody = req.body;
 
@@ -53,6 +56,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.send(newUserReview);
   }
 
+  // Sends updated review input to update-reviews service
   if (req.method === "PUT") {
     const reviewId = req.query.id as string;
     const updatedReviewBody = req.body as UpdateReviewBody;
@@ -64,6 +68,7 @@ const handler: NextApiHandler = async (req, res) => {
     return res.send(updatedReview);
   }
 
+  // sends deleted review input/onSubmit to delete-review service
   if (req.method === "DELETE") {
     const reviewDetails = req.body as ReviewDeleteBody;
     const deletedResult = (await deleteReview({
