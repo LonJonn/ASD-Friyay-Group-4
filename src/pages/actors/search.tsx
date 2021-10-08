@@ -8,17 +8,19 @@ import { SearchIcon } from "@chakra-ui/icons";
 
 const ActorSearchPage: NextPage = () => {
   const router = useRouter();
+
+  // Grab the current serach query from the url, or default to empty query
   const searchQuery = (router.query.query as string) || "";
-  console.log(searchQuery);
   const [queryValue, setQueryValue] = useState(searchQuery);
 
+  // Fire off the actor search query
   const query = useSearchActorsQuery(searchQuery);
-  console.log(query);
 
   return (
     <Stack spacing={8}>
       <Heading size="lg">Search for actors</Heading>
 
+      {/* Search Form */}
       <Stack
         as="form"
         direction="row"
@@ -42,6 +44,7 @@ const ActorSearchPage: NextPage = () => {
         <Button type="submit">Search</Button>
       </Stack>
 
+      {/* Results */}
       {query.status === "success" && <ActorList actors={query.data} />}
     </Stack>
   );

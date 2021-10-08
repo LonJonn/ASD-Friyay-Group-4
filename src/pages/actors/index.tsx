@@ -5,6 +5,7 @@ import { usePopularActorsQuery } from "@app/hooks/actor/usePopularActorsQuery";
 import { ActorList } from "@app/components/actors/ActorList";
 
 const ActorsPage: NextPage = () => {
+  // Fire off popular actors query
   const query = usePopularActorsQuery();
 
   return (

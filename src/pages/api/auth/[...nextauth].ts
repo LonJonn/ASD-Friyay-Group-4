@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 
 export default NextAuth({
   providers: [
+    // Init our Auth0 client from env vars
     Providers.Auth0({
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
@@ -18,10 +19,13 @@ export default NextAuth({
 
   callbacks: {
     session: async (session, user) => {
+      // On session change, add the user id to the session object so we can
+      // reference it later in our API handlers
       if (session.user) {
         session.uid = user.id as string;
       }
 
+      // Return the modified session
       return session;
     },
   },
