@@ -1,4 +1,4 @@
-import { MovieSearchResponse, MovieSearchResult } from "@app/typings/TMDB";
+import { Response, MoviePreviewResult } from "@app/typings/TMDB";
 
 const MONTHS = [
   "January",
@@ -20,7 +20,7 @@ const MONTHS = [
  */
 interface TransformedMovie
   extends Pick<
-    MovieSearchResult,
+  MoviePreviewResult,
     "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path"
   > {
   release_month: string;
@@ -47,7 +47,7 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
   );
   
   // Parse as JSON, and cast to our type from the TMDB.ts file
-  const moviesSearchData = (await response.json()) as MovieSearchResponse;
+  const moviesSearchData = (await response.json()) as Response;
 
   // Now we transform the response from TMDB into our custom shape that we want
   // to return from our API.
