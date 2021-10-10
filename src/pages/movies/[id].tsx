@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Stack, Image, AspectRatio, Box, Text, SimpleGrid, Heading } from "@chakra-ui/react";
+import { Stack, Text, SimpleGrid, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { getMovie, GetMovieResponse } from "@app/services/movie";
 import { GetMovieCommentsResult } from "@app/services/comment";
@@ -8,6 +8,8 @@ import ActorPreviewCard from "@app/components/movie/ActorPreviewCard";
 import { useQuery } from "react-query";
 import CommentForm from "@app/components/comments/CommentForm";
 import Comments from "@app/components/comments/Comments";
+import MovieCard from "@app/components/groups/MovieCard";
+import PreviewCard from "@app/components/movie/MoviePreviewCard";
 
 async function getMovieDetails(id: string): Promise<GetMovieResponse> {
   // Data is retrieved from the API layer
@@ -37,7 +39,7 @@ const Movie: NextPage = () => {
 
   // A query executes to retrieve the data elements that need to be displayed
   const query = useQuery<GetMovieResponse, Error>({
-    queryKey: "movie",
+    queryKey: "getMovie",
     queryFn: () => getMovieDetails(String(id)),
   });
 
@@ -81,14 +83,17 @@ const Movie: NextPage = () => {
         producers={query.data.producers}
         classificationRating={query.data.classificationRating}
       />
+
       {query.data.actors.length > 0 ? (
         <Heading>Cast</Heading>
       ) : (
         <Text ml="2">Cast Info Unavailable</Text>
       )}
+
       <br></br>
+      
       <Stack spacing={5}>
-        <SimpleGrid columns={4} spacingX={4} spacingY={4}>
+        <SimpleGrid columns={4} spacingX={4} spacingY={4} maxH="25em" overflowY="scroll">
           {query.data.actors.map((actor) => (
             <ActorPreviewCard
               key={actor.id}
@@ -104,6 +109,33 @@ const Movie: NextPage = () => {
           ))}
         </SimpleGrid>
       </Stack>
+      
+      <br></br>
+
+      {/* iterate over the recommendations to render */}
+      <Heading>Recommended Movies</Heading> 
+      <br></br>
+      <Stack spacing={5}>
+        {query.data.cleanedRecommendations.length > 1
+        ?
+          <SimpleGrid columns={4} spacingX={4} spacingY={4} maxH="25em" overflowY="scroll">
+            {query.data.cleanedRecommendations.map((movie) => (
+              <PreviewCard
+                key={movie.id}
+                id={movie.id}
+                title={movie.title}
+                poster_path={movie.poster_path == null ? 'https://safetyaustraliagroup.com.au/wp-content/uploads/2019/05/image-not-found.png' : "https://image.tmdb.org/t/p/w500/" + movie.poster_path}
+                original_language={movie.original_language}
+                release_month={movie.release_month}
+                release_year={String(movie.release_year)}
+                vote_average={movie.vote_average}
+              />
+            ))}               
+            </SimpleGrid>
+        : <Text>Recommendations are not yet available for this movie. Please check back at a later time. 😪</Text>
+        }
+        </Stack>
+
       {/* map over each comment associated to that movie and display */}
       <CommentForm movieId={id as string} />
       <Stack>
