@@ -23,7 +23,7 @@ const NavigationButton: React.FC<INavigationButton> = ({ search, nextPage, navig
         {/* On submission of the form, the handleClick procuredure is executed */}
         handleClick(search);
         {/* Remove Query is executed to clear previous search results from memory */}
-        queryClient.removeQueries("getMovies");
+        queryClient.invalidateQueries(["movies"]);
     }
 
     {/* The direction of navigation and button text is set dynamically */}

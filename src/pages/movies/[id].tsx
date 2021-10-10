@@ -34,12 +34,12 @@ async function getMovieComments(id: string): Promise<GetMovieCommentsResult> {
 
 const Movie: NextPage = () => {
   const router = useRouter();
-  const { id } = router.query;
-
+  const id = router.query.id as string;
+  
   // A query executes to retrieve the data elements that need to be displayed
-  const query = useQuery<GetMovieResponse, Error>({
-    queryKey: "getMovie",
-    queryFn: () => getMovieDetails(String(id)),
+  const movieQuery = useQuery<GetMovieResponse, Error>({
+    queryKey: ["movie", id],
+    queryFn: () => getMovieDetails(id as string),
   });
 
   const movieCommentsQuery = useQuery<GetMovieCommentsResult, Error>({
@@ -47,12 +47,13 @@ const Movie: NextPage = () => {
     queryFn: () => getMovieComments(String(id)),
   });
 
-  if (query.status === "loading" || query.status === "idle") {
+  if (movieQuery.status === "loading" || movieQuery.status === "idle") {
     return <Text>Loading...</Text>;
   }
 
-  if (query.status === "error") {
-    return <Text>Error...{query.error.message}</Text>;
+  if (movieQuery.status === "error") {
+    console.log(movieQuery.error.stack);
+    return <Text>Error...{movieQuery.error.message}</Text>;
   }
 
   // Return components by combining them into a div
@@ -62,28 +63,28 @@ const Movie: NextPage = () => {
   return (
     <div>
       <MovieBaseInfo
-        key={query.data.id}
-        id={query.data.id}
-        title={query.data.title}
-        poster_path={query.data.poster_path}
-        original_language={query.data.original_language}
-        release_month={query.data.release_month}
-        release_year={String(query.data.release_year)}
-        vote_average={query.data.vote_average}
-        overview={query.data.overview}
-        backdrop_path={query.data.backdrop_path}
-        tagline={query.data.tagline}
-        budget={query.data.budget}
-        revenue={query.data.revenue}
-        runtime={query.data.runtime}
-        genres={query.data.genres}
-        writers={query.data.writers}
-        exec_producers={query.data.execProducers}
-        producers={query.data.producers}
-        classificationRating={query.data.classificationRating}
+        key={movieQuery.data.id}
+        id={movieQuery.data.id}
+        title={movieQuery.data.title}
+        poster_path={movieQuery.data.poster_path}
+        original_language={movieQuery.data.original_language}
+        release_month={movieQuery.data.release_month}
+        release_year={String(movieQuery.data.release_year)}
+        vote_average={movieQuery.data.vote_average}
+        overview={movieQuery.data.overview}
+        backdrop_path={movieQuery.data.backdrop_path}
+        tagline={movieQuery.data.tagline}
+        budget={movieQuery.data.budget}
+        revenue={movieQuery.data.revenue}
+        runtime={movieQuery.data.runtime}
+        genres={movieQuery.data.genres}
+        writers={movieQuery.data.writers}
+        exec_producers={movieQuery.data.execProducers}
+        producers={movieQuery.data.producers}
+        classificationRating={movieQuery.data.classificationRating}
       />
 
-      {query.data.actors.length > 0 ? (
+      {movieQuery.data.actors.length > 0 ? (
         <Heading>Cast</Heading>
       ) : (
         <Text ml="2">Cast Info Unavailable</Text>
@@ -93,7 +94,7 @@ const Movie: NextPage = () => {
       
       <Stack spacing={5}>
         <SimpleGrid columns={4} spacingX={4} spacingY={4} maxH="25em" overflowY="scroll">
-          {query.data.actors.map((actor) => (
+          {movieQuery.data.actors.map((actor) => (
             <ActorPreviewCard
               key={actor.id}
               id={actor.id}
@@ -115,10 +116,10 @@ const Movie: NextPage = () => {
       <Heading>Recommended Movies</Heading> 
       <br></br>
       <Stack spacing={5}>
-        {query.data.cleanedRecommendations.length > 1
+        {movieQuery.data.cleanedRecommendations.length > 1
         ?
           <SimpleGrid columns={4} spacingX={4} spacingY={4} maxH="25em" overflowY="scroll">
-            {query.data.cleanedRecommendations.map((movie) => (
+            {movieQuery.data.cleanedRecommendations.map((movie) => (
               <PreviewCard
                 key={movie.id}
                 id={movie.id}

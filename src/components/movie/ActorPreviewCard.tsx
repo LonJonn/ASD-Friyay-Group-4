@@ -15,7 +15,7 @@ const PopularMovieCard: React.FC<IActorPreviewCard> = ({ id, name, character, pr
     const queryClient = useQueryClient();
 
     const handleClick = () => {
-        queryClient.removeQueries("getMovie");
+        queryClient.invalidateQueries(["movie"]);
         router.push(`/actors/${id}`);
     };
 
