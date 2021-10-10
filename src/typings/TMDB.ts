@@ -26,6 +26,7 @@ export interface MovieDetail {
   vote_count: number;
   credits: Credits;
   releases: Releases;
+  recommendations: Response;
 }
 
 export interface Genre {
@@ -70,30 +71,6 @@ export interface Cast {
   job: string;
 }
 
-export interface PopularMoviesResponse {
-  page: number;
-  results: PopularMovieResult[];
-  total_results: number;
-  total_pages: number;
-}
-
-export interface PopularMovieResult {
-  adult: boolean;
-  genre_ids: number[];
-  id: number;
-  original_language: OriginalLanguage;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  backdrop_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
-
 export enum OriginalLanguage {
   De = "de",
   En = "en",
@@ -110,13 +87,6 @@ export interface Country {
   iso_3166_1: string;
   primary: boolean;
   release_date: Date;
-}
-
-export interface MovieSearchResponse {
-  page: number;
-  results: MovieSearchResult[];
-  total_results: number;
-  total_pages: number;
 }
 
 export interface Actor {
@@ -141,22 +111,7 @@ export interface ActorSearchResult {
   results: ActorResult[];
 }
 
-export interface MovieSearchResult {
-  adult: boolean;
-  genre_ids: number[];
-  id: number;
-  original_language: OriginalLanguage;
-  original_title: string;
-  overview: string;
-  popularity: number;
-  poster_path: string;
-  backdrop_path: string;
-  release_date: string;
-  title: string;
-  video: boolean;
-  vote_average: number;
-  vote_count: number;
-}
+
 export interface ActorResult {
   profile_path: string;
   adult: boolean;
@@ -198,4 +153,28 @@ export interface ActorCredits {
   cast: Cast[];
   crew: Cast[];
   id: number;
+}
+
+export interface Response {
+  page: number;
+  results: MoviePreviewResult[];
+  total_results: number;
+  total_pages: number;
+}
+
+export interface MoviePreviewResult {
+  adult: boolean;
+  genre_ids: number[];
+  id: number;
+  original_language: OriginalLanguage;
+  original_title: string;
+  overview: string;
+  popularity: number;
+  poster_path: string;
+  backdrop_path: string;
+  release_date: string;
+  title: string;
+  video: boolean;
+  vote_average: number;
+  vote_count: number;
 }

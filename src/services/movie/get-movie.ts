@@ -1,18 +1,19 @@
-import { MovieDetail, Cast, Country } from "@app/typings/TMDB";
+import { MovieDetail, Cast, Country, MoviePreviewResult } from "@app/typings/TMDB";
+import { transformMovies } from "@app/services/movie/movie-preview-transformer";
 
 const MONTHS = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 /**
@@ -30,6 +31,16 @@ interface TransformedMovie
   producers: Cast[];
   classificationRating: Country[];
   actors: Cast[];
+  cleanedRecommendations: TransformedRecommendations[];
+}
+
+interface TransformedRecommendations
+  extends Pick<
+  MoviePreviewResult,
+    "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path"
+  > {
+  release_month: string;
+  release_year: number;
 }
 
 /**
@@ -40,7 +51,7 @@ export type GetMovieResponse = TransformedMovie;
 export async function getMovie(id: string): Promise<GetMovieResponse> {
   // Make request to TMDB
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=credits,releases`
+    `https://api.themoviedb.org/3/movie/${id}?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&append_to_response=credits,releases,recommendations`
   );
 
   // Parse as JSON, and cast to our type from the TMDB.ts file
@@ -61,6 +72,9 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
   
   // The Australan Classification Rating is selected from the response
   const classificationRating = movieData.releases.countries.filter(country => country.iso_3166_1 == "AU");
+  
+  // Extract and process recommended movies 
+  const transformedRecommendations = await transformMovies(movieData.recommendations.results);
 
   const transformedMovie: TransformedMovie = {
     // Data is extracted and organised into the correct fields
@@ -84,7 +98,8 @@ export async function getMovie(id: string): Promise<GetMovieResponse> {
     execProducers: processedexExecutiveProducers,
     producers: processedProducers,
     classificationRating: classificationRating,
-    actors: movieData.credits.cast
+    actors: movieData.credits.cast,
+    cleanedRecommendations: transformedRecommendations
   };
 
   return transformedMovie;

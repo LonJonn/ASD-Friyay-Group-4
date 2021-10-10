@@ -28,7 +28,7 @@ const SearchBar: React.FC = ({  }) => {
       handleClick(search, year);
 
       {/* Remove Query is executed to clear previous search results from memory */}
-      queryClient.removeQueries("getMovies");
+      queryClient.invalidateQueries(["movies"]);
     }
 
     {/* The movie search bar is composed of two form elements contained within a box element that is the form parent */}
