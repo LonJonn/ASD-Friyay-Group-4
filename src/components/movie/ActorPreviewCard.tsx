@@ -20,7 +20,8 @@ const PopularMovieCard: React.FC<IActorPreviewCard> = ({ id, name, character, pr
     };
 
     return (
-        <LinkBox borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl" p={4} display={{ md: "flex" }} onClick={handleClick}>
+        <LinkBox borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl" p={4}
+        _hover={{ transform: "scale(1.025)", shadow: "2xl" }} display={{ md: "flex" }} onClick={handleClick}>
             {/* The poster photo for each 'card' */}
             <Box flexShrink={0}>
                 <Image
