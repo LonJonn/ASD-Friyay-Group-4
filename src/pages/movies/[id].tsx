@@ -1,14 +1,13 @@
 import type { NextPage } from "next";
 import { Stack, Text, SimpleGrid, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { getMovie, GetMovieResponse } from "@app/services/movie";
+import { GetMovieResponse } from "@app/services/movie";
 import { GetMovieCommentsResult } from "@app/services/comment";
 import MovieBaseInfo from "@app/components/movie/MovieBaseInfo";
 import ActorPreviewCard from "@app/components/movie/ActorPreviewCard";
 import { useQuery } from "react-query";
 import CommentForm from "@app/components/comments/CommentForm";
 import Comments from "@app/components/comments/Comments";
-import MovieCard from "@app/components/groups/MovieCard";
 import PreviewCard from "@app/components/movie/MoviePreviewCard";
 
 async function getMovieDetails(id: string): Promise<GetMovieResponse> {
@@ -56,7 +55,7 @@ const Movie: NextPage = () => {
     return <Text>Error...{query.error.message}</Text>;
   }
 
-  // Return 2 components by combining them into a div
+  // Return components by combining them into a div
   // The MovieBaseInfo card will display summary info about a movie
   // The function also returns an array of cards in a grid with the movie actors
 
@@ -112,7 +111,7 @@ const Movie: NextPage = () => {
       
       <br></br>
 
-      {/* iterate over the recommendations to render */}
+      {/* iterate over the recommendations to render preview cards */}
       <Heading>Recommended Movies</Heading> 
       <br></br>
       <Stack spacing={5}>

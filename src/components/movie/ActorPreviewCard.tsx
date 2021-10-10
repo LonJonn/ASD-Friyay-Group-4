@@ -1,6 +1,4 @@
-import { Box, Image, Text, Wrap, WrapItem, Badge, Tooltip, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalBody, ModalFooter } from "@chakra-ui/react";
-import { StarIcon } from "@chakra-ui/icons";
-import { useRouter } from "next/router";
+import { Box, Image, Text } from "@chakra-ui/react";
 
 interface IActorPreviewCard {
   key: number;
@@ -10,7 +8,7 @@ interface IActorPreviewCard {
   profile_path: string;
 }
 
-const PopularMovieCard: React.FC<IActorPreviewCard> = ({ key, id, name, character, profile_path  }) => {
+const PopularMovieCard: React.FC<IActorPreviewCard> = ({ name, character, profile_path  }) => {
   return (
     <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl" p={4} display={{ md: "flex" }}>
         {/* The poster photo for each 'card' */}
