@@ -6,16 +6,17 @@ interface INavigationButton {
     search: string;
     nextPage: number;
     navigationDirection: string;
+    endpoint: string;
 }
 
-const NavigationButton: React.FC<INavigationButton> = ({ search, nextPage, navigationDirection }) => {
+const NavigationButton: React.FC<INavigationButton> = ({ search, nextPage, navigationDirection, endpoint }) => {
     const router = useRouter();
     const queryClient = useQueryClient();
 
     {/* The handleClick procedure creates a new search parameter and pushes users onto a new page */}
     const handleClick = (search: string) => {
         var newSearch = search.split("&")[0] + "&page=" + nextPage;
-        router.push(`/movies/search/${newSearch}`);
+        router.push(`/movies/${endpoint}/${newSearch}`);
     };
 
     async function onSubmit(event: React.FormEvent) {

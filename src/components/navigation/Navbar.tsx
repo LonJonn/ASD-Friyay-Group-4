@@ -90,6 +90,10 @@ const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
+    label: "Discover",
+    href: "/movie-catalogue",
+  },
+  {
     label: "Search",
     children: [
       { label: "Movies", subLabel: "Search All Movies", href: "/" },
