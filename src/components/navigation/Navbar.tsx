@@ -94,6 +94,10 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/movie-catalogue",
   },
   {
+    label: "Now Playing",
+    href: "/now-playing",
+  },
+  {
     label: "Search",
     children: [
       { label: "Movies", subLabel: "Search All Movies", href: "/" },
