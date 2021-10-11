@@ -33,7 +33,6 @@ const DiscoverBar: React.FC = ({  }) => {
       genresSelected = value
     }
 
-    const [genres, setGenres] = useState("");
     const [certification, setCertification] = useState("");
     const [sortMethod, setSortMethod] = useState("");
     const [year, setYear] = useState("");
@@ -52,8 +51,7 @@ const DiscoverBar: React.FC = ({  }) => {
     {/* As soon as any form control element is updated, the in-memory value is also updated */}
     return (
       <Box as="form" onSubmit={onSubmit} id="search-form" borderWidth="1px" borderRadius="lg" boxShadow="2xl" p={4} display={{ md: "flex" }} height="15em">
-        <Stack direction="row">
-
+        <Stack direction="row" spacing="8">
           <FormControl isRequired>
             <FormLabel>Genres</FormLabel>
             <Select
@@ -91,15 +89,19 @@ const DiscoverBar: React.FC = ({  }) => {
             <FormHelperText>Select a sorting method</FormHelperText>
           </FormControl>
 
-          <FormControl>
+          <FormControl width="30em">
             <FormLabel>Year Limit</FormLabel>
-            <Input placeholder="year (optional)" value={year} ml="1" type="number" onChange={(y) => {
+            <Input placeholder="year" value={year} ml="1" type="number" onChange={(y) => {
                 setYear(y.target.value);
               }} />
             <FormHelperText>Limit searches to a particular year</FormHelperText>
           </FormControl>
+
+          <FormControl>
+            <FormLabel>Search</FormLabel>
+            <IconButton colorScheme="teal" ml="3" form="search-form" type="submit" icon={<SearchIcon/>} aria-label="Search database"/>
+          </FormControl>
           
-          <IconButton colorScheme="teal" ml="3" form="search-form" type="submit" icon={<SearchIcon/>} aria-label="Search database"/>
         </Stack>
           
       </Box>
