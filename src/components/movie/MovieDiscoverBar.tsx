@@ -62,7 +62,7 @@ const DiscoverBar: React.FC = ({  }) => {
               >
               {genreData.map(genre => <option key={genre.code} value={genre.code}>{genre.name}</option>)}
             </Select>
-            <FormHelperText>Select one more genres</FormHelperText>
+            <FormHelperText>Select one or more genres.</FormHelperText>
           </FormControl>
 
           <FormControl>
@@ -73,7 +73,7 @@ const DiscoverBar: React.FC = ({  }) => {
             >
               {certifactionData.map(cert => <option key={cert.code} value={cert.code}>{cert.certification}</option>)}
             </Select>
-            <FormHelperText>[OPTIONAL] Select a maximum certification level</FormHelperText>
+            <FormHelperText>[OPTIONAL] Select a maximum certification level. If not specified, PG will be used.</FormHelperText>
           </FormControl>
 
           <FormControl>
@@ -86,7 +86,7 @@ const DiscoverBar: React.FC = ({  }) => {
               <option value="primary_release_date.desc">Release date descending</option>
               <option value="primary_release_date.asc">Release date ascending</option>
             </Select>
-            <FormHelperText>Select a sorting method</FormHelperText>
+            <FormHelperText>Select a sorting method.</FormHelperText>
           </FormControl>
 
           <FormControl width="30em">
@@ -94,7 +94,7 @@ const DiscoverBar: React.FC = ({  }) => {
             <Input placeholder="year" value={year} ml="1" type="number" onChange={(y) => {
                 setYear(y.target.value);
               }} />
-            <FormHelperText>Limit searches to a particular year</FormHelperText>
+            <FormHelperText>Limit searches to a particular year.</FormHelperText>
           </FormControl>
 
           <FormControl>
