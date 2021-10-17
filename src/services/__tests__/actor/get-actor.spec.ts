@@ -1,25 +1,15 @@
 import { getActor } from "@app/services/actor/get-actor";
 import { mocked } from "ts-jest/utils";
-import sampleData from "./sample-data.json";
+import mockData from "./mock-data.json";
 
-// Tell Jest to mock node-fetch
-jest.mock("node-fetch", () => {
-  return jest.fn();
-});
-
-// Set node-fetch to be used globally during execution of the test
-global.fetch = require("node-fetch");
-
-// Clear existing mocks
-beforeEach(() => {
-  mocked(fetch).mockClear();
-});
+// Tell Jest to mock global fetch
+global.fetch = jest.fn();
 
 test("it gets the correct actor by their id", async () => {
-  mocked(fetch).mockImplementation((): Promise<any> => {
+  mocked(fetch).mockImplementationOnce((): Promise<any> => {
     return Promise.resolve({
       json() {
-        return Promise.resolve(sampleData);
+        return Promise.resolve(mockData);
       },
     });
   });

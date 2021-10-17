@@ -15,11 +15,12 @@ type UpdateMovieCommentResponse = UpdateMovieCommentResult;
 export type CommentUpdateBody = Pick<UpdateMovieCommentInput, "id" | "text">;
 
 const handler: NextApiHandler = async (req, res) => {
+  // ensure comments can be reported by logged in users
   const session = await getSession({ req });
   if (!session) {
     return res.status(401).end();
   }
-
+  // delete movie comment based on id
   if (req.method === "DELETE") {
     const id = req.query.id as string;
     const deleteComment = (await deleteMovieComment({
@@ -27,7 +28,7 @@ const handler: NextApiHandler = async (req, res) => {
     })) as DeleteMovieCommentResponse;
     return res.send(deleteComment);
   }
-
+  // update movie comment based on id and replace text
   if (req.method === "PUT") {
     const id = req.query.id as string;
     const body = req.body as CommentUpdateBody;
@@ -37,7 +38,6 @@ const handler: NextApiHandler = async (req, res) => {
     })) as UpdateMovieCommentResponse;
     return res.send(updateComment);
   }
-  return res.status(404).end();
 };
 
 export default handler;

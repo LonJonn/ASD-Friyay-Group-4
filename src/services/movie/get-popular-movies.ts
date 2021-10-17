@@ -1,26 +1,12 @@
-import { PopularMoviesResponse, PopularMovieResult } from "@app/typings/TMDB";
-
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import { Response, MoviePreviewResult } from "@app/typings/TMDB";
+import { transformMovies } from "@app/services/movie/movie-preview-transformer";
 
 /**
  * Internal type used in this service.
  */
 interface TransformedMovie
   extends Pick<
-    PopularMovieResult,
+  MoviePreviewResult,
     "id" | "title" | "poster_path" | "original_language" | "vote_average" | "overview" | "backdrop_path"
   > {
   release_month: string;
@@ -29,7 +15,8 @@ interface TransformedMovie
 
 /**
  * The shape of the service response. (An array of TranformedMovies from above)
- */
+*/
+
 export type GetPopularMoviesResponse = TransformedMovie[];
 
 export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
@@ -39,28 +26,11 @@ export async function getPopularMovies(): Promise<GetPopularMoviesResponse> {
   );
 
   // Parse as JSON, and cast to our type from the TMDB.ts file
-  const popularMoviesData = (await response.json()) as PopularMoviesResponse;
+  const popularMoviesData = (await response.json()) as Response;
 
   // Now we transform the response from TMDB into our custom shape that we want
-  // to return from our API.
-  const transformedMovies = popularMoviesData.results.map((movie): TransformedMovie => {
-    // The release date is split into year and month to improve formatting
-    const releaseDate = new Date(movie.release_date);
-    const year = releaseDate.getFullYear();
-    const month = releaseDate.getMonth();
-
-    return {
-      id: movie.id,
-      title: movie.title,
-      poster_path: movie.poster_path,
-      original_language: movie.original_language,
-      release_month: MONTHS[month],
-      release_year: year,
-      vote_average: movie.vote_average,
-      overview: movie.overview,
-      backdrop_path: movie.backdrop_path,
-    };
-  });
-
+  // to return from our API. 
+  const transformedMovies = await transformMovies(popularMoviesData.results);
+  
   return transformedMovies;
 }

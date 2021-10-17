@@ -5,8 +5,9 @@ import { db } from "@app/lib/db";
 export type CreateReviewInput = Prisma.ReviewCreateArgs;
 export type CreateReviewResult = Review;
 
+//Create new user Review function
 export async function createReview(args: CreateReviewInput): Promise<CreateReviewResult>{
-    const createResult = await db.review.create(args);
+    const createResult = await db.review.create({data:{...args.data, likes: 0, dislikes: 0}});
 
     return createResult;
 }

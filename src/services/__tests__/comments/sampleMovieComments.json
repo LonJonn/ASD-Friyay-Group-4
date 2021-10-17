@@ -1,0 +1,32 @@
+[
+  {
+    "id": "615ec4650074d58f005ebddc",
+    "userId": "612af05800b431e00009d011",
+    "text": "Spider-Man 3 is a film about layers; on the surface, it's your typical thrill-a-minute Blockbuster with cutting-edge special effects, but upon further viewing your start to understand this is merely a façade - a false attempt to placate a broader audience",
+    "movieId": "550988",
+    "likes": 0,
+    "createdAt": "2021-10-07T09:56:53.401Z",
+    "updatedAt": "2021-10-07T09:57:16.570Z",
+    "reported": false
+  },
+  {
+    "id": "615ec5940074d58f005ebddd",
+    "userId": "612af05800b431e00009d011",
+    "text": "Glory to Los Pollos Hermanos 👴👴",
+    "movieId": "550988",
+    "likes": 0,
+    "createdAt": "2021-10-07T10:01:56.547Z",
+    "updatedAt": "2021-10-07T10:01:56.547Z",
+    "reported": false
+  },
+  {
+    "id": "615ec5a30074d58f005ebdde",
+    "userId": "612af05800b431e00009d011",
+    "text": "Spider-Man 3 is the best movie that Spider-Man made. Since its release in 2007, critics have spent countless hours analyzing every frame, every scene, every line of dialogue in search of its many subdued themes and messages. Like Garfield",
+    "movieId": "550988",
+    "likes": 0,
+    "createdAt": "2021-10-07T10:02:11.173Z",
+    "updatedAt": "2021-10-07T10:02:11.173Z",
+    "reported": false
+  }
+]

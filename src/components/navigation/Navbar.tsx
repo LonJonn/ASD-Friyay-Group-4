@@ -105,7 +105,7 @@ const NAV_ITEMS: Array<NavItem> = [
     href: "/groups",
   },
   {
-    label: "My Reviews",
+    label: "My Movie Reviews",
     href: "/reviews",
   },
 ];

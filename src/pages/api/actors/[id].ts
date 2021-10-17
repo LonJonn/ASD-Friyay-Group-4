@@ -5,6 +5,7 @@ export type GetActorByIDResponse = GetActorResult;
 
 const handler: NextApiHandler = async (req, res) => {
   if (req.method === "GET") {
+    // Take in the id from the request param
     const id = req.query.id as string;
 
     const actor = await getActor({ id: id });

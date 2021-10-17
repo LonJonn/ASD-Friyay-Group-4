@@ -1,7 +1,5 @@
 import {
   Box,
-  Heading,
-  Flex,
   Text,
   VStack,
   HStack,
@@ -23,43 +21,24 @@ import {
   MenuItem,
   MenuList,
   Spacer,
-  Editable,
-  EditableInput,
-  EditablePreview,
-  ButtonGroup,
-  useEditableControls,
 } from "@chakra-ui/react";
-import {
-  ArrowUpIcon,
-  ArrowDownIcon,
-  HamburgerIcon,
-  CheckIcon,
-  CloseIcon,
-  EditIcon,
-} from "@chakra-ui/icons";
+import { ArrowUpIcon, ArrowDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Comment } from "@prisma/client";
+import CommentData from "./CommentData";
 
 interface CommentProps {
   comment: Comment;
   movieId: string;
 }
 
-interface CommentDataProps {
-  commentId: string;
-  userId: string;
-  comment: string;
-  dateCreated: Date;
-}
-
 interface DeleteMovieCommentArgs {
   movieCommentId: string;
 }
 
-interface UpdateMovieCommentArgs {
+interface ReportMovieCommentArgs {
   id: string;
-  text: string;
 }
 
 interface CommentLikes {}
@@ -71,99 +50,34 @@ async function deleteMovieCommentFunction(deleteMovieCommentArgs: DeleteMovieCom
   return response;
 }
 
-async function updateMovieCommentFunction(updateMovieCommentArgs: UpdateMovieCommentArgs) {
-  const response = await fetch(`/api/comments/${updateMovieCommentArgs.id}`, {
+async function reportMovieCommentFunction(reportMovieCommentArgs: ReportMovieCommentArgs) {
+  const response = await fetch(`/api/comments/report/${reportMovieCommentArgs.id}`, {
     method: "PUT",
-    body: JSON.stringify(updateMovieCommentArgs),
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
   return response;
 }
 
 const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
   const queryClient = useQueryClient();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isReportOpen, onOpen: onReportOpen, onClose: onReportClose } = useDisclosure();
   const [likes, setLikes] = useState(comment.likes);
 
   const deleteMutation = useMutation(deleteMovieCommentFunction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments", movieId]);
-      onClose();
+      queryClient.invalidateQueries(["comments"]);
+      onDeleteClose();
     },
   });
-  const updateMutation = useMutation(updateMovieCommentFunction, {
+
+  const reportMutation = useMutation(reportMovieCommentFunction, {
     onSuccess: () => {
-      queryClient.invalidateQueries(["comments", movieId]);
+      queryClient.invalidateQueries(["comments"]);
+      onReportClose();
     },
   });
 
-  const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated, commentId }) => {
-    function EditComment() {
-      function EditableControls() {
-        const { isEditing, getSubmitButtonProps, getCancelButtonProps, getEditButtonProps } =
-          useEditableControls();
-
-        return isEditing ? (
-          <ButtonGroup>
-            <IconButton
-              aria-label="submit-button"
-              icon={<CheckIcon />}
-              variant="ghost"
-              {...getSubmitButtonProps()}
-            />
-            <IconButton
-              aria-label="cancel-button"
-              icon={<CloseIcon />}
-              variant="ghost"
-              {...getCancelButtonProps()}
-            />
-          </ButtonGroup>
-        ) : (
-          <Flex>
-            <IconButton
-              variant="ghost"
-              aria-label="edit-button"
-              icon={<EditIcon />}
-              {...getEditButtonProps()}
-            />
-          </Flex>
-        );
-      }
-      return (
-        <Editable
-          defaultValue={comment}
-          fontSize="md"
-          isPreviewFocusable={false}
-          onSubmit={(newComment) => {
-            updateMutation.mutate({ id: commentId, text: newComment });
-          }}
-        >
-          <EditablePreview />
-          <EditableInput />
-          <EditableControls />
-        </Editable>
-      );
-    }
-
-    return (
-      <>
-        <Box>
-          <Flex align="center">
-            <Heading size="sm" as="h3" mb={0} fontWeight="medium">
-              {userId}
-            </Heading>
-          </Flex>
-          <Text color="gray.500" mb={4} fontSize="xs" marginBottom={0}>
-            {dateCreated}
-          </Text>
-          <EditComment />
-        </Box>
-      </>
-    );
-  };
-
+  // comment upvote tracking function
   const Upvote: React.FC<CommentLikes> = ({}) => {
     var voteCount = comment.likes;
     var userVote = 0;
@@ -211,11 +125,12 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
             <HamburgerIcon />
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={onOpen}>Delete</MenuItem>
+            <MenuItem onClick={onReportOpen}>Report</MenuItem>
+            <MenuItem onClick={onDeleteOpen}>Delete</MenuItem>
           </MenuList>
         </Menu>
 
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Delete comment</ModalHeader>
@@ -228,6 +143,26 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
                 onClick={() => deleteMutation.mutate({ movieCommentId: comment.id })}
               >
                 DELETE
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+        <Modal isOpen={isReportOpen} onClose={onReportClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Report comment</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>Are you sure you want to report this comment?</ModalBody>
+            <ModalBody fontSize={"sm"}>
+              A reported comment will remtain and be manually reviewed by an admin
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                colorScheme="red"
+                size="sm"
+                onClick={() => reportMutation.mutate({ id: comment.id })}
+              >
+                REPORT
               </Button>
             </ModalFooter>
           </ModalContent>

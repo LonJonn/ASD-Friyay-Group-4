@@ -9,7 +9,7 @@ import { getMovie } from '@app/services/movie/get-movie';
 global.fetch = require("node-fetch");
 
 // Load the sample data to be passed into the function
-const movieSample = require('./sampeMovieData.json');
+const movieSample = require('./sampleMovieData.json');
 
 // Tell Jest to mock node-fetch
 jest.mock('node-fetch', () => {

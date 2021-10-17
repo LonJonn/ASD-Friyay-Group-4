@@ -22,23 +22,27 @@ import { AddToActorGroup } from "@app/components/actors/AddToActorGroup";
 
 const ActorsPage: NextPage = () => {
   const id = useRouter().query.id as string;
+
+  // Fire off the two queries
   const detailsQuery = useGetActorByIDQuery(id);
   const creditsQuery = useActorCreditsQuery(id);
 
-  console.log(creditsQuery);
-
+  // Internal state to track whether the client is reading more
   const [isShowMore, setIsShowMore] = useState(false);
 
+  // Loading state
   if (detailsQuery.status !== "success" && creditsQuery.status !== "success") {
     return null;
   }
 
+  // If either details or credits data is missing, show error
   if (!detailsQuery.data || !creditsQuery.data) {
     return <Heading mt={16}>We cant find the actor 🤔</Heading>;
   }
 
   return (
     <Flex mt={8} alignItems="start">
+      {/* Actor Image */}
       <Image
         src={
           detailsQuery.data.profile_path == null

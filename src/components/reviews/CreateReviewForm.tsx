@@ -88,6 +88,7 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
               <FormControl id="rating" isRequired>
                 <FormLabel>Rating</FormLabel>
                 <Input
+                  type="number"
                   placeholder="/5"
                   value={ratings}
                   onChange={(e) => {

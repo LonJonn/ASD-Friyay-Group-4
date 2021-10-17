@@ -4,6 +4,7 @@ import { Comment } from "@prisma/client";
 export type GetMovieCommentsInput = Comment["movieId"];
 export type GetMovieCommentsResult = Comment[];
 
+// reutrn many comments by movie id
 export async function getMovieComments(
   args: GetMovieCommentsInput
 ): Promise<GetMovieCommentsResult> {
@@ -12,6 +13,5 @@ export async function getMovieComments(
   if (!movieComments) {
     throw new Error("Comments not found...");
   }
-
   return movieComments;
 }

@@ -12,7 +12,7 @@ const Home: NextPage = () => {
 
   return (
     <Stack direction="column" align="start" spacing={4}>
-      <Heading>Error! You're not logged in as an admin!</Heading>
+      <Heading>Error! You&apos;re not logged in as an admin!</Heading>
 
       <NextLink href="./" passHref>
         <Link
@@ -23,7 +23,6 @@ const Home: NextPage = () => {
           Click here to return to the homepage
         </Link>
       </NextLink>
-
     </Stack>
   );
 };

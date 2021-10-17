@@ -33,12 +33,14 @@ const handler: NextApiHandler = async (req, res) => {
 
     const actorGroup = await getActorGroup({ id });
     const groupActors = await getGroupActors({ id });
+    //asign the additional attribute if group actor to the actorGroup and return
     Object.assign(actorGroup, { actors: groupActors });
 
     return res.send(actorGroup);
   }
 
   if (req.method === "PUT") {
+    //grab the id from the request and add it to the body object passed into the updateActorGroup service
     const actorGroupId = req.query.id as string;
     const updatedActorGroupBody = req.body as UpdateActorGroupBody;
     const updatedActorGroup = await updateActorGroup({
@@ -49,6 +51,7 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "DELETE") {
+    //grab the id from the body and send it in the object of the deleteActorGroup service
     const actorGroupDetails = req.body as DeleteMovieGroupBody;
     const deletedResult = (await deleteActorGroup({
       where: { id: actorGroupDetails.id },

@@ -68,6 +68,8 @@ model Review {
   createdAt              DateTime     @default(now())
   updatedAt              DateTime     @updatedAt
   ratings                Int
+  likes                  Int
+  dislikes               Int
   title                  String
   text                   String
   movieId                String
@@ -83,6 +85,7 @@ model Comment {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   user        User       @relation(fields: [userId], references: [id])
+  reported    Boolean    @default(false)
 }
 
 model MovieGroup {
