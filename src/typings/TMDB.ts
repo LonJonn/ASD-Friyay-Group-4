@@ -178,3 +178,16 @@ export interface MoviePreviewResult {
   vote_average: number;
   vote_count: number;
 }
+
+export interface NowPlayingResponse {
+  page: number;
+  results: MoviePreviewResult[];
+  total_results: number;
+  total_pages: number;
+  dates: Dates;
+}
+
+export interface Dates {
+  maximum: Date;
+  minimum: Date;
+}
