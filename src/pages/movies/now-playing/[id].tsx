@@ -1,16 +1,16 @@
 import { NextPage } from "next";
 import NextLink from "next/link";
 import { Stack, HStack, SimpleGrid, Heading, Text } from "@chakra-ui/react";
-import { GetMoviesSearchResponse } from "@app/services/movie";
+import { GetNowPlayingMoviesResponse } from "@app/services/movie";
 import PopularMovieCard from "@app/components/movie/MovieCard";
 import MovieSearchBar from "@app/components/movie/MovieSearchBar";
 import NavigationButton from "@app/components/movie/NavigationButton";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-async function getMoviesResult(search: string): Promise<GetMoviesSearchResponse> {
+async function getMoviesResult(search: string): Promise<GetNowPlayingMoviesResponse> {
     // Data is retrieved from the API layer
-    const res = await fetch("/api/movies/search/" + search);
+    const res = await fetch("/api/movies/now-playing/&" + search);
 
     if (!res.ok) {
     throw new Error("Unable to perform search for movies movies.");
@@ -24,8 +24,8 @@ const MoviesSearchPage: NextPage = () => {
     const id = router.query.id as string;
 
     // A query executes to retrieve the data elements that need to be displayed
-    const moviesQuery = useQuery<GetMoviesSearchResponse, Error>({
-        queryKey: ["movies", id],
+    const moviesQuery = useQuery<GetNowPlayingMoviesResponse, Error>({
+        queryKey: ["nowPlaying", id],
         queryFn: () => getMoviesResult(id as string),
     });
 
@@ -41,9 +41,9 @@ const MoviesSearchPage: NextPage = () => {
     // A series of components are returned, contained within a Stack element for layout
     return (
         <Stack spacing={8}>
-            <MovieSearchBar></MovieSearchBar>
+            <Heading>Now Playing</Heading>
 
-            <Heading size="s">Seach results for: {router.query['id']}</Heading>
+            <Heading size="sm">Date Range: {moviesQuery.data.startDate} - {moviesQuery.data.endDate}</Heading>
 
             <SimpleGrid columns={6} spacingX={4} spacingY={4}>
                 {moviesQuery.data.movies.map((movie) => (
@@ -64,16 +64,16 @@ const MoviesSearchPage: NextPage = () => {
                 <HStack space="24px">
                     {/* If this is not the first page, show a back button */}
                     {moviesQuery.data.page != 1 ?
-                        <NavigationButton search={String(router.query['id'])} nextPage={Number(moviesQuery.data.page - 1)} navigationDirection="Previous" endpoint="search"></NavigationButton>
+                        <NavigationButton search={String("")} nextPage={Number(moviesQuery.data.page - 1)} navigationDirection="Previous" endpoint="now-playing"></NavigationButton>
                     : "N/A"}
                     {/* The next button will show provided the outer if statement holds true */}
-                    <NavigationButton search={String(router.query['id'])} nextPage={Number(moviesQuery.data.page + 1)} navigationDirection="Next" endpoint="search"></NavigationButton>
+                    <NavigationButton search={String("")} nextPage={Number(moviesQuery.data.page + 1)} navigationDirection="Next" endpoint="now-playing"></NavigationButton>
                 </HStack>
             :   
                 <Text>No more results {/* Renders when only one page was returned from the API */}</Text> 
             }
             {/* If this is the last page and more than 1 page in total was returned */}
-            {moviesQuery.data.isLast && moviesQuery.data.totalPages > 1 ? <NavigationButton search={String(router.query['id'])} nextPage={Number(moviesQuery.data.page - 1)} navigationDirection="Previous" endpoint="search"></NavigationButton> : "N/A"}
+            {moviesQuery.data.isLast && moviesQuery.data.totalPages > 1 ? <NavigationButton search={String("")} nextPage={Number(moviesQuery.data.page - 1)} navigationDirection="Previous" endpoint="now-playing"></NavigationButton> : "N/A"}
         </Stack>
     );
 };

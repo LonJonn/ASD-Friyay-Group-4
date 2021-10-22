@@ -3,6 +3,9 @@ import {
   Image,
   Badge,
   Tooltip,
+  LinkBox,
+  LinkOverlay,
+  Text
 } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
@@ -34,9 +37,16 @@ const MovieCard: React.FC<IMovieCard> = ({
   };
 
   return (
-    <Box maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="2xl">
+    <LinkBox maxW="sm" borderWidth="1px" borderRadius="lg" overflow="hidden"
+    _hover={{ transform: "scale(1.025)", shadow: "2xl" }} boxShadow="2xl">
       {/* The poster photo for each 'card' */}
-      <Image objectFit="cover" src={poster_path} />
+      <Box>
+        <Image
+          objectFit="cover"
+          src={poster_path}
+          alt="Movie Poster"
+        />
+      </Box>
 
       <Box p="6">
         <Box alignItems="baseline">
@@ -79,7 +89,11 @@ const MovieCard: React.FC<IMovieCard> = ({
             textTransform="uppercase"
             textAlign="left"
           >
-            {title}
+            <LinkOverlay>
+              <Text>
+                {title}
+              </Text>
+            </LinkOverlay>
           </Box>
 
           {/* Rendering of the release month and year */}
@@ -96,7 +110,7 @@ const MovieCard: React.FC<IMovieCard> = ({
           </Box>
         </Box>
       </Box>
-    </Box>
+    </LinkBox>
   );
 };
 
