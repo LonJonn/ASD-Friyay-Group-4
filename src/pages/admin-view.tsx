@@ -16,6 +16,7 @@ import {
   Tabs,
   TabPanel,
   TabPanels,
+  Select,
 } from "@chakra-ui/react";
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from "next";
 import { getSession } from "next-auth/client";
@@ -75,6 +76,14 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
                 src="https://cdn-icons-png.flaticon.com/512/1617/1617543.png"
               ></img>
             </form>
+
+            <Select placeholder="Order Users" onChange={initFilterUsers} id="selectFilter">
+              <option value="az">Names A-Z</option>
+              <option value="za">Names Z-A</option>
+              <option value="rCreated">Recently Created</option>
+              <option value="rEdited">Recently Edited</option>
+            </Select>
+
             <div className="new-user-container hide">
               <Heading mb="4">Create New User</Heading>
               <form className="new-user-form">
@@ -131,14 +140,17 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
                   className="list-item-users"
                   data-firstName={user.firstName}
                   data-email={user.email}
+                  data-id={user.id}
                 >
-                  {user.firstName} | {user.email}
-                  <button className="button button-outline table-button" onClick={deleteUserInit}>
-                    Delete User
-                  </button>
+                  <p className="usersFirstname">{user.firstName}</p> | <p className="usersEmail">{user.email}</p><p className="usersID hide">{user.id}</p>
+                  <div className="btnContainer">
                   <button className="button button-outline  table-button" onClick={editUser}>
                     Edit User
                   </button>
+                  <button className="button button-outline table-button" onClick={deleteUserInit}>
+                    Delete User
+                  </button>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -159,7 +171,7 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
           <Heading>REPORTED COMMENTS </Heading>
           {/* map over each reported comment and display */}
           <Stack>
-            {reportedMovieCommentsQuery.data?.map((comment) => (
+            {reportedMovieCommentsQuery.data ?.map((comment) => (
               <ReportedComment key={comment.id} comment={comment} />
             ))}
           </Stack>
@@ -169,15 +181,88 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
   );
 };
 
+//function is executed when a user selects a filter
+function initFilterUsers() {
+  var filterVal = $('#selectFilter').val();
+  getFilteredUsers(filterVal);
+}
+
+//retrieve searched users from API
+export async function getFilteredUsers(filterVal: any) {
+  const res = await fetch("/api/admin-view/filterUser", {
+    method: "POST",
+    body: filterVal.toString(),
+  });
+  const data = await res.json();
+
+  if (!data) {
+    //No users in this search
+    console.log("Error");
+  } else {
+    displayFilter(data);
+  }
+
+  return {
+    props: { data },
+  };
+}
+
+//display filtered results
+function displayFilter(data: { id: any; name: any; email: any;}[]) {
+  var newLength = Object.keys(data).length;
+  var a = 0;
+
+  var totalUsers = $("#allUsersList > li").length;
+
+  //loop that updates view
+  while (a < totalUsers) {
+    var currentElement = $("#allUsersList").children().eq(a);
+    var domName = currentElement.data("firstname");
+    var domEmail = currentElement.data("email");
+    var domID = currentElement.data("id");
+
+    var filterName = data[a].name;
+
+    var splitName = filterName.split(".");
+
+    if (splitName[1]) {
+      //Remove the last name
+      filterName = splitName[0];
+    }
+
+    var filterEmail = data[a].email;
+    var filterID = data[a].id;
+    
+    //updates text values
+    currentElement.find(".usersFirstname").text(filterName);
+    currentElement.find(".usersEmail").text(filterEmail);
+    currentElement.find(".usersID").text(filterID);
+    currentElement.attr("data-firstname", filterName);
+    currentElement.attr("data-email", filterEmail);
+    currentElement.attr("data-id", filterID);
+
+    a++;
+  }
+}
+
 //submit search
 function submitSearch() {
-  $("#seach-div").submit(function (e) {
+  $("#seach-div").submit(function(e) {
     e.preventDefault();
   });
-  var searchVal = $("#admin-search-text").val();
+  var searchVal: any = $("#admin-search-text").val();
   $("#clearSearchBtn").removeClass("hide");
   $("#clearSearchBtn").show();
-  const returnedUsers = getSearchedUsers(searchVal);
+
+  //email search
+  if (searchVal.includes("@")) {
+    const returnedEmails = getSearchedEmails(searchVal);
+  } else if (searchVal.includes("id:")) {
+    const returnedId = getSearchedId(searchVal);
+
+  } else {
+    const returnedUsers = getSearchedUsers(searchVal);
+  }
 }
 
 //retrieve searched users from API
@@ -200,6 +285,47 @@ export async function getSearchedUsers(searchVal: any) {
   };
 }
 
+//retrieve searched emails from API
+export async function getSearchedEmails(searchVal: any) {
+  const res = await fetch("/api/admin-view/searchEmail", {
+    method: "POST",
+    body: searchVal.toString(),
+  });
+  const data = await res.json();
+
+  if (!data) {
+    //No users in this search
+    console.log("No matching emails");
+  } else {
+    displaySearchEmail(data, searchVal);
+  }
+
+  return {
+    props: { data },
+  };
+}
+
+//retrieve searched ID from API
+export async function getSearchedId(searchVal: any) {
+
+  const res = await fetch("/api/admin-view/searchId", {
+    method: "POST",
+    body: searchVal.split(":")[1].toString(),
+  });
+  const data = await res.json();
+
+  if (!data) {
+    //No users in this search
+    console.log("No matching ID");
+  } else {
+    displaySearchId(data, searchVal);
+  }
+
+  return {
+    props: { data },
+  };
+}
+
 //loop to display search results
 function displaySearch(data: any, searchVal: any) {
   checkFirstName(data, searchVal);
@@ -209,7 +335,7 @@ function displaySearch(data: any, searchVal: any) {
   var totalUsers = $("#allUsersList > li").length;
   while (a < totalUsers) {
     var i = 0;
-    var domName = $("#allUsersList").children().eq(a).data("firstname");
+    var domName = $("#allUsersList").children().eq(a).find(".usersFirstname").text();
     checkUser(a, i, newLength, data, domName);
     if (a == totalUsers - 1) {
       if ($("#allUsersList").children(":visible").length == 0) {
@@ -229,6 +355,93 @@ function checkUser(a: number, i: number, newLength: number, data: any, domName: 
       var searchFirstName = data[i].name.split(".")[0];
       var searchEmail = data[i].email;
       if (domName == searchFirstName) {
+        //User is in the search
+        counter++;
+      }
+    }
+    if (i == newLength) {
+      if (counter == 0) {
+        $("#allUsersList").children().eq(a).hide();
+      }
+    }
+    i++;
+  }
+}
+
+//loop to display search results (email)
+function displaySearchEmail(data: any, searchVal: any) {
+  var newLength = Object.keys(data).length;
+  var a = 0;
+
+  var totalUsers = $("#allUsersList > li").length;
+  while (a < totalUsers) {
+    var i = 0;
+    var domEmail = $("#allUsersList").children().eq(a).find(".usersEmail").text();
+    checkUserEmail(a, i, newLength, data, domEmail);
+    if (a == totalUsers - 1) {
+      if ($("#allUsersList").children(":visible").length == 0) {
+        $("#search-NoUsers").removeClass("hide");
+        $("#search-NoUsers").show();
+      }
+    }
+    a++;
+  }
+}
+
+//loop to display search results (email)
+function displaySearchId(data: any, searchVal: any) {
+  var newLength = Object.keys(data).length;
+  var a = 0;
+
+  var totalUsers = $("#allUsersList > li").length;
+  while (a < totalUsers) {
+    var i = 0;
+    var domId = $("#allUsersList").children().eq(a).find(".usersID").text();
+
+    checkUserId(a, i, newLength, data, domId);
+    if (a == totalUsers - 1) {
+      if ($("#allUsersList").children(":visible").length == 0) {
+        $("#search-NoUsers").removeClass("hide");
+        $("#search-NoUsers").show();
+      }
+    }
+    a++;
+  }
+}
+
+// check if user is in returned search, if not it's excluded from view
+function checkUserEmail(a: number, i: number, newLength: number, data: any, domEmail: any) {
+  var counter = 0;
+  while (i <= newLength) {
+    if (data[i]) {
+      var searchFirstName = data[i].name.split(".")[0];
+      var searchEmail = data[i].email;
+
+      if (domEmail == searchEmail) {
+        //User is in the search
+        counter++;
+      }
+    }
+    if (i == newLength) {
+      if (counter == 0) {
+        $("#allUsersList").children().eq(a).hide();
+      }
+    }
+    i++;
+  }
+}
+
+// check if user is in returned search, if not it's excluded from view
+function checkUserId(a: number, i: number, newLength: number, data: any, domId: any) {
+  var counter = 0;
+  while (i <= newLength) {
+
+    if (data) {
+      var searchFirstName = data.name.split(".")[0];
+      var searchId = data.id;
+
+
+      if (domId == searchId) {
         //User is in the search
         counter++;
       }
@@ -288,6 +501,7 @@ function BasicUsage() {
           <ModalHeader>Edit User</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+          <div id="editUser-modal">
             <p className="search-text">Name</p>
             <input type="text" name="name" className="admin-search-text" id="edit-input-name" />
             <p className="search-text">Email Address</p>
@@ -298,10 +512,26 @@ function BasicUsage() {
               There&apos;s an error! Please fix
             </p>
             <p id="email-data" className="hide"></p>
+            </div>
+            <div id="deleteUser-modal">
+            <p className="search-text">Are you sure you want to delete:</p>
+            <p className="search-text" id="deleteUserEmail-modal"></p>
+            </div>
+            <div id="loadingContainer">
+            <p className="search-text" id="loadingText">Submitting your request! Please wait while the page reloads.</p>
+            <img
+              className="newuser-gif loadingGif"
+              src="https://cdn.discordapp.com/attachments/859030538794303498/899968767537324072/Spin-1s-200px.gif"
+              alt="Reloading the page!"
+            />
+            </div>
           </ModalBody>
 
           <ModalFooter>
-            <button onClick={submitEditUser} id="modalSubmit">
+            <button onClick={submitEditUser} id="modalSubmitEdit" className="button">
+              Submit
+            </button>
+            <button onClick={submitDeleteUser} id="modalSubmitDelete" className="button">
               Submit
             </button>
           </ModalFooter>
@@ -315,12 +545,19 @@ function BasicUsage() {
 function editUser(e: { currentTarget: any }) {
   $("#modal-button").click();
   var clickedButton = e.currentTarget;
-  var collectFirstName = $(clickedButton).parent().data("firstname");
-  var collectEmail = $(clickedButton).parent().data("email");
-  setTimeout(function () {
+  var collectFirstName = $(clickedButton).parent().parent().find(".usersFirstname").text();
+  var collectEmail = $(clickedButton).parent().parent().find(".usersEmail").text();
+  setTimeout(function() {
     $("#edit-input-name").val(collectFirstName);
     $("#edit-input-email").val(collectEmail);
     $("#email-data").text(collectEmail);
+    $('#editUser-modal').show();
+    $('#deleteUser-modal').hide();
+    $('#modalSubmitEdit').show();
+    $('#modalSubmitDelete').hide();
+    $('#loadingContainer').hide();
+    $('#chakra-modal--header-26').text('Edit User');
+
   }, 10);
 }
 
@@ -334,26 +571,28 @@ function submitEditUser() {
     if (validateEmail(newEmail)) {
       //Call API to submit new name and email for the user
       var dataArray = [newName, newEmail, oldEmail];
-
+      $('#loadingContainer').show();
+      $('#editUser-modal').hide();
+      $('#deleteUser-modal').hide();
       const res = fetch("/api/admin-view/editUser", {
         method: "POST",
         body: dataArray.toString(),
       });
       //Refresh page
-      setTimeout(function () {
+      setTimeout(function() {
         window.location.reload();
       }, 3000);
     } else {
       $("#edit-user-error").removeClass("hide");
       $("#edit-user-error").show();
-      setTimeout(function () {
+      setTimeout(function() {
         $("#edit-user-error").fadeOut();
       }, 5000);
     }
   } else {
     $("#edit-user-error").removeClass("hide");
     $("#edit-user-error").show();
-    setTimeout(function () {
+    setTimeout(function() {
       $("#edit-user-error").fadeOut();
     }, 5000);
   }
@@ -370,7 +609,7 @@ function createNewUser() {
       //Success!
       $("#success-container").show();
       $("#success-container").removeClass("hide");
-      setTimeout(function () {
+      setTimeout(function() {
         $("#success-container").fadeOut();
       }, 5000);
 
@@ -383,7 +622,7 @@ function createNewUser() {
         body: dataArray.toString(),
       });
       //Refresh page
-      setTimeout(function () {
+      setTimeout(function() {
         window.location.reload();
       }, 3000);
     } else {
@@ -391,7 +630,7 @@ function createNewUser() {
       $("#failure-container").show();
       $("#failure-container").removeClass("hide");
 
-      setTimeout(function () {
+      setTimeout(function() {
         $("#failure-container").fadeOut();
       }, 5000);
     }
@@ -400,7 +639,7 @@ function createNewUser() {
     $("#failure-container").show();
     $("#failure-container").removeClass("hide");
 
-    setTimeout(function () {
+    setTimeout(function() {
       $("#failure-container").fadeOut();
     }, 5000);
   }
@@ -409,19 +648,39 @@ function createNewUser() {
 //Fires when the 'Delete User Button' is pressed for the specific user
 function deleteUserInit(e: { currentTarget: any }) {
   var el = e.currentTarget;
-  var collectFirstName = $(el).parent().data("firstname");
-  var collectEmail = $(el).parent().data("email");
-  if (window.confirm("Are you sure you want to delete this user? " + collectEmail)) {
-    //Send the API request and pass the email to the API
-    const res = fetch("/api/admin-view/deleteUser", {
-      method: "POST",
-      body: collectEmail,
-    });
-    //Refresh page
-    setTimeout(function () {
-      window.location.reload();
-    }, 3000);
-  }
+  var collectFirstName = $(el).parent().parent().find(".usersFirstname").text();
+  var collectEmail = $(el).parent().parent().find(".usersEmail").text();
+
+  $("#modal-button").click();
+  setTimeout(function() {
+    $("#edit-input-name").val(collectFirstName);
+    $("#edit-input-email").val(collectEmail);
+    $("#email-data").text(collectEmail);
+    $('#editUser-modal').hide();
+    $('#deleteUser-modal').show();
+    $('#modalSubmitEdit').hide();
+    $('#modalSubmitDelete').show();
+    $('#loadingContainer').hide();
+    $('#chakra-modal--header-26').text('Delete User');
+    $('#deleteUserEmail-modal').text(collectEmail);
+
+  }, 10);
+}
+
+function submitDeleteUser() {
+  var targetEmail = $("#email-data").text();
+  $('#loadingContainer').show();
+  $('#editUser-modal').hide();
+  $('#deleteUser-modal').hide();
+  //Send the API request and pass the email to the API
+  const res = fetch("/api/admin-view/deleteUser", {
+    method: "POST",
+    body: targetEmail,
+  });
+  //Refresh page
+  setTimeout(function() {
+    window.location.reload();
+  }, 3000);
 }
 
 //UX Logic to show/hide the 'Create New User' form
@@ -445,10 +704,6 @@ export const getServerSideProps: GetServerSideProps<{ users?: GetAllUsersRespons
   if (!session) {
     return {
       props: {},
-      // redirect: {
-      //   destination: "/login",
-      //   permanent: false,
-      // },
     };
   } else {
     //Check if user is an admin. If not, redirect them to a 404 page.
