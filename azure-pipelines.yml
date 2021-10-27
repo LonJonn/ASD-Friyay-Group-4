@@ -30,17 +30,26 @@ steps:
     inputs:
       testResultsFiles: './junit.xml'
 
-  - task: CopyFiles@2
+  # - task: CopyFiles@2
+  #   inputs:
+  #     Contents: |
+  #       .next/**
+  #       public/**
+  #       package.json
+  #     TargetFolder: "$(Build.ArtifactStagingDirectory)"
+  #     CleanTargetFolder: true
+  #     OverWrite: true
+
+  - task: ArchiveFiles@2
     inputs:
-      Contents: |
-        .next/**
-        public/**
-        package.json
-      TargetFolder: "$(Build.ArtifactStagingDirectory)"
-      CleanTargetFolder: true
-      OverWrite: true
+      rootFolderOrFile: '.'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: "$(Build.ArtifactStagingDirectory)"
       ArtifactName: "app"
+      publishLocation: "Container"

@@ -3,7 +3,7 @@ import { transformMovies } from "@app/services/movie/movie-preview-transformer";
 
 /**
  * Internal type used in this service.
- */
+*/
 interface TransformedMovie
   extends Pick<
   MoviePreviewResult,
@@ -23,13 +23,12 @@ interface IResponse {
 /**
  * The shape of the service response. (An array of IResponse objects from the above)
 */
+export type GetMoviesDiscoverResponse = IResponse;
 
-export type GetMoviesSearchResponse = IResponse;
-
-export async function getMovies(query: string): Promise<GetMoviesSearchResponse> {
+export async function getDiscoverMovies(query: string): Promise<GetMoviesDiscoverResponse> {
   // Make request to TMDB
   const response = await fetch(
-    `https://api.themoviedb.org/3/search/movie/?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&query=${encodeURI(query)}&include_adult=false`
+    `https://api.themoviedb.org/3/discover/movie/?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}&language=en-US&${query}&include_adult=false`
   );
   
   // Parse as JSON, and cast to our type from the TMDB.ts file
@@ -47,5 +46,6 @@ export async function getMovies(query: string): Promise<GetMoviesSearchResponse>
   processed.movies = transformedMovies;
   processed.totalPages = moviesSearchData.total_pages;
   
+
   return processed;
 }
