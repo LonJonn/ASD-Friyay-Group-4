@@ -1,6 +1,6 @@
-import { Button, Textarea, Heading } from "@chakra-ui/react";
+import { Button, Textarea, Heading, Box } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "react-query";
-import { useState } from "react";
+import React, { useState } from "react";
 import { CommentPostBody } from "@app/pages/api/comments/movie/[movieId]";
 
 interface CommentFormProps {
@@ -35,7 +35,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ movieId }) => {
   });
 
   return (
-    <>
+    <Box>
       <Heading marginTop={8} marginBottom={8}>
         COMMENTS
       </Heading>
@@ -57,7 +57,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ movieId }) => {
       >
         COMMENT
       </Button>
-    </>
+    </Box>
   );
 };
 

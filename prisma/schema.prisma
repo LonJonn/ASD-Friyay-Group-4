@@ -36,20 +36,20 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id            String       @id @default(dbgenerated()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
   accounts      Account[]
   sessions      Session[]
   reviews       Review[]
   comments      Comment[]
   movieGroups   MovieGroup[]
   actorGroups   ActorGroup[]
-  }
+}
 
 model VerificationRequest {
   id         String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
@@ -63,45 +63,48 @@ model VerificationRequest {
 }
 
 model Review {
-  id                     String       @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  ownerId                String       @db.ObjectId
-  createdAt              DateTime     @default(now())
-  updatedAt              DateTime     @updatedAt
-  ratings                Int
-  likes                  Int
-  dislikes               Int
-  title                  String
-  text                   String
-  movieId                String
-  owner                  User         @relation(fields: [ownerId], references:[id])
+  id        String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  ownerId   String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ratings   Int
+  likes     Int
+  dislikes  Int
+  title     String
+  text      String
+  movieId   String
+  owner     User     @relation(fields: [ownerId], references: [id])
 }
 
 model Comment {
-  id          String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  userId      String    @db.ObjectId
-  text        String
-  movieId     String
-  likes       Int        @default(0)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  user        User       @relation(fields: [userId], references: [id])
-  reported    Boolean    @default(false)
+  id        String    @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  text      String
+  movieId   String
+  likes     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String    @db.ObjectId
+  user      User      @relation(fields: [userId], references: [id])
+  reported  Boolean   @default(false)
+  parentId  String?    @db.ObjectId
+  parent    Comment?   @relation("ParentChildren", fields: [parentId], references: [id])
+  children  Comment[] @relation("ParentChildren")
 }
 
 model MovieGroup {
-  id        String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  emoji     String
-  name      String
-  movieIds  String[]
-  ownerId   String      @db.ObjectId
-  user      User        @relation(fields: [ownerId], references: [id])
+  id       String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  emoji    String
+  name     String
+  movieIds String[]
+  ownerId  String   @db.ObjectId
+  user     User     @relation(fields: [ownerId], references: [id])
 }
 
 model ActorGroup {
-  id        String      @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  emoji     String
-  name      String
-  actorIds  String[]
-  ownerId   String      @db.ObjectId
-  user      User        @relation(fields: [ownerId], references: [id])
+  id       String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  emoji    String
+  name     String
+  actorIds String[]
+  ownerId  String   @db.ObjectId
+  user     User     @relation(fields: [ownerId], references: [id])
 }

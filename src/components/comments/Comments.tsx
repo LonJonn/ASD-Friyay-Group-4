@@ -25,11 +25,11 @@ import {
 import { ArrowUpIcon, ArrowDownIcon, HamburgerIcon } from "@chakra-ui/icons";
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { Comment } from "@prisma/client";
-import CommentData from "./CommentData";
+import Prisma from "@prisma/client";
+import Comment from "./Comment";
 
 interface CommentProps {
-  comment: Comment;
+  comment: Prisma.Comment;
   movieId: string;
 }
 
@@ -113,7 +113,7 @@ const Comments: React.FC<CommentProps> = ({ comment, movieId }) => {
         <VStack spacing="0">
           <Upvote></Upvote>
         </VStack>
-        <CommentData
+        <Comment
           commentId={comment.id}
           comment={comment.text}
           userId={comment.userId}

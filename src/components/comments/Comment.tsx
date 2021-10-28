@@ -1,11 +1,12 @@
 import { Editable, EditableInput, EditablePreview, useEditableControls } from "@chakra-ui/editable";
 import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
-import { Flex, Box, Heading } from "@chakra-ui/layout";
-import { ButtonGroup, IconButton, Text } from "@chakra-ui/react";
-import React from "react";
+import { Flex, Box, Heading, HStack } from "@chakra-ui/layout";
+import { Button, ButtonGroup, IconButton, Text, useDisclosure } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import CommentForm from "./CommentForm";
 
-interface CommentDataProps {
+export interface CommentProps {
   commentId: string;
   userId: string;
   comment: string;
@@ -17,7 +18,7 @@ interface UpdateMovieCommentArgs {
   text: string;
 }
 
-const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated, commentId }) => {
+const Comment: React.FC<CommentProps> = ({ comment, userId, dateCreated, commentId }) => {
   const queryClient = useQueryClient();
 
   async function updateMovieCommentFunction(updateMovieCommentArgs: UpdateMovieCommentArgs) {
@@ -86,20 +87,20 @@ const CommentData: React.FC<CommentDataProps> = ({ comment, userId, dateCreated,
   }
 
   return (
-    <>
-      <Box>
-        <Flex align="center">
-          <Heading size="sm" as="h3" mb={0} fontWeight="medium">
-            {userId}
-          </Heading>
-        </Flex>
-        <Text color="gray.500" mb={4} fontSize="xs" marginBottom={0}>
-          {dateCreated}
-        </Text>
+    <Box>
+      <Flex align="center">
+        <Heading size="sm" as="h3" mb={0} fontWeight="medium">
+          {userId}
+        </Heading>
+      </Flex>
+      <Text color="gray.500" mb={4} fontSize="xs" marginBottom={0}>
+        {dateCreated}
+      </Text>
+      <HStack>
         <EditComment />
-      </Box>
-    </>
+      </HStack>
+    </Box>
   );
 };
 
-export default CommentData;
+export default Comment;
