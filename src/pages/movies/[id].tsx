@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import CommentForm from "@app/components/comments/CommentForm";
 import Comments from "@app/components/comments/Comments";
 import PreviewCard from "@app/components/movie/MoviePreviewCard";
+import CommentList from "@app/components/comments/CommentList";
 
 async function getMovieDetails(id: string): Promise<GetMovieResponse> {
   // Data is retrieved from the API layer
@@ -91,7 +92,7 @@ const Movie: NextPage = () => {
       )}
 
       <br></br>
-      
+
       <Stack spacing={5}>
         <SimpleGrid columns={4} spacingX={4} spacingY={4} maxH="25em" overflowY="scroll">
           {movieQuery.data.actors.map((actor) => (
@@ -109,40 +110,41 @@ const Movie: NextPage = () => {
           ))}
         </SimpleGrid>
       </Stack>
-      
+
       <br></br>
 
       {/* iterate over the recommendations to render preview cards */}
-      <Heading>Recommended Movies</Heading> 
+      <Heading>Recommended Movies</Heading>
       <br></br>
       <Stack spacing={5}>
-        {movieQuery.data.cleanedRecommendations.length > 1
-        ?
+        {movieQuery.data.cleanedRecommendations.length > 1 ? (
           <SimpleGrid columns={4} spacingX={4} spacingY={4} maxH="25em" overflowY="scroll">
             {movieQuery.data.cleanedRecommendations.map((movie) => (
               <PreviewCard
                 key={movie.id}
                 id={movie.id}
                 title={movie.title}
-                poster_path={movie.poster_path == null ? 'https://safetyaustraliagroup.com.au/wp-content/uploads/2019/05/image-not-found.png' : "https://image.tmdb.org/t/p/w500/" + movie.poster_path}
+                poster_path={
+                  movie.poster_path == null
+                    ? "https://safetyaustraliagroup.com.au/wp-content/uploads/2019/05/image-not-found.png"
+                    : "https://image.tmdb.org/t/p/w500/" + movie.poster_path
+                }
                 original_language={movie.original_language}
                 release_month={movie.release_month}
                 release_year={String(movie.release_year)}
                 vote_average={movie.vote_average}
               />
-            ))}               
-            </SimpleGrid>
-        : <Text>Recommendations are not yet available for this movie. Please check back at a later time. 😪</Text>
-        }
-        </Stack>
-
-      {/* map over each comment associated to that movie and display */}
-      <CommentForm movieId={id as string} />
-      <Stack>
-        {movieCommentsQuery.data?.map((comment) => (
-          <Comments key={comment.id} comment={comment} movieId={id as string} />
-        ))}
+            ))}
+          </SimpleGrid>
+        ) : (
+          <Text>
+            Recommendations are not yet available for this movie. Please check back at a later time.
+            😪
+          </Text>
+        )}
       </Stack>
+
+      <CommentList movieId={id as string} comments={movieCommentsQuery.data || []} />
     </div>
   );
 };

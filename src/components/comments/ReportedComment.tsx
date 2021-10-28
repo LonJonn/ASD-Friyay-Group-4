@@ -2,11 +2,11 @@ import { Box, IconButton, Spacer, Text } from "@chakra-ui/react";
 import { CheckIcon, DeleteIcon, NotAllowedIcon } from "@chakra-ui/icons";
 import React from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { Comment } from "@prisma/client";
-import CommentData from "./CommentData";
+import Prisma from "@prisma/client";
+import Comment from "./Comment";
 
 interface ReportedCommentProps {
-  comment: Comment;
+  comment: Prisma.Comment;
 }
 
 interface DeleteMovieCommentArgs {
@@ -50,7 +50,7 @@ const ReportedComment: React.FC<ReportedCommentProps> = ({ comment }) => {
     <>
       <Box>
         <Spacer marginTop={4} />
-        <CommentData
+        <Comment
           commentId={comment.id}
           comment={comment.text}
           userId={comment.userId}
