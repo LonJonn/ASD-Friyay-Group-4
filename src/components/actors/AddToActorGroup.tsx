@@ -1,16 +1,29 @@
 import { GetActorGroupsResponse } from "@app/pages/api/groups/actors";
 import { getAllActorGroups } from "@app/pages/groups";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Button, Menu, MenuButton, MenuItem, MenuList, Stack, Text } from "@chakra-ui/react";
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { updateGroupFunction } from "../groups/AddToMovieGroup";
+import CreateGroupForm from "../groups/CreateGroupForm";
 
 export const AddToActorGroup: React.FC = () => {
   const router = useRouter();
   const actorId = router.query.id as string;
   const queryClient = useQueryClient();
+
+  const { isOpen: isOpenAG, onOpen: onOpenAG, onClose: onCloseAG } = useDisclosure();
 
   const actorGroupsQuery = useQuery<GetActorGroupsResponse, Error>({
     queryKey: "actorGroups",
@@ -32,7 +45,14 @@ export const AddToActorGroup: React.FC = () => {
 
   return (
     <Stack>
-      {availableGroups.length === 0 && <Button disabled>No Available Groups</Button>}
+      {availableGroups.length === 0 && (
+        <Stack direction="row">
+          <Button disabled flexGrow={1}>
+            No Available Groups
+          </Button>
+          <IconButton icon={<AddIcon />} onClick={onOpenAG} aria-label="Add group" />
+        </Stack>
+      )}
 
       {availableGroups.length > 0 && (
         <Menu>
@@ -58,9 +78,19 @@ export const AddToActorGroup: React.FC = () => {
                 </MenuItem>
               );
             })}
+            <MenuItem onClick={onOpenAG} justifyContent="center">
+              <AddIcon />
+            </MenuItem>
           </MenuList>
         </Menu>
       )}
+
+      <CreateGroupForm
+        isOpen={isOpenAG}
+        onClose={onCloseAG}
+        apiEndPoint="actors"
+        queryInvalidationKey="actorGroups"
+      />
     </Stack>
   );
 };

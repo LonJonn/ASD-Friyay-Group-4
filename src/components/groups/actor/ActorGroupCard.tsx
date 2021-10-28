@@ -18,7 +18,6 @@ const ActorGroupCard: React.FC<IActorGroupCard> = ({ actorGroup }) => {
 
   return (
     <Box
-      as="button"
       borderWidth={2}
       borderRadius="lg"
       overflow="hidden"

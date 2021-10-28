@@ -47,11 +47,20 @@ const ActorGroupPage: NextPage = () => {
           </Button>
         </Stack>
       </Stack>
-      <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
-        {actorGroupQuery.data.actors.map((actor) => (
-          <ActorCard key={actor?.id} actor={actor} actorGroup={actorGroupQuery.data} />
-        ))}
-      </SimpleGrid>
+
+      {actorGroupQuery.data.actorIds.length == 0 && (
+        <Heading size="lg" textAlign="center" pt={40}>
+          No Actors in this group. 😥 Add some!
+        </Heading>
+      )}
+
+      {actorGroupQuery.data.actorIds.length > 0 && (
+        <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
+          {actorGroupQuery.data.actors.map((actor) => (
+            <ActorCard key={actor?.id} actor={actor} actorGroup={actorGroupQuery.data} />
+          ))}
+        </SimpleGrid>
+      )}
       <EditGroupForm
         isOpen={isOpen}
         onClose={onClose}

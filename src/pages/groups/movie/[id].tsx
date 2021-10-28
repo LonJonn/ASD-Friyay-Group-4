@@ -2,7 +2,7 @@ import { DeleteConfirmationAlert } from "@app/components/groups/DeleteConfirmati
 import EditGroupForm from "@app/components/groups/EditGroupForm";
 import MovieCard from "@app/components/groups/MovieCard";
 import { withAuthRequired } from "@app/lib/with-auth-required";
-import { Box, Button, Heading, SimpleGrid, Stack, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Heading, SimpleGrid, Spacer, Stack, useDisclosure } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
@@ -50,11 +50,21 @@ const Group: NextPage = () => {
           </Button>
         </Stack>
       </Stack>
-      <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
-        {movieGroupQuery.data.movies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} movieGroup={movieGroupQuery.data} />
-        ))}
-      </SimpleGrid>
+
+      {movieGroupQuery.data.movieIds.length == 0 && (
+        <Heading size="lg" textAlign="center" pt={40}>
+          No Movies in this group. 😥 Add some!
+        </Heading>
+      )}
+
+      {movieGroupQuery.data.movieIds.length > 0 && (
+        <SimpleGrid columns={4} pt={8} spacing={4} justifyItems={"center"}>
+          {movieGroupQuery.data.movies.map((movie) => (
+            <MovieCard key={movie.id} movie={movie} movieGroup={movieGroupQuery.data} />
+          ))}
+        </SimpleGrid>
+      )}
+
       <EditGroupForm
         isOpen={isOpen}
         onClose={onClose}

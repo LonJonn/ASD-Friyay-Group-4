@@ -52,6 +52,7 @@ const CreateGroupForm: React.FC<CreateModalDisclosure> = ({
     });
 
     queryClient.invalidateQueries(`${queryInvalidationKey}`);
+
     setEmoji("");
     setName("");
 
