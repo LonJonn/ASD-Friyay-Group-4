@@ -22,7 +22,7 @@ const GroupCard: React.FC<IGroupCard> = ({ group }) => {
       borderRadius="lg"
       overflow="hidden"
       onClick={() => handleClick(group.id)}
-      _hover={{ boxShadow: "2xl", transition: "0.5s" }}
+      _hover={{ transform: "scale(1.02)", boxShadow: "2xl", transition: "0.5s" }}
       pos="relative"
     >
       <AspectRatio minW="xl" ratio={2} borderRadius="lg">

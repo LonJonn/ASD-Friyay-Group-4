@@ -27,7 +27,9 @@ export const ActorCard: React.FC<IActorCard> = ({ actor, actorGroup }) => {
     <Box
       overflow="hidden"
       maxH="445px"
-      _hover={{ transform: "scale(1.02)", transition: "0.5s" }}
+      borderWidth={2}
+      borderRadius="lg"
+      _hover={{ transform: "scale(1.02)", boxShadow: "2xl", transition: "0.5s" }}
       onClick={() => router.push(`/actors/${actor.id}`)}
     >
       <Image

@@ -27,7 +27,8 @@ const MovieCard: React.FC<IMovieCard> = ({ movie, movieGroup }) => {
     <Box
       overflow="hidden"
       maxH="445px"
-      _hover={{ transform: "scale(1.02)", transition: "0.5s" }}
+      borderWidth={2}
+      _hover={{ transform: "scale(1.02)", boxShadow: "2xl", transition: "0.5s" }}
       onClick={() => router.push(`/movies/${movie.id}`)}
     >
       <Image

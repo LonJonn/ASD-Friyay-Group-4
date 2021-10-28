@@ -3,6 +3,7 @@ import {
   deleteMovieGroup,
   DeleteMovieGroupInput,
   DeleteMovieGroupResult,
+  getMovieGroups,
   updateMovieGroup,
   UpdateMovieGroupInput,
 } from "@app/services/groups";
@@ -26,8 +27,23 @@ const handler: NextApiHandler = async (req, res) => {
     return res.status(401).end();
   }
 
+  const id = req.query.id as string;
+
+  const movieGroups = await getMovieGroups(session.uid!);
+  var isTheOwner;
+
+  movieGroups.forEach((movieGroup) => {
+    if (movieGroup.id == id) {
+      isTheOwner = true;
+    }
+  });
+
+  if (!isTheOwner) {
+    return res.status(404).end();
+  }
+
   if (req.method === "GET") {
-    const id = req.query.id as string;
+    //const id = req.query.id as string;
 
     const movieGroup = await getMovieGroup({ id });
     const groupMovies = await getGroupMovies({ id });
@@ -37,10 +53,10 @@ const handler: NextApiHandler = async (req, res) => {
   }
 
   if (req.method === "PUT") {
-    const movieGroupId = req.query.id as string;
+    //const movieGroupId = req.query.id as string;
     const updatedMovieGroupBody = req.body as UpdateMovieGroupBody;
     const updatedMovieGroup = await updateMovieGroup({
-      where: { id: movieGroupId },
+      where: { id: id },
       data: updatedMovieGroupBody,
     });
 

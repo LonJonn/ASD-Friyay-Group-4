@@ -2,13 +2,15 @@ import { UpdateActorGroupBody } from "@app/pages/api/groups/actors/[id]";
 import { GetMovieGroupsResponse } from "@app/pages/api/groups/movies";
 import { UpdateMovieGroupBody } from "@app/pages/api/groups/movies/[id]";
 import { getAllMovieGroups } from "@app/pages/groups";
-import { Button } from "@chakra-ui/button";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { Button, IconButton } from "@chakra-ui/button";
+import { AddIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { Stack, Text } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
+import { useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import CreateGroupForm from "./CreateGroupForm";
 
 interface UpdateGroupArgs {
   movieGroupId?: string;
@@ -49,6 +51,8 @@ export const AddToMovieGroup: React.FC = () => {
   const movieId = router.query.id as string;
   const queryClient = useQueryClient();
 
+  const { isOpen: isOpenMG, onOpen: onOpenMG, onClose: onCloseMG } = useDisclosure();
+
   const movieGroupsQuery = useQuery<GetMovieGroupsResponse, Error>({
     queryKey: "movieGroups",
     queryFn: getAllMovieGroups,
@@ -69,7 +73,14 @@ export const AddToMovieGroup: React.FC = () => {
 
   return (
     <Stack pb={4}>
-      {availableGroups.length === 0 && <Button disabled>No Available Groups</Button>}
+      {availableGroups.length === 0 && (
+        <Stack direction="row">
+          <Button disabled flexGrow={1}>
+            No Available Groups
+          </Button>
+          <IconButton icon={<AddIcon />} onClick={onOpenMG} aria-label="Add group" />
+        </Stack>
+      )}
 
       {availableGroups.length > 0 && (
         <Menu>
@@ -95,9 +106,19 @@ export const AddToMovieGroup: React.FC = () => {
                 </MenuItem>
               );
             })}
+            <MenuItem onClick={onOpenMG} justifyContent="center">
+              <AddIcon />
+            </MenuItem>
           </MenuList>
         </Menu>
       )}
+
+      <CreateGroupForm
+        isOpen={isOpenMG}
+        onClose={onCloseMG}
+        apiEndPoint="movies"
+        queryInvalidationKey="movieGroups"
+      />
     </Stack>
   );
 };

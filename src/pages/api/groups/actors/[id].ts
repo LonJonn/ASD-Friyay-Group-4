@@ -5,6 +5,7 @@ import {
   DeleteActorGroupResult,
 } from "@app/services/groups/actor/delete-movie-group";
 import { getActorGroup } from "@app/services/groups/actor/get-actor-group";
+import { getActorGroups } from "@app/services/groups/actor/get-actor-groups";
 import { getGroupActors, GetGroupActorsResult } from "@app/services/groups/actor/get-group-actors";
 import {
   updateActorGroup,
@@ -26,6 +27,21 @@ const handler: NextApiHandler = async (req, res) => {
   const session = await getSession({ req });
   if (!session) {
     return res.status(401).end();
+  }
+
+  const id = req.query.id as string;
+
+  const actorGroups = await getActorGroups({ userId: session.uid! });
+  var isTheOwner;
+
+  actorGroups.forEach((actorGroup) => {
+    if (actorGroup.id == id) {
+      isTheOwner = true;
+    }
+  });
+
+  if (!isTheOwner) {
+    return res.status(404).end();
   }
 
   if (req.method === "GET") {
