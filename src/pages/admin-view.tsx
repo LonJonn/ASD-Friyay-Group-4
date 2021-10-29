@@ -76,13 +76,14 @@ const AllUsers: NextPage<AllUsersProps> = ({ users }) => {
                 src="https://cdn-icons-png.flaticon.com/512/1617/1617543.png"
               ></img>
             </form>
-
+            <div className="selectContainer">
             <Select placeholder="Order Users" onChange={initFilterUsers} id="selectFilter">
               <option value="az">Names A-Z</option>
               <option value="za">Names Z-A</option>
               <option value="rCreated">Recently Created</option>
               <option value="rEdited">Recently Edited</option>
             </Select>
+            </div>
 
             <div className="new-user-container hide">
               <Heading mb="4">Create New User</Heading>
@@ -232,7 +233,7 @@ function displayFilter(data: { id: any; name: any; email: any;}[]) {
 
     var filterEmail = data[a].email;
     var filterID = data[a].id;
-    
+
     //updates text values
     currentElement.find(".usersFirstname").text(filterName);
     currentElement.find(".usersEmail").text(filterEmail);

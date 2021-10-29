@@ -181,7 +181,7 @@ input[type='submit'].button-outline[disabled]:hover {
   width: 30px;
   margin-left: 10px;
 }
-.chakra-select__wrapper {
+.selectContainer {
   width: 200px !important;
   float: right;
   margin-top: -80px;
