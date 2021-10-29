@@ -9,8 +9,8 @@ export async function getMovieComments(
   args: GetMovieCommentsInput
 ): Promise<GetMovieCommentsResult> {
   const movieComments = await db.comment.findMany({
-    where: { movieId: args },
-    include: { user: true },
+    where: { movieId: args, parentId: null },
+    include: { children: { include: { user: true } }, user: true },
   });
 
   if (!movieComments) {

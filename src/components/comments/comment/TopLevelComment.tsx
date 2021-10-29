@@ -42,6 +42,12 @@ export default function TopLevelComment({ comment, movieId }: TopLevelCommentPro
     <Stack alignItems={"flex-start"}>
       <Comment comment={comment} />
       <CommentReplyForm onSubmit={handleReply} />
+      <Stack pl={16}>
+        {/* @ts-ignore */}
+        {comment.children.map((comment) => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
+      </Stack>
     </Stack>
   );
 }
