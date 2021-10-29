@@ -10,7 +10,10 @@ import {
 
 type CreateMovieCommentResponse = CreateMovieCommentResult;
 
-export type CommentPostBody = Pick<CreateMovieCommentInput, "text">;
+export type CommentPostBody = {
+  text: string;
+  parentId?: string;
+};
 
 const handler: NextApiHandler = async (req, res) => {
   // ensure comments can be reported by logged in users
@@ -25,6 +28,9 @@ const handler: NextApiHandler = async (req, res) => {
       movieId: req.query.movieId as string,
       text: body.text,
       user: { connect: { id: session.uid } },
+      ...(body.parentId && {
+        parent: { connect: { id: body.parentId } },
+      }),
     })) as CreateMovieCommentResponse;
 
     return res.status(201).send(newComment);

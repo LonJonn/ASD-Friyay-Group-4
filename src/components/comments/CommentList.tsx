@@ -2,6 +2,7 @@ import Comment from "./comment/Comment";
 import Prisma from "@prisma/client";
 import { Stack } from "@chakra-ui/layout";
 import CommentForm from "./CommentForm";
+import TopLevelComment from "./comment/TopLevelComment";
 
 export interface CommentListProps {
   movieId: string;
@@ -15,7 +16,7 @@ export default function CommentList({ movieId, comments }: CommentListProps) {
 
       <Stack direction="column" spacing={4}>
         {comments.map((comment) => (
-          <Comment key={comment.id} comment={comment} />
+          <TopLevelComment key={comment.id} comment={comment} movieId={movieId} />
         ))}
       </Stack>
     </Stack>
