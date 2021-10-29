@@ -74,14 +74,14 @@ const NAV_ITEMS: Array<NavItem> = [
   //   label: "Secret",
   //   href: "/protected",
   // },
-  {
-    label: "All Users SSR",
-    href: "/all-users",
-  },
-  {
-    label: "All Users CSR",
-    href: "/all-users-client",
-  },
+  // {
+  //   label: "All Users SSR",
+  //   href: "/all-users",
+  // },
+  // {
+  //   label: "All Users CSR",
+  //   href: "/all-users-client",
+  // },
   {
     label: "Popular",
     children: [
