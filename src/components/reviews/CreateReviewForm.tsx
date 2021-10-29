@@ -1,4 +1,4 @@
-import { ReviewGroupPostBody } from "@app/pages/api/reviews"
+import { ReviewGroupPostBody } from "@app/pages/api/reviews";
 import React, { useState } from "react";
 import { useQueryClient } from "react-query";
 import {
@@ -13,6 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Spacer,
   Stack,
   Textarea,
@@ -32,27 +33,30 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
   //should be using ReactHookForms for validation.
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
+    setTitle("");
+    setText("");
+    setRating("");
 
     const requestBody: ReviewGroupPostBody = {
-        title,
-        text,
-        ratings: parseInt(ratings),
-    }
+      title,
+      text,
+      ratings: parseInt(ratings),
+    };
 
     //Should useMutation from reactQuery
     const response = await fetch("/api/reviews", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
     });
 
     queryClient.invalidateQueries("reviews");
     console.log(response);
 
     onClose();
-  };
+  }
 
   return (
     <>
@@ -85,25 +89,31 @@ const CreateReviewForm: React.FC<CreateReviewModal> = ({ isOpen, onClose }) => {
                 />
               </FormControl>
 
-              <FormControl id="rating" isRequired>
-                <FormLabel>Rating</FormLabel>
-                <Input
-                  type="number"
-                  placeholder="/5"
+                <FormLabel id="rating">Rating</FormLabel>
+                <Select
+                  placeholder = "Select rating out of 5"
+                  color={"teal"}
                   value={ratings}
                   onChange={(e) => {
                     setRating(e.target.value);
                   }}
-                />
-              </FormControl>
+                  isRequired
+                >
+                  <option>0</option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                </Select>
             </Stack>
           </ModalBody>
 
           <ModalFooter>
-            <Button mr={3} onClick={onClose} colorScheme="red">
+            <Button mr={3} onClick= {() => {setRating(""); setText(""); setTitle(""); onClose()}} colorScheme="red">
               Cancel
             </Button>
-            <Spacer/>
+            <Spacer />
             <Button form="create-form" type="submit" colorScheme="teal">
               Add
             </Button>

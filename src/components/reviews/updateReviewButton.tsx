@@ -16,6 +16,7 @@ import {
   Stack,
   Spacer,
   Textarea,
+  Select,
 } from "@chakra-ui/react";
 import { Review } from ".prisma/client";
 
@@ -30,17 +31,17 @@ interface UpdateReviewBodyMutation extends UpdateReviewBody {
 }
 
 //create function that updates the likes and dislikes of a movie Review
-export async function updateReviewFunc(updatedUserReview: UpdateReviewBodyMutation){
+export async function updateReviewFunc(updatedUserReview: UpdateReviewBodyMutation) {
   const id = updatedUserReview.id;
-  delete updatedUserReview.id;   
-  
-  const response = await fetch(`/api/reviews/${id}`,{
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updatedUserReview),
-    });
+  delete updatedUserReview.id;
 
-    return response;
+  const response = await fetch(`/api/reviews/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedUserReview),
+  });
+
+  return response;
 }
 
 const EditReviewForm: React.FC<EditReviewModalDisclosure> = ({
@@ -66,7 +67,7 @@ const EditReviewForm: React.FC<EditReviewModalDisclosure> = ({
   //should be using ReactHookForms for validation.
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    updateMutation.mutate({title: title, text: text, ratings: ratings});
+    updateMutation.mutate({ title: title, text: text, ratings: ratings });
     queryClient.invalidateQueries("reviews");
     onClose();
   }
@@ -100,16 +101,23 @@ const EditReviewForm: React.FC<EditReviewModalDisclosure> = ({
                 />
               </FormControl>
 
-              <FormControl id="rating" isRequired>
-                <FormLabel>Rating</FormLabel>
-                <Input
-                  type="number"
-                  value={ratings}
-                  onChange={(e) => {
-                    setRating(parseInt(e.target.value))
-                  }}
-                />
-              </FormControl>
+              <FormLabel id="rating">Rating</FormLabel>
+              <Select
+                placeholder = "Select rating out of 5"
+                color={"teal"}
+                value={ratings}
+                onChange={(e) => {
+                  setRating(parseInt(e.target.value));
+                }}
+                isRequired
+              >
+                <option>0</option>
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </Select>
             </Stack>
           </ModalBody>
 

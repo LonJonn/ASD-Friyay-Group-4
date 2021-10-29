@@ -55,7 +55,7 @@ const UserReviewCard: React.FC<ReviewCard> = ({ review}) => {
         </HStack>
       </HStack>
       <p>
-        🧙 {review.createdAt}
+        🧙 Posted on {formatDate(new Date(review.createdAt))}
       </p>
       <Text>{review.text}</Text>
       <HStack>
@@ -71,3 +71,5 @@ const UserReviewCard: React.FC<ReviewCard> = ({ review}) => {
 };
 
 export default UserReviewCard;
+
+const {format: formatDate} =  new Intl.DateTimeFormat('en-AU', { dateStyle: 'full'})
